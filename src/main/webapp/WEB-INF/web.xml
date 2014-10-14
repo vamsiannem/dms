@@ -1,0 +1,63 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <display-name>dms web application</display-name>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>encodedFilter</filter-name>
+        <filter-class>com.dms.interceptors.CharsetFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodedFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+    <servlet>
+        <servlet-name>dms</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:dms-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dms</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/views/user/error.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/views/user/error.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/views/user/nopage.jsp</location>
+    </error-page>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>/index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
