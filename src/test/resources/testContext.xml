@@ -6,12 +6,10 @@
                  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 	             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <context:annotation-config />
-    <context:component-scan base-package="com.dms.repository, com.dms.interceptors"  />
     <context:property-placeholder location="classpath:db.properties"/>
 
-    <bean
-            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
     <bean name="openSessionInViewInterceptor"
           class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
@@ -44,27 +42,28 @@
         </property>
     </bean>
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-          destroy-method="close">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="${db.url}" />
-        <property name="username" value="${db.username}" />
-        <property name="password" value="${db.password}" />
-        <property name="defaultAutoCommit" value="${db.defaultAutoCommit}" />
-        <property name="testOnBorrow" value="true" />
-        <property name="validationQuery" value="select 1" />
-        <property name="maxWait" value="3600000" />
-        <property name="timeBetweenEvictionRunsMillis" value="1800000" />
-    </bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${db.url}${db.schema}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="defaultAutoCommit" value="${db.defaultAutoCommit}" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="select 1" />
+		<property name="maxWait" value="3600000" />
+		<property name="timeBetweenEvictionRunsMillis" value="1800000" />
+	</bean>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="hibernate3AnnotatedSessionFactory"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"
-                          proxy-target-class="true" />
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
 
-
+    <context:annotation-config />
+    <context:component-scan base-package="com.dms.repository"  />
 
 
 

@@ -6,9 +6,9 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-    <mvc:resources mapping="/static/**" location="/static/"
+    <!--<mvc:resources mapping="/static/**" location="/static/"
                    cache-period="86400" />
-
+    <mvc:annotation-driven />-->
     <context:annotation-config />
     <context:component-scan base-package="com.dms.controller" />
 
@@ -23,5 +23,9 @@
     <bean id="localeResolver"
           class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
 
 </beans>

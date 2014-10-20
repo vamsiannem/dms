@@ -1,13 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Example</title>
+        <title>View CSV Graph Data</title>
     </head>
     <body>
 
-        <form method="post" action="api/login">
+        <form method="post" action="/login">
             <center>
             <table border="1" width="30%" cellpadding="3">
                 <thead>
