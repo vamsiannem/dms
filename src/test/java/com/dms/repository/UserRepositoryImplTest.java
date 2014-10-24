@@ -22,21 +22,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 //@ContextConfiguration("/testContext.xml")
 //@RunWith(SpringJUnit4ClassRunner.class)
-//@Transactional
+//@Transactional()
+//@TransactionConfiguration(defaultRollback= false, transactionManager="transactionManager")
 public class UserRepositoryImplTest {
 
     private Role role;
 
-    //@Resource
+    @Resource
     UserRepository userRepository;
-
-    //@Resource
+    
+    @Resource
     SessionFactory sessionFactory;
 
-   // @Before
+  //  @Before
     public void createDummyRolesNPermissions(){
         Session session = sessionFactory.getCurrentSession();
         Set<Permission> permissions = new HashSet<Permission>(3);
@@ -55,7 +57,7 @@ public class UserRepositoryImplTest {
         session.clear();
     }
 
-   // @Test
+   //@Test
     public void testAddUser() throws Exception {
         com.dms.dto.User dtoUser = createSampleDTOUser();
         userRepository.addUser(dtoUser);

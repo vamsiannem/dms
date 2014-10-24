@@ -30,7 +30,9 @@ public class SecurityContextFilter implements Filter{
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         // Allow calls to login controller since it is where authentication happens.
-        if(!httpServletRequest.getRequestURI().contains("/login")){
+        String requestURI = httpServletRequest.getRequestURI();
+        
+        if(!requestURI.contains("/login") && !requestURI.contains("index.jsp")){
             HttpSession httpSession = httpServletRequest.getSession(false);
              User user = (User) httpSession.getAttribute(DMSConstants.SESSION_USER);
             if( user != null){

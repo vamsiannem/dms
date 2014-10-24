@@ -16,17 +16,14 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>User Name</td>
-                        <td><input type="text" name="username" value="" /></td>
+                        <td>Welcome</td>
+                        
                     </tr>
                     <tr>
-                        <td>Password</td>
-                        <td><input type="password" name="password" value="" /></td>
+                        <td>Welcome</td>
+                        
                     </tr>
-                    <tr>
-                        <td><input type="submit" value="Login" /></td>
-                        <td><input type="reset" value="Reset" /></td>
-                    </tr>
+                    
                 </tbody>
             </table>
             </center>
