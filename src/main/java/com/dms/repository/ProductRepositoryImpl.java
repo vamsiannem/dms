@@ -41,5 +41,15 @@ public class ProductRepositoryImpl implements ProductRepository{
                .setMaxResults(10000);
        return query.list();
     }
-    
+
+    @Override
+    public void saveProducts(List<ProductData> productDataList, String companyName, String unitSerialNo) {
+        Session session = sessionFactory.getCurrentSession();
+        for (ProductData productData : productDataList){
+            productData.setCompanyName(companyName);
+            productData.setUnitSerialNo(unitSerialNo);
+            session.save(productData);
+        }
+    }
+
 }

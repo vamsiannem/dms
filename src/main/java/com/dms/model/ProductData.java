@@ -20,62 +20,56 @@ import javax.persistence.Table;
 @Entity
 @Table(name="product_data")
 public class ProductData implements Serializable {
-    
+
     @Id
     @Column(name="id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    
+
     @Column(name="company_name", nullable=false)
     private String companyName;
-    
-    @Column( name="entry_date")
-    private String entryDate;
-    
-    @Column( name="ty")
-    private String ty;
-    
+
+    @Column(name="unit_serial_no", nullable=false)
+    private String unitSerialNo;
+
+    @Column( name="time")
+    private String time;
+
+    @Column(name="vNetAddress", nullable=false)
+    private String vNetAddress;
+
+    @Column( name="type")
+    private Integer type;
+
     @Column( name="status")
     private String status;
-    
-    @Column(name="mode")
-    private Long mode;
-    
-    @Column(name="read_no")
-    private Long readNo;
-    
-    @Column(name="IRreading")
-    private Float IRreading;
-    
-    @Column(name= "limV")
-    private Float limV;
-   
-    @Column( name="limC")
-    private Float limC;
-    
-    @Column(name="temperature")
-    private Float temperature;
-    
-    @Column(name="EPUIn")
-    private Float EPUIn;
-    
-    @Column(name="EPUOut")
-    private Float EPUOut;
-    
-    @Column(name="limR")
-    private Float limR;
-    
-    @Column(name="c12")
-    private Integer c12;
-    
-    @Column(name="c13")
-    private Integer c13;
-    
-    @Column(name="c14")
-    private Integer c14;
-    
-    @Column(name="c15")
-    private Integer c15;
+
+    @Column(name="lim_imbalance")
+    private Double limImbalance;
+
+    @Column(name="lim_resistance")
+    private Double limResistance;
+
+    @Column(name="lim_capacitance")
+    private String limCapacitance;
+
+    @Column(name= "lim_resistance_cm")
+    private Double limResistanceCm;
+
+    @Column( name="lim_capacitance_cm")
+    private String limCapacitanceCm;
+
+    @Column(name="line_voltage")
+    private Double lineVoltage;
+
+    @Column(name="line_current")
+    private Double lineCurrent;
+
+    @Column(name="line_frequency")
+    private Double lineFrequency;
+
+    @Column(name="line_phase")
+    private Double linePhase;
 
     public Long getId() {
         return id;
@@ -93,20 +87,36 @@ public class ProductData implements Serializable {
         this.companyName = companyName;
     }
 
-    public String getEntryDate() {
-        return entryDate;
+    public String getUnitSerialNo() {
+        return unitSerialNo;
     }
 
-    public void setEntryDate(String entryDate) {
-        this.entryDate = entryDate;
+    public void setUnitSerialNo(String unitSerialNo) {
+        this.unitSerialNo = unitSerialNo;
     }
 
-    public String getTy() {
-        return ty;
+    public String getTime() {
+        return time;
     }
 
-    public void setTy(String ty) {
-        this.ty = ty;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getvNetAddress() {
+        return vNetAddress;
+    }
+
+    public void setvNetAddress(String vNetAddress) {
+        this.vNetAddress = vNetAddress;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public String getStatus() {
@@ -117,108 +127,75 @@ public class ProductData implements Serializable {
         this.status = status;
     }
 
-    public Long getMode() {
-        return mode;
+    public Double getLimImbalance() {
+        return limImbalance;
     }
 
-    public void setMode(Long mode) {
-        this.mode = mode;
+    public void setLimImbalance(Double limImbalance) {
+        this.limImbalance = limImbalance;
     }
 
-    public Long getReadNo() {
-        return readNo;
+    public Double getLimResistance() {
+        return limResistance;
     }
 
-    public void setReadNo(Long readNo) {
-        this.readNo = readNo;
+    public void setLimResistance(Double limResistance) {
+        this.limResistance = limResistance;
     }
 
-    public Float getIRreading() {
-        return IRreading;
+    public String getLimCapacitance() {
+        return limCapacitance;
     }
 
-    public void setIRreading(Float IRreading) {
-        this.IRreading = IRreading;
+    public void setLimCapacitance(String limCapacitance) {
+        this.limCapacitance = limCapacitance;
     }
 
-    public Float getLimV() {
-        return limV;
+    public Double getLimResistanceCm() {
+        return limResistanceCm;
     }
 
-    public void setLimV(Float limV) {
-        this.limV = limV;
+    public void setLimResistanceCm(Double limResistanceCm) {
+        this.limResistanceCm = limResistanceCm;
     }
 
-    public Float getLimC() {
-        return limC;
+    public String getLimCapacitanceCm() {
+        return limCapacitanceCm;
     }
 
-    public void setLimC(Float limC) {
-        this.limC = limC;
+    public void setLimCapacitanceCm(String limCapacitanceCm) {
+        this.limCapacitanceCm = limCapacitanceCm;
     }
 
-    public Float getTemperature() {
-        return temperature;
+    public Double getLineVoltage() {
+        return lineVoltage;
     }
 
-    public void setTemperature(Float temperature) {
-        this.temperature = temperature;
+    public void setLineVoltage(Double lineVoltage) {
+        this.lineVoltage = lineVoltage;
     }
 
-    public Float getEPUIn() {
-        return EPUIn;
+    public Double getLineCurrent() {
+        return lineCurrent;
     }
 
-    public void setEPUIn(Float EPUIn) {
-        this.EPUIn = EPUIn;
+    public void setLineCurrent(Double lineCurrent) {
+        this.lineCurrent = lineCurrent;
     }
 
-    public Float getEPUOut() {
-        return EPUOut;
+    public Double getLineFrequency() {
+        return lineFrequency;
     }
 
-    public void setEPUOut(Float EPUOut) {
-        this.EPUOut = EPUOut;
+    public void setLineFrequency(Double lineFrequency) {
+        this.lineFrequency = lineFrequency;
     }
 
-    public Float getLimR() {
-        return limR;
+    public Double getLinePhase() {
+        return linePhase;
     }
 
-    public void setLimR(Float limR) {
-        this.limR = limR;
+    public void setLinePhase(Double linePhase) {
+        this.linePhase = linePhase;
     }
-
-    public Integer getC12() {
-        return c12;
-    }
-
-    public void setC12(Integer c12) {
-        this.c12 = c12;
-    }
-
-    public Integer getC13() {
-        return c13;
-    }
-
-    public void setC13(Integer c13) {
-        this.c13 = c13;
-    }
-
-    public Integer getC14() {
-        return c14;
-    }
-
-    public void setC14(Integer c14) {
-        this.c14 = c14;
-    }
-
-    public Integer getC15() {
-        return c15;
-    }
-
-    public void setC15(Integer c15) {
-        this.c15 = c15;
-    }
-   
 }

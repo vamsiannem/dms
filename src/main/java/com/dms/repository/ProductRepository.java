@@ -26,5 +26,9 @@ public interface ProductRepository {
      * @return list of product data.
      */
     List<ProductData> getDataForProduct(String companyName);
-    
+
+    /**
+     * File Uploaded for a company is persisted in product tables.
+     */
+    void saveProducts(List<ProductData> productDataList, String companyName, String unitSerialNo);
 }
