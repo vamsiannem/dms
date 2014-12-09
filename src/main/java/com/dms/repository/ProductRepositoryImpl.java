@@ -8,9 +8,11 @@ import com.dms.model.ProductData;
 import java.util.List;
 import javax.annotation.Resource;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +29,12 @@ public class ProductRepositoryImpl implements ProductRepository{
     SessionFactory sessionFactory;
 
     @Override
-    public List<String> getAllAvailableProducts() {        
+    public List<ProductData> getAllAvailableProducts() {
        Session session = sessionFactory.getCurrentSession();
-       return session.createSQLQuery("select distinct(company_name) from product_data ").list();               
+        String hqlQuery = "select companyName, unitSerialNo, time, vNetAddress, status  from ProductData ";
+        Query query = session.createQuery(hqlQuery);
+        query.setMaxResults(2000);
+       return query.list();
     }
 
     @Override
@@ -50,6 +55,14 @@ public class ProductRepositoryImpl implements ProductRepository{
             productData.setUnitSerialNo(unitSerialNo);
             session.save(productData);
         }
+    }
+
+    @Override
+    public List<String> getAllCompanies(){
+        Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria( ProductData.class );
+        criteria.setProjection(Projections.distinct(Projections.property("companyName")));
+        return criteria.list();
     }
 
 }

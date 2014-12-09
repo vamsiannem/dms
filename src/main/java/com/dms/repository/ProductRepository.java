@@ -17,7 +17,7 @@ public interface ProductRepository {
      * 
      * @return  List of product names available in the product data table.
      */
-    List<String> getAllAvailableProducts();
+    List<ProductData> getAllAvailableProducts();
     
     /**
      * Get all the data for a company. This data is used to display
@@ -31,4 +31,6 @@ public interface ProductRepository {
      * File Uploaded for a company is persisted in product tables.
      */
     void saveProducts(List<ProductData> productDataList, String companyName, String unitSerialNo);
+
+    List<String> getAllCompanies();
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseDouble;
@@ -59,6 +60,12 @@ public class DataManageController extends BaseController {
     @Resource
     private ProductRepository productRepository;
 
+
+    @RequestMapping(value="/upload/view", method = RequestMethod.POST)
+    public ModelAndView renderProductUploadView(){
+        ModelAndView mav = new ModelAndView("fileselection");
+        return mav;
+    }
     @RequestMapping(value="/upload",
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes=MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -128,16 +135,13 @@ public class DataManageController extends BaseController {
 
         String fileName = file.getName();
         CSVReader reader;
-
-        if (fileName.endsWith(".csv")) {
-
-            String tempFileName = "temp_dms_"+ random.nextInt() +".csv";
-            File tempFile =  new File(FileUtils.getTempDirectoryPath() + File.separator+tempFileName);
-            FileUtils.touch(tempFile);
-            FileUtils.copyInputStreamToFile(file.getInputStream(), tempFile);
-
-            CsvBeanReader csvBeanReader = null;
-            try {
+        CsvBeanReader csvBeanReader = null;
+        String tempFileName = "temp_dms_"+ random.nextInt() +".csv";
+        File tempFile =  new File(FileUtils.getTempDirectoryPath() + File.separator+tempFileName);
+        FileUtils.touch(tempFile);
+        try {
+            if (fileName.endsWith(".csv")) {
+                FileUtils.copyInputStreamToFile(file.getInputStream(), tempFile);
                 final CellProcessor[] processors = new CellProcessor[] {
                         new NotNull(), // time
                         new DefaultString(), // vNetAddress
@@ -161,12 +165,12 @@ public class DataManageController extends BaseController {
                         productDataList.add(product);
                     }
                 }
-            } finally {
-                csvBeanReader.close();
+            } else {
+                throw new Exception("Unknown File Format uploaded");
             }
-
-        } else {
-            throw new Exception("Unknown File Format uploaded");
+        } finally {
+            csvBeanReader.close();
+            tempFile.delete();
         }
         return productDataList;
     }
@@ -184,11 +188,18 @@ public class DataManageController extends BaseController {
         }
     }
 
+    /**
+     * List all networks
+     * @return
+     */
     @RequestMapping(
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             method= RequestMethod.GET)
-    public List<String> getAvailableProducts(){
-        return productRepository.getAllAvailableProducts();
+    public ModelAndView getAvailableProducts(){
+        ModelAndView mav = new ModelAndView("networks");
+        mav.addObject("companies", productRepository.getAllCompanies());
+        mav.addObject("products", productRepository.getAllAvailableProducts());
+        return mav;
     }
 
     @RequestMapping(value= "/data/{companyName}",
