@@ -70,13 +70,14 @@ public class DataManageController extends BaseController {
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes=MediaType.MULTIPART_FORM_DATA_VALUE,
             method= RequestMethod.POST)
-    public @ModelAttribute("status") String uploadProductDateFromCSV(HttpServletRequest request){
+    public ModelAndView uploadProductDataFromCSV(HttpServletRequest request) throws Exception {
         String statusMessage = "File uploaded Successfully.";
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if(!isMultipart){
             System.out.println("Not Multipart!!!");
-            return null;
+            throw new Exception("Required multipart form input");
         }
+        ModelAndView mav= new ModelAndView("fileselection");
         // Create a factory for disk-based file items
         DiskFileItemFactory factory = new DiskFileItemFactory();
         // 1 MB is the file size limit.
@@ -88,21 +89,34 @@ public class DataManageController extends BaseController {
         // Create a new file upload handler
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setSizeMax(1048576*2);
+        String uploadedFileName = null;
         try {
             // Parse the request
             List<FileItem> items = upload.parseRequest(request);
             Map<String, Object> map = createProduct(items);
             List<ProductData> productData = (List<ProductData>) map.get("productData");
+
             Map<String, String> formFields = (Map<String, String>) map.get("formFields");
+            uploadedFileName = formFields.get("filePath");
             productRepository.saveProducts(productData, formFields.get(VAR_COMP_NAME), formFields.get(VAR_UNIT_NO) );
         } catch (FileUploadException ex) {
             logger.error("Error while uploading the CSV", ex);
             statusMessage = "An error occurred while uploading CSV";
+            mav.addObject("status", statusMessage);
+            mav.addObject("flag", "red");
+            return mav;
         } catch (Exception e) {
             logger.error("Error while uploading the CSV", e);
             statusMessage = "An error occurred while uploading CSV";
+            mav.addObject("status", statusMessage);
+            mav.addObject("flag", "red");
+            return mav;
         }
-        return statusMessage;
+
+        mav.addObject("status", statusMessage);
+        mav.addObject("flag", "green");
+        mav.addObject("file", uploadedFileName );
+        return mav;
     }
 
     private Map<String, Object> createProduct(List<FileItem> items) throws Exception {
@@ -183,6 +197,9 @@ public class DataManageController extends BaseController {
             }
             if(name !=null && name.equalsIgnoreCase(VAR_UNIT_NO)){
                 formFields.put(VAR_UNIT_NO, item.getString());
+            }
+            if(name !=null && name.equalsIgnoreCase("path")){
+                formFields.put("filePath", item.getString());
             }
 
         }

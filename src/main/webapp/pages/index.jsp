@@ -23,7 +23,7 @@
 	    	<span>Please sign in</span>
 		</div>
 		<div>
-		    <span style="float:left">
+		    <span style="float:left;color:red;font-size: 13px;">
 		        <c:if test="${message ne null}">
 		            <c:out value="${message}"> </c:out>
 		        </c:if>

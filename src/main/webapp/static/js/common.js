@@ -49,4 +49,7 @@ $(document).ready(function() {
             $("#common-form").attr("method", "POST");
             $("#common-form").submit();
     });
+    $('#myfile').change(function(){
+    		$('#path').val($(this).val());
+    });
 });

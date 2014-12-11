@@ -1,0 +1,32 @@
+.form input[type="file"]{
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    opacity: 0;
+    filter: alpha(opacity = 0);-ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+    width:125px;
+    height:31px;
+    left:0;
+    overflow:hidden;
+}
+
+.add-photo-btn{
+    position:relative;
+    cursor:pointer;
+    text-align:center;
+    background-color:#83b81a;
+    color:#fff;display:inline-block;
+    width:125px;
+    height:31px;
+    font-size:18px;
+    line-height:30px;
+
+}
+input[type="text"]{
+
+}
