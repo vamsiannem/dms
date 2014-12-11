@@ -57,7 +57,7 @@
     <div>
 
 	<div style="float:left;" id="statusMessage">
-        <span style='color:<c:out value="${flag}"> </c:out>;font-size: 13px;'>
+        <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
                 <c:out value="${status}"> </c:out>
         </span>
 	</div>
