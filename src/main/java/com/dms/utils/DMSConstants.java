@@ -5,4 +5,5 @@ package com.dms.utils;
  */
 public interface DMSConstants {
     static final String SESSION_USER = "USER";
+    String PACKAGE_ROOT = "com.dms";
 }

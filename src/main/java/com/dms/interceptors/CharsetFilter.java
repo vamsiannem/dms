@@ -17,7 +17,7 @@ public class CharsetFilter implements Filter {
 		//servletResponse.setContentType("text/html; charset=UTF-8");
 
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		response.setHeader("cache-control", "no-cache, no-store");
+		//response.setHeader("cache-control", "no-cache, no-store");
 		filterChain.doFilter(servletRequest, servletResponse);
 	}
 

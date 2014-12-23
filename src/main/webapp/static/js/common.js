@@ -10,6 +10,7 @@ $(document).ready(function() {
         var contextPath = $("#common-form").attr("action");
         $("#common-form").attr("action", contextPath+"/api/product");
         $("#common-form").attr("method", "GET");
+        $("#common-form").attr("accept", "application/json");
         $("#common-form").submit();
     });
     $("#list_10").click(function() {
@@ -52,4 +53,17 @@ $(document).ready(function() {
     $('#myfile').change(function(){
     		$('#path').val($(this).val());
     });
+
 });
+
+function appendNewData2Dropdown(dropdownId, dataArray, emptyExistingOptions){
+    var dropdown = "#"+dropdownId;
+    if(emptyExistingOptions) {
+        $(dropdown).empty();
+    }
+    $.each(dataArray, function (index, item) {
+        $(dropdown).append(
+            $('<option></option>').val(item).html(item)
+        );
+    });
+}

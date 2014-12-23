@@ -27,6 +27,10 @@ public interface ProductRepository {
      */
     List<ProductData> getDataForProduct(String companyName);
 
+    List<ProductData> getDataForProduct(String companyName, String unitSerialNo);
+
+    List<ProductData> getUnitListByCompany(String companyName);
+
     /**
      * File Uploaded for a company is persisted in product tables.
      */

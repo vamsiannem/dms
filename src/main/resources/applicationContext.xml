@@ -7,7 +7,7 @@
 	             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="com.dms.repository, com.dms.interceptors"  />
+    <context:component-scan base-package="com.dms.repository, com.dms.interceptors, com.dms.utils"  />
     <context:property-placeholder location="classpath:db.properties" />
 
     <bean
@@ -63,4 +63,7 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"
                           proxy-target-class="true" />
+
+    <bean id="jsonObject" class="org.json.JSONObject" scope="prototype" />
+    <bean id="jsonArray" class="org.json.JSONArray" scope="prototype" />
 </beans>

@@ -4,6 +4,8 @@
  */
 package com.dms.model;
 
+import com.dms.annotation.Json;
+
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
  * Uploaded CSV data model class.
  * @author vamsikrishna_a
  */
+
 @Entity
 @Table(name="product_data")
 public class ProductData implements Serializable {
@@ -71,6 +74,7 @@ public class ProductData implements Serializable {
     @Column(name="line_phase")
     private Double linePhase;
 
+    @Json
     public Long getId() {
         return id;
     }
@@ -79,6 +83,7 @@ public class ProductData implements Serializable {
         this.id = id;
     }
 
+    @Json
     public String getCompanyName() {
         return companyName;
     }
@@ -87,6 +92,7 @@ public class ProductData implements Serializable {
         this.companyName = companyName;
     }
 
+    @Json
     public String getUnitSerialNo() {
         return unitSerialNo;
     }
@@ -95,6 +101,7 @@ public class ProductData implements Serializable {
         this.unitSerialNo = unitSerialNo;
     }
 
+    @Json
     public String getTime() {
         return time;
     }
@@ -103,6 +110,7 @@ public class ProductData implements Serializable {
         this.time = time;
     }
 
+    @Json
     public String getvNetAddress() {
         return vNetAddress;
     }
@@ -111,6 +119,7 @@ public class ProductData implements Serializable {
         this.vNetAddress = vNetAddress;
     }
 
+    @Json
     public Integer getType() {
         return type;
     }
@@ -119,6 +128,7 @@ public class ProductData implements Serializable {
         this.type = type;
     }
 
+    @Json
     public String getStatus() {
         return status;
     }
@@ -127,6 +137,7 @@ public class ProductData implements Serializable {
         this.status = status;
     }
 
+    @Json
     public Double getLimImbalance() {
         return limImbalance;
     }
@@ -135,6 +146,7 @@ public class ProductData implements Serializable {
         this.limImbalance = limImbalance;
     }
 
+    @Json
     public Double getLimResistance() {
         return limResistance;
     }
@@ -143,6 +155,7 @@ public class ProductData implements Serializable {
         this.limResistance = limResistance;
     }
 
+    @Json
     public String getLimCapacitance() {
         return limCapacitance;
     }
@@ -151,6 +164,7 @@ public class ProductData implements Serializable {
         this.limCapacitance = limCapacitance;
     }
 
+    @Json
     public Double getLimResistanceCm() {
         return limResistanceCm;
     }
@@ -159,6 +173,7 @@ public class ProductData implements Serializable {
         this.limResistanceCm = limResistanceCm;
     }
 
+    @Json
     public String getLimCapacitanceCm() {
         return limCapacitanceCm;
     }
@@ -167,6 +182,7 @@ public class ProductData implements Serializable {
         this.limCapacitanceCm = limCapacitanceCm;
     }
 
+    @Json
     public Double getLineVoltage() {
         return lineVoltage;
     }
@@ -175,6 +191,7 @@ public class ProductData implements Serializable {
         this.lineVoltage = lineVoltage;
     }
 
+    @Json
     public Double getLineCurrent() {
         return lineCurrent;
     }
@@ -183,6 +200,7 @@ public class ProductData implements Serializable {
         this.lineCurrent = lineCurrent;
     }
 
+    @Json
     public Double getLineFrequency() {
         return lineFrequency;
     }
@@ -191,6 +209,7 @@ public class ProductData implements Serializable {
         this.lineFrequency = lineFrequency;
     }
 
+    @Json
     public Double getLinePhase() {
         return linePhase;
     }

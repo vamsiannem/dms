@@ -8,11 +8,14 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.dms.model.ProductData;
 import com.dms.repository.ProductRepository;
 import com.dms.utils.DefaultString;
+import com.dms.utils.JsonBuilder;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +36,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,9 +60,13 @@ public class DataManageController extends BaseController {
     private Random random = new Random(100000);
     private static final String VAR_COMP_NAME = "companyName";
     private static final String VAR_UNIT_NO = "unitSerialNo";
+    ObjectMapper mapper = new ObjectMapper();
 
     @Resource
     private ProductRepository productRepository;
+
+    @Resource
+    private JsonBuilder jsonBuilder;
 
 
     @RequestMapping(value="/upload/view", method = RequestMethod.POST)
@@ -212,10 +220,25 @@ public class DataManageController extends BaseController {
     @RequestMapping(
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             method= RequestMethod.GET)
-    public ModelAndView getAvailableProducts(){
+    public ModelAndView getAvailableProducts() throws IOException {
         ModelAndView mav = new ModelAndView("networks");
-        mav.addObject("companies", productRepository.getAllCompanies());
-        mav.addObject("products", productRepository.getAllAvailableProducts());
+        mav.addObject("companies", mapper.writeValueAsString(productRepository.getAllCompanies()));
+        mav.addObject("products", mapper.writeValueAsString(productRepository.getAllAvailableProducts()));
+        return mav;
+    }
+
+    /**
+     * List all Networks based on companyName and unitSerialNo
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value= "/data/{companyName}/{unitSerialNo}",
+            produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            method= RequestMethod.GET)
+    public ModelAndView getDataForProductNUnit(@PathVariable("companyName") String companyName,
+                                               @PathVariable("unitSerialNo") String unitSerialNo) throws IOException {
+        ModelAndView mav = new ModelAndView("networks");
+        mav.addObject("products", mapper.writeValueAsString(productRepository.getDataForProduct(companyName, unitSerialNo)));
         return mav;
     }
 
@@ -225,6 +248,14 @@ public class DataManageController extends BaseController {
             method= RequestMethod.GET)
     public List<ProductData> getDataForProduct(@PathVariable("companyName") String companyName){
         return productRepository.getDataForProduct(companyName);
+    }
+
+    @RequestMapping(value= "/{companyName}/unitSerialNo",
+            produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            method= RequestMethod.GET)
+    public List<ProductData> getUnitListByCompany(@PathVariable("companyName") String companyName){
+        return productRepository.getUnitListByCompany(companyName);
     }
 
 
