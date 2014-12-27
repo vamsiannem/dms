@@ -78,5 +78,14 @@ function applySelectEventForDataTable(tableId, table){
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
             }
+            var companyName = $("#companyName").val();
+            var unitSerialNo = $("#unitSerialNo").val();
+            var contextPath = $("#common-form").attr("action");
+            $("#common-form").attr("action", contextPath+"/api/graph");
+            $("#common-form").attr("method", "GET");
+            $("#frm_companyName").val(companyName);
+            $("#frm_unitSerialNo").val(unitSerialNo);
+            $("#common-form").submit();
     });
+
 }

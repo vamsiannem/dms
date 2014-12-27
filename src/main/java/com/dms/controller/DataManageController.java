@@ -68,7 +68,6 @@ public class DataManageController extends BaseController {
     @Resource
     private JsonBuilder jsonBuilder;
 
-
     @RequestMapping(value="/upload/view", method = RequestMethod.POST)
     public ModelAndView renderProductUploadView(){
         ModelAndView mav = new ModelAndView("fileselection");

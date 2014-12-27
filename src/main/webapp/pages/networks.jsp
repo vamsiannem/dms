@@ -12,7 +12,7 @@
       	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/folder-tree-static.js"></script>
       	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/context-menu.js"></script>
       	 <!-- jQuery -->
-        <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jquery-1.11.1.js"></script>
 
       	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
 
@@ -88,8 +88,8 @@
             <select name="unitSerialNo"  id="unitSerialNo" class="input_field"></select>
         </div>
 
-	    <div style="padding: 10px; border: 1px solid #343434; margin: 5px; overflow:hidden;  ">
-	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="networks_table" width="90%"></table>
+	    <div id="table_div" style="padding: 10px; border: 1px solid #343434; margin: 5px; overflow:hidden;  ">
+	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="networks_table" width="95%"></table>
 	    </div>
 
     </div>
@@ -99,7 +99,10 @@
 	<span class="contactus"><a href="" style="color:#aaa">Contact Us</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Terms of use</a></span>
 </div>
 <div>
-    <form name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post"></form>
+    <form style="visibility:hidden" name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post">
+        <input type="hidden" name="frm_companyName" id="frm_companyName" />
+        <input type="hidden" name="frm_unitSerialNo" id="frm_unitSerialNo" />
+    </form>
  </div>
 </body>
 </html>
