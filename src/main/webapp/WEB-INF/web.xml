@@ -61,7 +61,7 @@
 
     <error-page>
         <error-code>401</error-code>
-        <location>/accessDenied.html</location>
+        <location>/pages/index.jsp</location>
     </error-page>
 
     <session-config>
