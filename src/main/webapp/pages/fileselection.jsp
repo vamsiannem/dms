@@ -21,7 +21,7 @@
 <div class="header1">
 	<span style="float:left"><img src="" style="color:#aaa"/></span>
 	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
-	<h2>Upload Product Data</h2>
+	<h2>Upload Unit Data</h2>
 
 </div>
 <div>
@@ -50,6 +50,8 @@
     				</li>
     				<li><a href="#" id="list_32">Notification</a>
     				</li>
+    				<li><a href="#" id="list_33">Remote Unit Config</a>
+                    </li>
     			</ul>
     		</li>
     	</ul>
@@ -68,15 +70,13 @@
 
 </div>
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
+    <div><h3 style="text-align:center">Upload CSV Data</h3></div>
     <div style="float:left;width: 600px;height: 350px;border: 2px solid #fff;"><span style="padding:5px;">
       <div>
-        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/product/upload" method="post" enctype="multipart/form-data">
+        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/upload" method="post" enctype="multipart/form-data">
             <div class="content">
                 <div>
-                    <input type="text" name="companyName" class="input_field" placeholder="Company Name">
-                </div>
-                <div>
-                    <input type="text" name="unitSerialNo" class="input_field" placeholder="Unit Serial No">
+                    <input type="text" name="projectId" class="input_field" placeholder="Project ID" title="Enter Network Unit's Project Id">
                 </div>
                 <div>
                     <p class="form">

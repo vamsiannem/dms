@@ -23,8 +23,7 @@
         <!-- DataTables -->
         <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
       	<script language="javascript" type="text/javascript">
-      	    var companies= JSON.parse('${companies}');
-      	    var products= JSON.parse('${products}');
+      	    var networkUnits= JSON.parse('${networkUnits}');
         </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/networks_script.js"></script>
 </head>
@@ -33,7 +32,7 @@
 <div class="header1">
 	<span style="float:left"><img src="" style="color:#aaa"/></span>
 	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
-	<h2>Data Management</h2>
+	<h2>Network Units</h2>
 
 </div>
 <div>
@@ -62,6 +61,8 @@
     				</li>
     				<li><a href="#" id="list_32">Notification</a>
     				</li>
+    				<li><a href="#" id="list_33">Remote Unit Config</a>
+                    </li>
     			</ul>
     		</li>
     	</ul>
@@ -82,14 +83,10 @@
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
-	    <div><h3 style="text-align:center">List of Networks</h3></div>
-	    <div style="padding:5px;">
-            <select name="companyName" id="companyName" class="input_field"></select>
-            <select name="unitSerialNo"  id="unitSerialNo" class="input_field"></select>
-        </div>
-
-	    <div id="table_div" style="padding: 10px; border: 1px solid #343434; margin: 5px; overflow:hidden;  ">
-	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="networks_table" width="95%"></table>
+	    <div><h3 style="text-align:center">List of Network Units</h3></div>
+        <div style=""> </div>
+	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
+	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="network_unit_table" width="95%"></table>
 	    </div>
 
     </div>
@@ -100,8 +97,6 @@
 </div>
 <div>
     <form style="visibility:hidden" name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post">
-        <input type="hidden" name="frm_companyName" id="frm_companyName" />
-        <input type="hidden" name="frm_unitSerialNo" id="frm_unitSerialNo" />
     </form>
  </div>
 </body>

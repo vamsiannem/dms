@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. All Rights Reserved
+ */
+
 package com.dms.repository;
 
 import com.dms.model.Permission;
@@ -118,9 +122,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void createRole(String roleName, List<Integer> permissionIds){
         Session session = sessionFactory.getCurrentSession();
         Set<Permission> permissions = new HashSet<Permission>(permissionIds.size());
-        for(Integer pId: permissionIds){
             permissions.addAll(session.createCriteria(Permission.class).add(Restrictions.in("id", permissionIds)).list());
-        }
         Role role = new Role();
         role.setName(roleName);
         role.setPermissions(permissions);
@@ -131,9 +133,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateRole(Integer roleId, List<Integer> permissionIds){
         Session session = sessionFactory.getCurrentSession();
         Set<Permission> permissions = new HashSet<Permission>(permissionIds.size());
-        for(Integer pId: permissionIds){
             permissions.addAll(session.createCriteria(Permission.class).add(Restrictions.in("id", permissionIds)).list());
-        }
         Role role = getRole(roleId);
         if(role != null) {
             role.setPermissions(permissions);

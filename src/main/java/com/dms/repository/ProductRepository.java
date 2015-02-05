@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2015. All Rights Reserved
+ */
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -27,14 +31,14 @@ public interface ProductRepository {
      */
     List<ProductData> getDataForProduct(String companyName);
 
-    List<ProductData> getDataForProduct(String companyName, String unitSerialNo);
+   // List<ProductData> getDataForProduct(String companyName, String unitSerialNo);
 
-    List<ProductData> getUnitListByCompany(String companyName);
+  //  List<ProductData> getUnitListByCompany(String companyName);
 
     /**
      * File Uploaded for a company is persisted in product tables.
      */
-    void saveProducts(List<ProductData> productDataList, String companyName, String unitSerialNo);
+    void saveProducts(List<ProductData> productDataList, String projectId);
 
-    List<String> getAllCompanies();
+   // List<String> getAllCompanies();
 }

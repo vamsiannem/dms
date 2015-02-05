@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. All Rights Reserved
+ */
+
 package com.dms.controller;
 
 import com.dms.model.ProductData;
@@ -42,11 +46,10 @@ public class NavigationController extends BaseController {
         return mav;
     }
 
-    @RequestMapping(value="/graph", method = RequestMethod.GET)
-    public ModelAndView renderGraphView(@RequestParam("frm_companyName") String companyName,
-                                        @RequestParam("frm_unitSerialNo") String unitSerialNo) throws IOException {
-        ModelAndView mav = new ModelAndView("network");
-        List<ProductData> products =  productRepository.getDataForProduct(companyName, unitSerialNo);
+    @RequestMapping(value="/graph", method = RequestMethod.POST)
+    public ModelAndView renderGraphView(@RequestParam("frm_projectId") String projectId) throws IOException {
+        ModelAndView mav = new ModelAndView("network_graph");
+        List<ProductData> products =  productRepository.getDataForProduct(projectId);
         List<Object[]> plotGraphData = new ArrayList<Object[]>(products.size());
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(9);
@@ -76,7 +79,10 @@ public class NavigationController extends BaseController {
 
         mav.addObject("products", mapper.writeValueAsString(products));
         mav.addObject("plotData", mapper.writeValueAsString(plotGraphData));
-
+        if(products!=null && products.size()>0){
+            mav.addObject("companyName", products.get(0).getNetworkUnit().getCompanyName());
+            mav.addObject("unitSerialNo", products.get(0).getNetworkUnit().getUnitSerialNo());
+        }
         return mav;
     }
 

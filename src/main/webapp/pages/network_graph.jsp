@@ -24,7 +24,7 @@
         var plotData= JSON.parse('${plotData}');
         var products= JSON.parse('${products}');
     </script>
-    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/network.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/network_graph.js"></script>
 
 
     <!-- <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script> -->
@@ -63,6 +63,8 @@
                     </li>
                     <li><a href="#" id="list_32">Notification</a>
                     </li>
+    				<li><a href="#" id="list_33">Remote Unit Config</a>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -75,7 +77,6 @@
         </span>
     </div>
 
-	<div style="float:left;font-size:20px;padding-left: 15px">Hold</div>
 	<div style="float:right;padding-right: 15px;"><input type="submit" name="submit" value="Page buttons" class="button" /></div>
 	</div>
 	<div style="border-bottom: 2px solid #cfcfcf;border-radius: 3px 3px 0 0;padding-top: 52px">
@@ -84,8 +85,9 @@
 </div>
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
     <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;">
-	    <div>Network Status Graph</div>
-	    <div id="resizable"> <div id="chart1">  </div> </div>
+        <div style="text-align:center">Network Status Graph</div>
+        <div style="margin-left:25px;">Name: ${companyName}  | Unit Serial#: ${unitSerialNo}</div>
+        <div style="margin: 25px;  border: 1px solid #ffafa4;" id="resizable"> <div id="chart1">  </div> </div>
     </div>&nbsp;
     <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
 	Monthly Reports

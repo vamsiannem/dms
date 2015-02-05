@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2015. All Rights Reserved
+ */
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,12 +11,7 @@ package com.dms.model;
 import com.dms.annotation.Json;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *
@@ -24,16 +23,14 @@ import javax.persistence.Table;
 @Table(name="product_data")
 public class ProductData implements Serializable {
 
+    @ManyToOne(optional = false, targetEntity = NetworkUnit.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "unit_project_id", referencedColumnName = "project_id", nullable = false)
+    private NetworkUnit networkUnit;
+
     @Id
     @Column(name="id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-
-    @Column(name="company_name", nullable=false)
-    private String companyName;
-
-    @Column(name="unit_serial_no", nullable=false)
-    private String unitSerialNo;
 
     @Column( name="time")
     private String time;
@@ -81,24 +78,6 @@ public class ProductData implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Json
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    @Json
-    public String getUnitSerialNo() {
-        return unitSerialNo;
-    }
-
-    public void setUnitSerialNo(String unitSerialNo) {
-        this.unitSerialNo = unitSerialNo;
     }
 
     @Json
@@ -216,5 +195,13 @@ public class ProductData implements Serializable {
 
     public void setLinePhase(Double linePhase) {
         this.linePhase = linePhase;
+    }
+
+    public NetworkUnit getNetworkUnit() {
+        return networkUnit;
+    }
+
+    public void setNetworkUnit(NetworkUnit networkUnit) {
+        this.networkUnit = networkUnit;
     }
 }

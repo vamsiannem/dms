@@ -48,6 +48,8 @@
 				</li>
 				<li><a href="#" id="list_32">Notification</a>
 				</li>
+                <li><a href="#" id="list_33">Remote Unit Config</a>
+                </li>
 			</ul>
 		</li>
 	</ul> 

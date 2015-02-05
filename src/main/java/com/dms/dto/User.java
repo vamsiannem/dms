@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. All Rights Reserved
+ */
+
 package com.dms.dto;
 
 import java.io.Serializable;

@@ -8,26 +8,26 @@ $(document).ready(function() {
     });
     $("#list_of_networks").click(function() {
         var contextPath = $("#common-form").attr("action");
-        $("#common-form").attr("action", contextPath+"/api/product");
+        $("#common-form").attr("action", contextPath+"/api/unit");
         $("#common-form").attr("method", "GET");
         $("#common-form").attr("accept", "application/json");
         $("#common-form").submit();
     });
     $("#list_10").click(function() {
         var contextPath = $("#common-form").attr("action");
-        $("#common-form").attr("action", contextPath+"/api/product");
+        $("#common-form").attr("action", contextPath+"/api/unit");
         $("#common-form").attr("method", "GET");
         $("#common-form").submit();
     });
     $("#list_20").click(function() {
         var contextPath = $("#common-form").attr("action");
-        $("#common-form").attr("action", contextPath+"/api/product/upload/view");
+        $("#common-form").attr("action", contextPath+"/api/unit/data/view");
         $("#common-form").attr("method", "POST");
         $("#common-form").submit();
     });
     $("#list_21").click(function() {
             var contextPath = $("#common-form").attr("action");
-            $("#common-form").attr("action", contextPath+"/api/product/upload/view");
+            $("#common-form").attr("action", contextPath+"/api/unit/data/view");
             $("#common-form").attr("method", "POST");
             $("#common-form").submit();
     });
@@ -44,12 +44,18 @@ $(document).ready(function() {
             $("#common-form").attr("method", "POST");
             $("#common-form").submit();
     });
-     $("#list_31").click(function() {
+     $("#list_32").click(function() {
             var contextPath = $("#common-form").attr("action");
             $("#common-form").attr("action", contextPath+"/api/assets");
             $("#common-form").attr("method", "POST");
             $("#common-form").submit();
     });
+    $("#list_33").click(function() {
+                var contextPath = $("#common-form").attr("action");
+                $("#common-form").attr("action", contextPath+"/api/unit");
+                $("#common-form").attr("method", "POST");
+                $("#common-form").submit();
+        });
     $('#myfile').change(function(){
     		$('#path').val($(this).val());
     });

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. All Rights Reserved
+ */
+
 package com.dms.repository;
 
 import com.dms.model.Permission;
