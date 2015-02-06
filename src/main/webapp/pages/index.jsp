@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>
-        DMS - Data Management Software
+        DMS - Data Management System
     </title>
 
     <link rel="stylesheet" type="text/css" href="../static/css/sample_style.css" />

@@ -19,9 +19,11 @@
 
         <!-- DataTables CSS -->
         <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.css">
-
+        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/jquery-ui.css">
         <!-- DataTables -->
         <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" charset="utf8" src="<%= request.getContextPath() %>/static/js/jquery-ui.js"></script>
+
       	<script language="javascript" type="text/javascript">
       	    var networkUnits= JSON.parse('${networkUnits}');
         </script>
@@ -84,12 +86,45 @@
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
 	    <div><h3 style="text-align:center">List of Network Units</h3></div>
-        <div style=""> </div>
+
+    <div id="dialog-form" title="Create New Project">
+        <p class="validateTips">All form fields are required.</p>
+        <form>
+            <fieldset >
+                <div>
+                <label class='dialog-label' for="projectId">Project ID</label>
+                <input type="text" name="projectId" id="projectId" value="" class="text ui-widget-content ui-corner-all">
+                <label class='dialog-label' for="client">Client</label>
+                <input type="text" name="client" id="client" value=""  class="text ui-widget-content ui-corner-all">
+                </div>
+                <div>
+                <label class='dialog-label' for="platform">Platform</label>
+                <input type="text" name="platform" id="platform" value="" class="text ui-widget-content ui-corner-all">
+
+                <label class='dialog-label' for="controlSystem">Control System</label>
+                <input type="text" name="controlSystem" id="controlSystem" value="" class="text ui-widget-content ui-corner-all">
+                </div>
+                <div>
+                <label class='dialog-label' for="channel">Channel</label>
+                <input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all">
+                <label class='dialog-label' for="ipAddress">IP Address</label>
+                <input type="text" name="ipAddress" id="ipAddress" value="" class="text ui-widget-content ui-corner-all">
+                </div>
+                <div>
+                <label class='dialog-label' for="unitSerialNo">Unit Serial No:</label>
+                <input type="text" name="unitSerialNo" id="unitSerialNo" value="" class="text ui-widget-content ui-corner-all">
+                </div>
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+    <button id="create-project" class='button'>New Project</button>
 	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
 	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="network_unit_table" width="95%"></table>
 	    </div>
-
     </div>
+
 </div>
 <div class="footer1">
 	<span class="copylink">copyright A @ 2004-2015. All Rights reserved</span>
