@@ -5,6 +5,7 @@
 package com.dms.controller;
 
 import com.dms.model.ProductData;
+import com.dms.repository.NetworkUnitRepository;
 import com.dms.repository.ProductRepository;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
@@ -34,9 +35,17 @@ public class NavigationController extends BaseController {
     @Resource
     private ProductRepository productRepository;
 
+    @Resource
+    private NetworkUnitRepository unitRepository;
+
     @RequestMapping(value="/home", method = RequestMethod.POST)
     public ModelAndView renderDashboardView(){
         ModelAndView mav = new ModelAndView("dashboard");
+        try {
+            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+        } catch (IOException e) {
+            //
+        }
         return mav;
     }
 

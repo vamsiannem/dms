@@ -4,7 +4,7 @@ $(document).ready(function() {
                data: networkUnits,
                columns: [
                    {data: 'projectId', title: 'ProjectID', class: 'center'},
-                   {data: 'companyName', title: 'Client', class: 'center'},
+                   {data: 'companyName', title: 'Client', class: 'center', "width": "15%"},
                    {data: 'platform', title: 'Platform', class: 'center'},
                    {data: 'controlSystem', title: 'Control System', class: 'center'},
                    {data: 'channel', title: 'Channel', class: 'center'},
