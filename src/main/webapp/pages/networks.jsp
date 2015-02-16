@@ -28,6 +28,7 @@
       	    var networkUnits= JSON.parse('${networkUnits}');
         </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/networks_script.js"></script>
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/networks.css" type="text/css">
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
@@ -85,7 +86,7 @@
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
-    <div id="dialog-form" title="Create New Project">
+    <div id="dialog-form" title="Create New Project" style="background: url('../images/bg.png')">
         <p class="validateTips">All form fields are required.</p>
         <form>
             <fieldset >
