@@ -2,11 +2,14 @@ $(document).ready(function() {
 
   var table_config = {
      data: networkUnits,
-     "paging":   false,
      "searching": false,
      "sort": false,
+     "info": false,
+     "pageLength": 5,
+     "lengthMenu": [ [5], [5] ],
      columns: [
          {data: 'projectId', title: 'ProjectID', class: 'center'},
+         {data: 'companyName', title: 'Client', class: 'center'},
          {data: 'platform', title: 'Platform', class: 'center'},
          {data: 'controlSystem', title: 'Control System', class: 'center'},
          {data: 'channel', title: 'Channel', class: 'center'},
@@ -29,10 +32,7 @@ function applySelectEventForDataTable(tableId, table){
             }
             var columns = $(this).find('td');
             var projectId = $(columns[0]).text();
-            var contextPath = $("#common-form").attr("action");
-            $("#common-form").attr("action", contextPath+"/api/unit/data/"+ projectId);
-            $("#common-form").attr("method", "GET");
-            $("#common-form").submit();
+            getNodesList(projectId);
     });
 
 }

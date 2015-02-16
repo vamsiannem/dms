@@ -23,6 +23,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,34 +77,7 @@ public class ProductRepositoryImpl implements ProductRepository{
         return createProductsList(query.list());
     }
 
-  /*  @Override
-    public List<ProductData> getDataForProduct(String companyName, String unitSerialNo) {
-        Session session = sessionFactory.getCurrentSession();
-        Criteria query = session.createCriteria(ProductData.class)
-                .add(Restrictions.eq("networkUnit.projectId", companyName))
-                .addOrder(Order.asc("companyName"))
-                //.addOrder(Order.desc("unitSerialNo"))
-                .setMaxResults(MAX_RESULTS)
-                .setProjection(Projections.projectionList()
-                        .add(Projections.property("time"))
-                        .add(Projections.property("vNetAddress"))
-                        .add(Projections.property("type"))
-                        .add(Projections.property("status"))
-                        .add(Projections.property("limImbalance"))
-                        .add(Projections.property("limResistance"))
-                        .add(Projections.property("limCapacitance")));
 
-        return createProductsList(query.list());
-    }
-
-    @Override
-    public List<ProductData> getUnitListByCompany(String companyName) {
-        Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria(ProductData.class);
-        criteria.setProjection(Projections.distinct(Projections.property("unitSerialNo")));
-        criteria.add(Restrictions.eq("companyName", companyName));
-        return criteria.list();
-    }*/
       @Override
     public void saveProducts(List<ProductData> productDataList, String projectId) {
         Session session = sessionFactory.getCurrentSession();
@@ -113,13 +87,19 @@ public class ProductRepositoryImpl implements ProductRepository{
         }
     }
 
-    /*@Override
-    public List<String> getAllCompanies(){
+    @Override
+    public List<String> getVNetAddress(String projectId) {
         Session session = sessionFactory.getCurrentSession();
-        Criteria criteria = session.createCriteria( ProductData.class );
-        criteria.setProjection(Projections.distinct(Projections.property("companyName")));
-        return criteria.list();
-    }*/
+        Criteria query = session.createCriteria(ProductData.class)
+                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                .add(Restrictions.eq("nu.projectId", projectId))
+                .addOrder(Order.desc("vNetAddress"))
+                .setMaxResults(MAX_RESULTS)
+                .setProjection(Projections.distinct(Projections.projectionList()
+                        .add(Projections.property("vNetAddress"))));
+                //.setResultTransformer(Transformers.aliasToBean(String.class));
+        return query.list();
+    }
 
     private List<ProductData> createProductsList(List<Object[]> results){
 

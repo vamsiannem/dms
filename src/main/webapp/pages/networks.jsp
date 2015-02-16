@@ -34,7 +34,7 @@
 <div class="header1">
 	<span style="float:left"><img src="" style="color:#aaa"/></span>
 	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
-	<h2>Network Units</h2>
+	<h2>V-IR SYSTEMS OVERVIEW</h2>
 
 </div>
 <div>
@@ -76,7 +76,7 @@
                 <c:out value="${status}"> </c:out>
         </span>
     </div>
-	<div style="float:right;padding-right: 15px;"><input type="submit" name="submit" value="Page buttons" class="button" /></div>
+	<div style="float:right;padding: 5px 25px 5px 5px;"><button id="create-project" class='button'>New Project</button></div>
 	</div>
 	<div style="border-bottom: 2px solid #cfcfcf;border-radius: 3px 3px 0 0;padding-top: 52px">
 	</div>
@@ -85,8 +85,6 @@
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
-	    <div><h3 style="text-align:center">List of Network Units</h3></div>
-
     <div id="dialog-form" title="Create New Project">
         <p class="validateTips">All form fields are required.</p>
         <form>
@@ -119,7 +117,6 @@
             </fieldset>
         </form>
     </div>
-        <button id="create-project" class='button'>New Project</button>
 	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
 	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="network_unit_table" width="95%"></table>
 	    </div>
@@ -132,6 +129,7 @@
 </div>
 <div>
     <form style="visibility:hidden" name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post">
+        <input type="hidden" id="frm_projectId" name="frm_projectId">
     </form>
  </div>
 </body>

@@ -33,7 +33,7 @@
 <div class="header1">
 	<span style="float:left"><img src="" style="color:#aaa"/></span>
 	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
-	<h2>Network Image - ${companyName} </h2>
+	<h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel} </h2>
 
 </div>
 <div>
@@ -84,8 +84,6 @@
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
-	    <div><h3 style="text-align:center">Network Image </h3></div>
-	    <div style="margin-left:25px;">Name: ${companyName}  | Unit Serial#: ${unitSerialNo}</div>
 	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
 	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="networks_table" width="95%"></table>
 	    </div>

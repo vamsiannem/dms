@@ -91,7 +91,9 @@ public class NavigationController extends BaseController {
         if(products!=null && products.size()>0){
             mav.addObject("companyName", products.get(0).getNetworkUnit().getCompanyName());
             mav.addObject("unitSerialNo", products.get(0).getNetworkUnit().getUnitSerialNo());
+            mav.addObject("node", products.get(0).getvNetAddress());
         }
+        mav.addObject("network_unit", unitRepository.getUnitIfo(projectId));
         return mav;
     }
 

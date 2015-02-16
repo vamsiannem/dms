@@ -73,3 +73,48 @@ function appendNewData2Dropdown(dropdownId, dataArray, emptyExistingOptions){
         );
     });
 }
+
+//var base_url =
+var getNodesList = function(projectId) {
+    var request = $.ajax({
+      url: "unit/"+projectId+"/node.json",
+      type: "GET",
+      dataType: "json"
+    });
+
+    request.done(function( response ) {
+      if( typeof response === 'object' && typeof(response.nodes) != 'undefined'){
+        var nodes = response.nodes;
+        if(nodes.length ==0){
+           $("#statusMessage").html("No Data Log available for Project:"+ projectId+", Please sync the data first.")
+        }
+        if(nodes.length == 1){
+            showNetworkGraph(projectId);
+        } else {
+            showNetworkImage(projectId);
+        }
+      } else {
+        $("#statusMessage").html("Unknown error has occurred.");
+      }
+    });
+
+    request.fail(function( jqXHR, textStatus ) {
+      console.log( "Request failed: " + textStatus );
+      $("#statusMessage").html("Unable to Fetch Nodes for Project:"+ projectId)
+    });
+}
+
+var showNetworkImage = function(projectId){
+    var contextPath = $("#common-form").attr("action");
+    $("#common-form").attr("action", contextPath+"/api/unit/data/"+ projectId);
+    $("#common-form").attr("method", "GET");
+    $("#common-form").submit();
+}
+
+var showNetworkGraph = function(projectId){
+    var contextPath = $("#common-form").attr("action");
+    $("#common-form").attr("action", contextPath+"/api/graph");
+    $("#common-form").attr("method", "POST");
+    $("#frm_projectId").val(projectId)
+    $("#common-form").submit();
+}

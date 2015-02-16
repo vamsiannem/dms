@@ -9,7 +9,6 @@ $(document).ready(function() {
                    {data: 'controlSystem', title: 'Control System', class: 'center'},
                    {data: 'channel', title: 'Channel', class: 'center'},
                    {data: 'ipAddress', title: 'IP Address', class: 'center'},
-                   {data: 'unitSerialNo', title: 'Unit Serial#', class: 'center'},
                    {data: 'alive', title: 'Status', class: 'center'}
                    ]
                };
@@ -30,10 +29,7 @@ function applySelectEventForDataTable(tableId, table){
             }
             var columns = $(this).find('td');
             var projectId = $(columns[0]).text();
-            var contextPath = $("#common-form").attr("action");
-            $("#common-form").attr("action", contextPath+"/api/unit/data/"+ projectId);
-            $("#common-form").attr("method", "GET");
-            $("#common-form").submit();
+            getNodesList(projectId);
     });
 
 }

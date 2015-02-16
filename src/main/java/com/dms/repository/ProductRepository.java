@@ -41,4 +41,6 @@ public interface ProductRepository {
     void saveProducts(List<ProductData> productDataList, String projectId);
 
    // List<String> getAllCompanies();
+
+    List<String> getVNetAddress(String projectId);
 }

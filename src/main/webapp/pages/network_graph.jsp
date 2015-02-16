@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +35,7 @@
 <div class="header1">
 	<span style="float:left"><img src="" style="color:#aaa"/></span>
 	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
-	<h2>Dashboard</h2>
+	<h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel}-${node} </h2>
 
 </div>
 <div>
@@ -85,8 +86,6 @@
 </div>
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
     <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;">
-        <div style="text-align:center">Network Status Graph</div>
-        <div style="margin-left:25px;">Name: ${companyName}  | Unit Serial#: ${unitSerialNo}</div>
         <div style="margin: 25px;  border: 1px solid #ffafa4;" id="resizable"> <div id="chart1">  </div> </div>
     </div>&nbsp;
     <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
@@ -113,6 +112,3 @@
  </div>
 </body>
 </html>
-
-
-

@@ -368,6 +368,22 @@ public class UnitController extends BaseController {
             mav.addObject("unitSerialNo", productData.get(0).getNetworkUnit().getUnitSerialNo());
         }
         mav.addObject("network_unit_data", mapper.writeValueAsString(productData));
+        mav.addObject("network_unit", unitRepository.getUnitIfo(projectId));
+        return mav;
+    }
+
+    /**
+     * Fetch all nodes for a Network Unit
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value= "/{projectId}/node",
+            produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            method= RequestMethod.GET)
+    public ModelAndView getAllNodes(@PathVariable("projectId") String projectId) throws IOException {
+        ModelAndView mav = new ModelAndView();
+        List<String> nodes = productRepository.getVNetAddress(projectId);
+        mav.addObject("nodes", nodes);
         return mav;
     }
 
