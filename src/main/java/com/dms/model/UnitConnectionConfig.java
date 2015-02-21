@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by support on 31/1/15.
@@ -41,6 +43,9 @@ public class UnitConnectionConfig implements Serializable {
     @Column(name="method")
     private RequestMethod method;
 
+    @Column(name = "body")
+    private String bodyParams;
+
     @OneToOne(mappedBy = "unitConnectionConfig")
     private NetworkUnit networkUnit;
 
@@ -61,8 +66,8 @@ public class UnitConnectionConfig implements Serializable {
         this.url = url;
     }
 
-    public String getHeaders() {
-        return headers;
+    public String[] getHeaders() {
+        return headers!=null ? headers.split(";") : null;
     }
 
     public void setHeaders(String headers) {
@@ -75,5 +80,23 @@ public class UnitConnectionConfig implements Serializable {
 
     public void setMethod(RequestMethod method) {
         this.method = method;
+    }
+
+    public String getBodyParams() {
+        return bodyParams;
+    }
+
+    public void setBodyParams(String bodyParams) {
+        this.bodyParams = bodyParams;
+    }
+
+    public Map<String, ?> getHeadersMap(){
+       String[] _headers = headers!=null ? headers.split(";") : null;
+        Map<String, String> headersMap = new HashMap<String, String>(_headers.length);
+        for(String _header: _headers){
+            String[] keyValue = _header.split(":");
+            headersMap.put(keyValue[0], keyValue[1]);
+        }
+        return headersMap;
     }
 }

@@ -1,0 +1,6 @@
+1. Introduce new column to network unit table.
+2. Hyper link only on Channel not for entire table  on Network Image and dashboard.
+3. Upload csv page update with Network Unit details on it.
+4. Validation for CSV upload - Data duplication check, Check the selection of projectid, 
+	client, control system, channel.
+

@@ -262,7 +262,7 @@ public class UnitController extends BaseController {
                                                   @RequestParam("ipAddress")String ipAddress,
                                                   @RequestParam("unitSerialNo")String unitSerialNo,
                                                   @RequestParam("restUrl")String url,
-                                                  @RequestParam("headers")String headers,
+                                                  @RequestParam("headers") String headers,
                                                   @RequestParam("method")String method) throws Exception {
         String status = "success";
         // plz write validations here for each input field.
@@ -315,7 +315,7 @@ public class UnitController extends BaseController {
                                  @RequestParam("ipAddress")String ipAddress,
                                  @RequestParam("unitSerialNo")String unitSerialNo,
                                  @RequestParam("restUrl")String url,
-                                 @RequestParam("headers")String headers,
+                                 @RequestParam("headers") String headers,
                                  @RequestParam("method")String method) throws Exception {
         String status = "success";
         // plz write validations here for each input field.
