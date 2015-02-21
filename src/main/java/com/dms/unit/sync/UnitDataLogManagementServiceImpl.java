@@ -5,6 +5,7 @@
 package com.dms.unit.sync;
 
 import com.dms.model.NetworkUnit;
+import com.dms.utils.DMSConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,7 +26,9 @@ public class UnitDataLogManagementServiceImpl implements UnitDataLogManagementSe
 
     @Override
     public String getSyncStatus(NetworkUnit unit) {
-        return syncService.isAdhocSyncInProgress(unit.getUnitSerialNo());
+        return syncService.isAdhocSyncInProgress(unit.getUnitSerialNo())
+                ? DMSConstants.ADHOC_SYNC_IN_PROGRESS.replace("%s", unit.getUnitSerialNo()):
+                DMSConstants.ADHOC_SYNC_DONE;
     }
 
     @Override
