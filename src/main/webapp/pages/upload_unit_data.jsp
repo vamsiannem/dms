@@ -27,6 +27,7 @@
 <div>
   <div class='leftNavMenu'>
     <jsp:include page="left_nav.jsp"/>
+
   </div>
     <div>
 
