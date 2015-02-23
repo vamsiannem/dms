@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -16,10 +17,10 @@ public interface UnitSyncRepository {
 
     /**
      * Get last run status for a network unit
-     * @param unitProjectId
+     * @param unitProjectInfoId
      * @return
      */
-    UnitSyncStatus getLastRun(String unitProjectId);
+    UnitSyncStatus getLastRun(Long unitProjectInfoId);
 
     /**
      * Get last run status for all the units.
@@ -44,7 +45,7 @@ public interface UnitSyncRepository {
      * Get last 7 runs sync status. This will help
      * @return
      */
-    public Map<String, Collection<UnitSyncStatus>> getLastWeekSyncStatus();
+    public Map<Long, Collection<UnitSyncStatus>> getLastWeekSyncStatus();
 
 
 

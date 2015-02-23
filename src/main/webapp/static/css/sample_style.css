@@ -30,12 +30,13 @@ BODY STYLING
 }
 
 body {
-	background: url('../images/bg.png');
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	background:#87CEEB ;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", "Lucida Grande", "sans-serif";
 	font-weight:300;
 	text-align: left;
 	text-decoration: none;
-	height: 500px;
+	height: 450px;
+
 }
 
 #wrapper {
@@ -53,7 +54,7 @@ body {
 	right: 25px;
 	bottom: 25px;
 	padding: 5px;
-	
+
 	font-weight: bold;
 	font-size: 11px;
 	text-align: right;
@@ -80,7 +81,7 @@ body {
 	top: 50%;
 	margin-left: -300px;
 	margin-top: -300px;
-	
+
 	background: url(images/gradient.png) no-repeat;
 }
 */
@@ -95,11 +96,11 @@ body {
 	margin-left: -300px;
 	margin-top: -300px;
 	z-index: -2;
-	
-	/* Fallback */ 
-	background-image: url(images/gradient.png); 
-	background-repeat: no-repeat; 
-	
+
+	/* Fallback */
+	background-image: url(images/gradient.png);
+	background-repeat: no-repeat;
+
 	/* CSS3 Gradient */
 	background-image: -webkit-gradient(radial, 0% 0%, 0% 100%, from(rgba(213,246,255,1)), to(rgba(213,246,255,0)));
 	background-image: -webkit-radial-gradient(50% 50%, 40% 40%, rgba(213,246,255,1), rgba(213,246,255,0));
@@ -116,11 +117,11 @@ LOGIN FORM
 	width: 300px;
 	margin: 0 auto;
 	position: relative;
-	
+
 	background: #f3f3f3;
 	border: 1px solid #fff;
 	border-radius: 5px;
-	
+
 	box-shadow: 0 1px 3px rgba(0,0,0,0.5);
 	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
@@ -134,10 +135,16 @@ HEADER
 	padding: 40px 30px 30px 30px;
 }
 .header1 {
-    background-color:black;
-    color:white;
-    text-align:center;
-    padding:30px;
+    background: url('../images/bg3.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #ffffff;
+    text-align: center;
+    height: 80px;
+    line-height:80px;
+    border-bottom: 2px solid #ffffff;
 }
 
 .login-form .header h1 {
@@ -172,17 +179,17 @@ CONTENT
 .login-form .content .input {
 	width: 188px;
 	padding: 15px 25px;
-	
+
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 	font-weight: 400;
 	font-size: 14px;
 	color: #9d9e9e;
 	text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
-	
+
 	background: #fff;
 	border: 1px solid #fff;
 	border-radius: 5px;
-	
+
 	box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
 	-moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
 	-webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
@@ -201,21 +208,21 @@ CONTENT
 .login-form .content .input:focus {
 	background: #dfe9ec;
 	color: #414848;
-	
+
 	box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
 	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
 	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
 }
 
 .user-icon, .pass-icon {
-	
+
 	height: 47px;
 	display: block;
 	position: absolute;
 	left: 0px;
 	padding-right: 2px;
 	z-index: -1;
-	
+
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-bottomleft: 5px;
 	-webkit-border-top-left-radius: 5px;
@@ -224,7 +231,7 @@ CONTENT
 
 .user-icon {
 	top:153px; /* Positioning fix for slide-in, got lazy to think up of simpler method. */
-	background: rgba(65,72,72,0.75) url(images/user-icon.png) no-repeat center;	
+	background: rgba(65,72,72,0.75) url(images/user-icon.png) no-repeat center;
 }
 
 .pass-icon {
@@ -272,19 +279,25 @@ FOOTER
 *******************/
 
 .footer1 {
-    background-color:black;
-    color:white;
+    background: url('../images/bg4.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #ffffff;
     clear:both;
-   padding:28px;	 	 
+    height: 50px;
+    line-height:50px;
+    border-top: 2px solid #ffffff;
 }
 
 .login-form .footer {
 	padding: 25px 30px 20px 30px;
 	overflow: auto;
-	
+
 	background: #d4dedf;
 	border-top: 1px solid #fff;
-	
+
 	box-shadow: inset 0 1px 0 rgba(0,0,0,0.15);
 	-moz-box-shadow: inset 0 1px 0 rgba(0,0,0,0.15);
 	-webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.15);
@@ -292,40 +305,40 @@ FOOTER
 
 /* Login button */
 .login-form .footer .button {
-	
+
 	padding: 11px 25px;
-	
+
 	font-family: 'Bree Serif', serif;
 	font-weight: 300;
 	font-size: 18px;
 	color: #fff;
 	text-shadow: 0px 1px 0 rgba(0,0,0,0.25);
-	
+
 	background: #56c2e1;
 	border: 1px solid #46b3d3;
 	border-radius: 5px;
 	cursor: pointer;
-	
+
 	box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 	-moz-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 	-webkit-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 }
 
 .button {
-	
+
 	padding: 11px 25px;
-	
+
 	font-family: 'Bree Serif', serif;
 	font-weight: 300;
 	font-size: 18px;
 	color: #fff;
 	text-shadow: 0px 1px 0 rgba(0,0,0,0.25);
-	
+
 	background: #56c2e1;
 	border: 1px solid #46b3d3;
 	border-radius: 5px;
 	cursor: pointer;
-	
+
 	box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 	-moz-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 	-webkit-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
@@ -337,12 +350,12 @@ FOOTER
 	float: right;
 	padding: 10px;
 	margin-right: 20px;
-	
+
 	background: #56c2e1;
 	border: 1px solid #46b3d3;
 	border-radius: 5px;
 	cursor: pointer;
-	
+
 	font-family: 'Bree Serif', serif;
 	font-weight: 300;
 	font-size: 18px;
@@ -351,34 +364,32 @@ FOOTER
 }
 
 .form2 .login-help .button {
-	
+
 	padding: 11px 25px;
-	
+
 	font-family: 'Bree Serif', serif;
 	font-weight: 300;
 	font-size: 18px;
 	color: #fff;
 	text-shadow: 0px 1px 0 rgba(0,0,0,0.25);
-	
+
 	background: #56c2e1;
 	border: 1px solid #46b3d3;
 	border-radius: 5px;
 	cursor: pointer;
-	
+
 	box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 	-moz-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 	-webkit-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
 }
 
 .copylink {
-	width: 40%;
+	padding-left: 5px;
 	float:left;
 }
 .contactus {
 	float: right;
-	padding-left:10%;
-	width: 50%;
-	
+	padding-right:5px;
 }
 .login-help {
 	margin: 20px;
@@ -392,9 +403,32 @@ FOOTER
     position: fixed;
     right: 0;
     vertical-align: bottom;
-    width: 265px;  
+    width: 265px;
  }
 
    .dialog-label { display:block; }
   input.text { margin-bottom:12px; width:80; padding: .2em; }
   fieldset { padding:0; border:0; margin-top:25px; }
+
+  .hide_column {display:none}
+
+  .hover_text { text-decoration: underline; text-color:blue; font-style:italic; cursor:pointer }
+
+  .highlight { background-color : #dfdfdf }
+
+  .cursor_point {cursor:pointer}
+
+  .options {padding-right: 10px;float:right; }
+  .ref_option {color:#ffff00;}
+
+  .leftNavMenu {
+    background-color:#87CEEB;
+    height:580px;
+    width:200px;
+    float:left;
+    border-right: 1px solid #ffffff;
+    box-shadow: 5px 5px 2px #888888;
+  }
+.shadow {
+    box-shadow: 6px 6px 7px #888888;
+  }

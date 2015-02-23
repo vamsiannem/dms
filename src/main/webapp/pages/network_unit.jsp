@@ -31,44 +31,15 @@
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
 <div class="header1">
-	<span style="float:left"><img src="" style="color:#aaa"/></span>
-	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
+	<span style="float:left"><img src=""/></span>
+    	<span class='options' ><a href="" class="ref_option">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Help</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Admin</a></span>
 	<h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel} </h2>
 
 </div>
 <div>
-    <div style="background-color:#aaa; height:580px;width:200px;float:left;">
-          <ul id="dhtmlgoodies_tree2" class="dhtmlgoodies_tree">
-            <li><a href="#" id="node_99">Dashboard</a></li>
-    		<li><a href="#" id="node_100">Networks</a>
-    			<ul>
-    				<li><a href="#" id="list_10">List of Networks</a>
-    				</li>
-    			</ul>
-    		</li>
-    		<li><a href="#" id="node_101">Data Management</a>
-    			<ul>
-    				<li><a href="#" id="list_20">Import</a>
-    				</li>
-    				<li><a href="#" id="list_21">exports</a>
-    				</li>
-    			</ul>
-    		</li>
-    		<li><a href="#" id="node_102">Assets</a>
-    			<ul>
-    				<li><a href="#" id="list_30">Maintenance Contracts </a>
-    				</li>
-    				<li><a href="#" id="list_31">Warranties</a>
-    				</li>
-    				<li><a href="#" id="list_32">Notification</a>
-    				</li>
-    				<li><a href="#" id="list_33">Remote Unit Config</a>
-                    </li>
-    			</ul>
-    		</li>
-    	</ul>
-        </div>
-    <div>
+    <div class='leftNavMenu'>
+      <jsp:include page="left_nav.jsp"/>
+    </div>
 
 	<div style="float:left;" id="statusMessage">
         <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
@@ -84,19 +55,19 @@
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
-	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
+	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;font-size:13px; ">
 	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="networks_table" width="95%"></table>
 	    </div>
 
     </div>
 </div>
 <div class="footer1">
-	<span class="copylink">copyright A @ 2004-2015. All Rights reserved</span>
-	<span class="contactus"><a href="" style="color:#aaa">Contact Us</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Terms of use</a></span>
+	<span class="copylink">Copyright @ 20014-2016. All Rights reserved</span>
+	<span class="contactus options"><a class="ref_option" href="">Contact Us</a>&nbsp;&nbsp;&nbsp;<a class="ref_option" href="" >Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a class="ref_option" href="" >Terms of use</a></span>
 </div>
 <div>
     <form style="visibility:hidden" name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post">
-        <input type="hidden" name="frm_projectId" id="frm_projectId" />
+        <input type="hidden" name="frm_projectInfoId" id="frm_projectInfoId" />
     </form>
  </div>
 </body>

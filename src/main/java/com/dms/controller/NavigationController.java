@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -7,8 +8,6 @@ package com.dms.controller;
 import com.dms.model.ProductData;
 import com.dms.repository.NetworkUnitRepository;
 import com.dms.repository.ProductRepository;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,9 +55,9 @@ public class NavigationController extends BaseController {
     }
 
     @RequestMapping(value="/graph", method = RequestMethod.POST)
-    public ModelAndView renderGraphView(@RequestParam("frm_projectId") String projectId) throws IOException {
+    public ModelAndView renderGraphView(@RequestParam("frm_projectInfoId") Long projectInfoId) throws IOException {
         ModelAndView mav = new ModelAndView("network_graph");
-        List<ProductData> products =  productRepository.getDataForProduct(projectId);
+        List<ProductData> products =  productRepository.getDataForProduct(projectInfoId);
         List<Object[]> plotGraphData = new ArrayList<Object[]>(products.size());
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(9);
@@ -93,7 +92,7 @@ public class NavigationController extends BaseController {
             mav.addObject("unitSerialNo", products.get(0).getNetworkUnit().getUnitSerialNo());
             mav.addObject("node", products.get(0).getvNetAddress());
         }
-        mav.addObject("network_unit", unitRepository.getUnitIfo(projectId));
+        mav.addObject("network_unit", unitRepository.getUnitIfo(projectInfoId));
         return mav;
     }
 

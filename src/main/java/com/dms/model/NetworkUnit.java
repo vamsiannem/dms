@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -15,12 +16,11 @@ import java.util.Collection;
 @Table(name = "network_unit")
 public class NetworkUnit implements Serializable {
 
-    /*@Id
-    @Column(name="id")
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;*/
-
     @Id
+    @Column(name="project_info_id")
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long projectInfoId;
+
     @Column(name="project_id", length = 6)
     private String projectId;
 
@@ -51,6 +51,14 @@ public class NetworkUnit implements Serializable {
 
     @OneToMany(mappedBy = "networkUnit", fetch = FetchType.LAZY)
     private Collection<UnitSyncStatus> unitSyncStatus;
+
+    public Long getProjectInfoId() {
+        return projectInfoId;
+    }
+
+    public void setProjectInfoId(Long projectInfoId) {
+        this.projectInfoId = projectInfoId;
+    }
 
     public String getProjectId() {
         return projectId;

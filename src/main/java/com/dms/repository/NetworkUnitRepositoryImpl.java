@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -8,9 +9,6 @@ import com.dms.model.NetworkUnit;
 import com.dms.model.UnitConnectionConfig;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +26,9 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     SessionFactory sessionFactory;
 
     @Override
-    public NetworkUnit getUnitIfo(String projectId) {
+    public NetworkUnit getUnitIfo(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
-        return (NetworkUnit) session.get(NetworkUnit.class, projectId);
+        return (NetworkUnit) session.get(NetworkUnit.class, projectInfoId);
     }
 
     @Override
@@ -48,20 +46,20 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     }
 
     @Override
-    public void delete(String projectId) {
+    public void delete(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
-        Object unit = session.get(NetworkUnit.class, projectId);
+        Object unit = session.get(NetworkUnit.class, projectInfoId);
         if(unit!=null){
             session.delete(unit);
         } else {
-            System.err.println(" No Network Unit found with the given ProjectId: "+ projectId);
+            System.err.println(" No Network Unit found with the given ProjectInfoId: "+ projectInfoId);
         }
     }
 
     @Override
-    public UnitConnectionConfig getUnitConfig(String projectId) {
+    public UnitConnectionConfig getUnitConfig(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
-        NetworkUnit unit = (NetworkUnit) session.get(NetworkUnit.class, projectId);
+        NetworkUnit unit = (NetworkUnit) session.get(NetworkUnit.class, projectInfoId);
         return unit.getUnitConnectionConfig();
     }
 

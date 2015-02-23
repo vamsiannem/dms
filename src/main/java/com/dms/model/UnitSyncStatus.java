@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by support on 26/1/15.
+ * Created by Vamsi Krishna on 26/1/15.
  */
 @Entity
 @Table(name = "unit_sync_status")
@@ -20,7 +21,7 @@ public class UnitSyncStatus implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "unit_project_id", referencedColumnName = "project_id", nullable = false)
+    @JoinColumn(name = "network_unit_id", referencedColumnName = "project_info_id", nullable = false)
     private NetworkUnit networkUnit;
 
     @Column(name = "start_time")

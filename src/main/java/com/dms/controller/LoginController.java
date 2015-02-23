@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -49,7 +50,7 @@ public class LoginController {
         try {
             modelAndView.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
         } catch (IOException e) {
-            //
+            e.printStackTrace();
         }
         modelAndView.addObject("status", "SUCCESS");
         return modelAndView;

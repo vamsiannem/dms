@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -24,7 +25,7 @@ import javax.persistence.*;
 public class ProductData implements Serializable {
 
     @ManyToOne(optional = false, targetEntity = NetworkUnit.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "unit_project_id", referencedColumnName = "project_id", nullable = false)
+    @JoinColumn(name = "network_unit_id", referencedColumnName = "project_info_id", nullable = false)
     private NetworkUnit networkUnit;
 
     @Id

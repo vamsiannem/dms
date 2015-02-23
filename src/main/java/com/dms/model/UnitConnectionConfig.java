@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -90,6 +91,7 @@ public class UnitConnectionConfig implements Serializable {
         this.bodyParams = bodyParams;
     }
 
+    @org.codehaus.jackson.annotate.JsonIgnore
     public Map<String, ?> getHeadersMap(){
        String[] _headers = headers!=null ? headers.split(";") : null;
         Map<String, String> headersMap = new HashMap<String, String>(_headers.length);

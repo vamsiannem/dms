@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -23,7 +24,6 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,11 +56,11 @@ public class ProductRepositoryImpl implements ProductRepository{
     }
 
     @Override
-    public List<ProductData> getDataForProduct(String projectId) {
+    public List<ProductData> getDataForProduct(Long projectInfoId) {
        Session session = sessionFactory.getCurrentSession();
        Criteria query = session.createCriteria(ProductData.class)
                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
-               .add(Restrictions.eq("nu.projectId", projectId))
+               .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                .addOrder(Order.desc("id"))
                .setMaxResults(MAX_RESULTS)
                .setProjection(Projections.projectionList()
@@ -73,26 +73,27 @@ public class ProductRepositoryImpl implements ProductRepository{
                        .add(Projections.property("limCapacitance"))
                        .add(Projections.property("nu.companyName"))
                        .add(Projections.property("nu.unitSerialNo"))
+                       .add(Projections.property("nu.projectInfoId"))
                        .add(Projections.property("nu.projectId")));
         return createProductsList(query.list());
     }
 
 
       @Override
-    public void saveProducts(List<ProductData> productDataList, String projectId) {
+    public void saveProducts(List<ProductData> productDataList, Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
         for (ProductData productData : productDataList){
-            productData.setNetworkUnit(unitRepository.getUnitIfo(projectId));
+            productData.setNetworkUnit(unitRepository.getUnitIfo(projectInfoId));
             session.save(productData);
         }
     }
 
     @Override
-    public List<String> getVNetAddress(String projectId) {
+    public List<String> getVNetAddress(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
         Criteria query = session.createCriteria(ProductData.class)
                 .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
-                .add(Restrictions.eq("nu.projectId", projectId))
+                .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                 .addOrder(Order.desc("vNetAddress"))
                 .setMaxResults(MAX_RESULTS)
                 .setProjection(Projections.distinct(Projections.projectionList()
@@ -121,7 +122,8 @@ public class ProductRepositoryImpl implements ProductRepository{
             NetworkUnit nu = new NetworkUnit();
             nu.setCompanyName((String) row[7]);
             nu.setUnitSerialNo((String) row[8]);
-            nu.setProjectId((String)row[9]);
+            nu.setProjectInfoId((Long) row[9]);
+            nu.setProjectId((String)row[10]);
             productData.setNetworkUnit(nu);
             productDataList.add(productData);
         }

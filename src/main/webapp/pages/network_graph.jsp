@@ -32,83 +32,59 @@
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
-<div class="header1">
-	<span style="float:left"><img src="" style="color:#aaa"/></span>
-	<span style="float:right;padding-top:0px "><a href="" style="color:#aaa">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Help</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Admin</a></span><br>
-	<h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel}-${node} </h2>
+    <div class="header1">
+        <span style="float:left"><img src=""/></span>
+            <span class='options' ><a href="" class="ref_option">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Help</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Admin</a></span>
+        <h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel}-${node} </h2>
 
-</div>
-<div>
-    <div style="background-color:#aaa; height:580px;width:200px;float:left;">
-          <ul id="dhtmlgoodies_tree2" class="dhtmlgoodies_tree">
-            <li><a href="#" id="node_99">Dashboard</a></li>
-            <li><a href="#" id="node_100">Networks</a>
-                <ul>
-                    <li><a href="#" id="list_10">List of Networks</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="#" id="node_101">Data Management</a>
-                <ul>
-                    <li><a href="#" id="list_20">Import</a>
-                    </li>
-                    <li><a href="#" id="list_21">exports</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="#" id="node_102">Assets</a>
-                <ul>
-                    <li><a href="#" id="list_30">Maintenance Contracts </a>
-                    </li>
-                    <li><a href="#" id="list_31">Warranties</a>
-                    </li>
-                    <li><a href="#" id="list_32">Notification</a>
-                    </li>
-    				<li><a href="#" id="list_33">Remote Unit Config</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        </div>
+    </div>
     <div>
+        <div class='leftNavMenu'>
+              <jsp:include page="left_nav.jsp"/>
+        </div>
 
-    <div style="float:left;" id="statusMessage">
-        <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
-                <c:out value="${status}"> </c:out>
-        </span>
+        <div>
+            <div style="float:left;" id="statusMessage">
+                <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
+                    <c:out value="${status}"> </c:out>
+                </span>
+            </div>
+            <div style="float:right;padding-right: 15px;">
+                <input type="submit" name="submit" value="Page buttons" class="button" />
+            </div>
+        </div>
+        <div style="border-bottom: 2px solid #cfcfcf;border-radius: 3px 3px 0 0;padding-top: 52px">
+        </div>
+
+
+        <div style="padding-left: 15px;padding-top: 4px;float:left;">
+            <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;">
+                <div style="margin: 25px;  border: 1px solid #ffafa4;" id="resizable">
+                    <div id="chart1">  </div>
+                </div>
+            </div>&nbsp;
+            <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
+                Monthly Reports
+            </div>
+            <br>&nbsp;
+            <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
+                User Activities
+            </div>
+        </div>
+
+        <div style="padding-top: 10px;float:left;padding-left: 15px;">
+            <div style="float:left;width: 1038px;height: 50px;border: 2px solid #fff;">
+            Recent Projects
+            </div>&nbsp;
+        </div>
+
+        <div class="footer1">
+            <span class="copylink">Copyright @ 20014-2016. All Rights reserved</span>
+            <span class="contactus options"><a class="ref_option" href="">Contact Us</a>&nbsp;&nbsp;&nbsp;<a class="ref_option" href="" >Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a class="ref_option" href="" >Terms of use</a></span>
+        </div>
+        <div>
+            <form name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post"></form>
+        </div>
     </div>
-
-	<div style="float:right;padding-right: 15px;"><input type="submit" name="submit" value="Page buttons" class="button" /></div>
-	</div>
-	<div style="border-bottom: 2px solid #cfcfcf;border-radius: 3px 3px 0 0;padding-top: 52px">
-	</div>
-
-</div>
-<div style="padding-left: 15px;padding-top: 4px;float:left;">
-    <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;">
-        <div style="margin: 25px;  border: 1px solid #ffafa4;" id="resizable"> <div id="chart1">  </div> </div>
-    </div>&nbsp;
-    <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
-	Monthly Reports
-    </div><br>&nbsp;
-    <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
-	User Activities
-    </div>
-</div>
-
-<div style="padding-top: 10px;float:left;padding-left: 15px;">
-    <div style="float:left;width: 1038px;height: 50px;border: 2px solid #fff;">
-	Recent Projects
-    </div>&nbsp;
-
-    </div>
-
-<div class="footer1">
-	<span class="copylink">copyright A @ 2004-2015. All Rights reserved</span>
-	<span class="contactus"><a href="" style="color:#aaa">Contact Us</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a href="" style="color:#aaa">Terms of use</a></span>
-</div>
-<div>
-    <form name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post"></form>
- </div>
 </body>
 </html>

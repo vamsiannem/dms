@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -31,10 +32,10 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
     private NetworkUnitRepository unitRepository;
 
     @Override
-    public UnitSyncStatus getLastRun(String unitProjectId) {
+    public UnitSyncStatus getLastRun(Long unitProjectInfoId) {
         Session session = sessionFactory.getCurrentSession();
 
-        Collection<UnitSyncStatus> result = getSyncStatus(unitProjectId, 1);
+        Collection<UnitSyncStatus> result = getSyncStatus(unitProjectInfoId, 1);
         if (result !=null && result.size() == 1) {
             Iterator<UnitSyncStatus> iterator =result.iterator();
             return iterator.next();
@@ -50,7 +51,7 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
             Session session = sessionFactory.getCurrentSession();
             syncStatusCollection = new ArrayList<UnitSyncStatus>(units.size());
             for(NetworkUnit unit: units){
-                Collection<UnitSyncStatus> result = getSyncStatus(unit.getProjectId(), 1);
+                Collection<UnitSyncStatus> result = getSyncStatus(unit.getProjectInfoId(), 1);
                 if (result !=null && result.size() == 1) {
                     Iterator<UnitSyncStatus> iterator =result.iterator();
                     syncStatusCollection.add(iterator.next());
@@ -73,26 +74,26 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
     }
 
     @Override
-    public Map<String, Collection<UnitSyncStatus>> getLastWeekSyncStatus() {
+    public Map<Long, Collection<UnitSyncStatus>> getLastWeekSyncStatus() {
         Collection<NetworkUnit> units = unitRepository.getAll();
-        Map<String, Collection<UnitSyncStatus>> map = null;
+        Map<Long, Collection<UnitSyncStatus>> map = null;
         if (units != null && units.size()>0 ) {
-            map = new HashMap<String, Collection<UnitSyncStatus>>(units.size());
+            map = new HashMap<Long, Collection<UnitSyncStatus>>(units.size());
             Session session = sessionFactory.getCurrentSession();
             for(NetworkUnit unit: units){
-                Collection<UnitSyncStatus> result = getSyncStatus(unit.getProjectId(), 7);
+                Collection<UnitSyncStatus> result = getSyncStatus(unit.getProjectInfoId(), 7);
                 if (result !=null && result.size()>0) {
-                    map.put(unit.getProjectId(), result);
+                    map.put(unit.getProjectInfoId(), result);
                 }
             }
         }
         return map;
     }
 
-    private Collection<UnitSyncStatus> getSyncStatus(String projectId, int howManyRuns){
+    private Collection<UnitSyncStatus> getSyncStatus(Long projectInfoId, int howManyRuns){
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(UnitSyncStatus.class)
-                .add(Restrictions.eq("networkUnit.projectId", projectId))
+                .add(Restrictions.eq("networkUnit.projectInfoId", projectInfoId))
                 .addOrder(Order.desc("endTime"))
                 .setFirstResult(0)
                 .setMaxResults(howManyRuns);

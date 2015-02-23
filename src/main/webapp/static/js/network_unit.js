@@ -1,8 +1,9 @@
-$(document).ready(function() {
+ $(document).ready(function() {
 
   var table_config = {
                data: products,
                columns: [
+                   {data: 'networkUnit.projectInfoId', title: 'Project Info Id', class: 'hide_column'},
                    {data: 'time', title: 'Time', class: 'center', "width": "20%"},
                    {data: 'vNetAddress', title: 'VNet Address', class: 'center'},
                    {data: 'type', title: 'Type', class: 'center'},
@@ -14,14 +15,16 @@ $(document).ready(function() {
                    ]
                };
   var table = $('#networks_table').DataTable(table_config);
+  if(!$(".dataTables_empty").length) {
     applySelectEventForDataTable("networks_table", table);
-
+  }
 
 });
 
 
 function applySelectEventForDataTable(tableId, table){
-    $('#'+tableId).on( 'click', 'tr',
+    $('#'+tableId+' tbody')
+        .on( 'click', 'tr',
         function () {
             if ( $(this).hasClass('selected') ) {
                 $(this).removeClass('selected');
@@ -30,12 +33,18 @@ function applySelectEventForDataTable(tableId, table){
                 $(this).addClass('selected');
             }
             var columns = $(this).find('td');
-            var projectId = $(columns[columns.length-1]).text();
+            var projectInfoId = $(columns[0]).text();
             var contextPath = $("#common-form").attr("action");
             $("#common-form").attr("action", contextPath+"/api/graph");
             $("#common-form").attr("method", "POST");
-            $("#frm_projectId").val(projectId);
+            $("#frm_projectInfoId").val(projectInfoId);
             $("#common-form").submit();
-    });
+        })
+        .on( 'mouseover', 'tr', function () {
+              $(this).addClass('cursor_point');
+        })
+        .on( 'mouseout', 'tr', function () {
+              $(this).removeClass('cursor_point');
+        });;
 
 }

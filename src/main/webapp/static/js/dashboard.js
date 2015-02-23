@@ -8,6 +8,7 @@ $(document).ready(function() {
      "pageLength": 5,
      "lengthMenu": [ [5], [5] ],
      columns: [
+         {data: 'projectInfoId', title: 'ProjectInfo Id', class: 'hide_column'},
          {data: 'projectId', title: 'ProjectID', class: 'center'},
          {data: 'companyName', title: 'Client', class: 'center'},
          {data: 'platform', title: 'Platform', class: 'center'},
@@ -16,23 +17,64 @@ $(document).ready(function() {
          ]
   };
   var table = $('#network_unit_table').DataTable(table_config);
-  applySelectEventForDataTable("network_unit_table", table);
+  if(!$(".dataTables_empty").length) {
+    applySelectEventForDataTable("network_unit_table", table);
+  }
+
 
 });
 
 
 function applySelectEventForDataTable(tableId, table){
-    $('#'+tableId).on( 'click', 'tr',
+    var lastIdx = null;
+    $('#'+tableId+' tbody')
+      .on( 'mouseover', 'td', function () {
+          var colIdx = table.cell(this).index().column;
+
+          if ( colIdx !== lastIdx ) {
+              $( table.cells().nodes() ).removeClass( 'highlight' );
+              $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
+          }
+          // this is very specific fix for a column
+          if(colIdx === 5){
+            $(table.column( colIdx ).nodes()).addClass('hover_text');
+          }
+      } )
+      .on( 'mouseleave','td', function () {
+          $( table.cells().nodes() ).removeClass( 'highlight' );
+          var colIdx = table.cell(this).index().column;
+          if(colIdx === 5){
+              $(table.column( colIdx ).nodes()).removeClass('hover_text');
+          }
+      })
+      .on('click', 'td', function(){
+        var colIdx = table.cell(this).index().column;
+        /*
+            5th column is the Channel displayed.
+            First column is hidden column for Project_Info_Id.
+         */
+        if(colIdx === 5){
+            var firstColumnValues = $(table.column(0).nodes());
+            $.each($(table.column( colIdx ).nodes()), function(index, value){
+               var projectInfoId = $(firstColumnValues[index]).text();
+               getNodesList(projectInfoId);
+            });
+        }
+      });
+
+    /*$('#'+tableId).on( 'click', 'tr',
         function () {
-            if ( $(this).hasClass('selected') ) {
+            *//*if ( $(this).hasClass('selected') ) {
                 $(this).removeClass('selected');
             } else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
-            }
+            }*//*
             var columns = $(this).find('td');
-            var projectId = $(columns[0]).text();
-            getNodesList(projectId);
-    });
+            var projectInfoId = $(columns[0]).text();
+            console.log(projectInfoId);
+            // getNodesList(projectId);
+    });*/
+
 
 }

@@ -23,7 +23,7 @@
 	
 </div>
 <div>
-    <div style="background-color:#aaa; height:580px;width:200px;float:left;">
+    <div style="background-color:#BCF2F5; height:580px;width:200px;float:left; border-right: 2px solid #ffffff">
           <ul id="dhtmlgoodies_tree2" class="dhtmlgoodies_tree">
             <li><a href="#" id="node_99">Dashboard</a></li>
     		<li><a href="#" id="node_100">Networks</a>

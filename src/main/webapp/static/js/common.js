@@ -75,9 +75,9 @@ function appendNewData2Dropdown(dropdownId, dataArray, emptyExistingOptions){
 }
 
 //var base_url =
-var getNodesList = function(projectId) {
+var getNodesList = function(projectInfoId) {
     var request = $.ajax({
-      url: "unit/"+projectId+"/node.json",
+      url: "unit/"+projectInfoId+"/node.json",
       type: "GET",
       dataType: "json"
     });
@@ -86,12 +86,12 @@ var getNodesList = function(projectId) {
       if( typeof response === 'object' && typeof(response.nodes) != 'undefined'){
         var nodes = response.nodes;
         if(nodes.length ==0){
-           $("#statusMessage").html("No Data Log available for Project:"+ projectId+", Please sync the data first.")
+           $("#statusMessage").html("No Data Log available for Project:"+ projectInfoId+", Please sync the data first.")
         }
         if(nodes.length == 1){
-            showNetworkGraph(projectId);
+            showNetworkGraph(projectInfoId);
         } else {
-            showNetworkImage(projectId);
+            showNetworkImage(projectInfoId);
         }
       } else {
         $("#statusMessage").html("Unknown error has occurred.");
@@ -100,21 +100,21 @@ var getNodesList = function(projectId) {
 
     request.fail(function( jqXHR, textStatus ) {
       console.log( "Request failed: " + textStatus );
-      $("#statusMessage").html("Unable to Fetch Nodes for Project:"+ projectId)
+      $("#statusMessage").html("Unable to Fetch Nodes for Project:"+ projectInfoId)
     });
 }
 
-var showNetworkImage = function(projectId){
+var showNetworkImage = function(projectInfoId){
     var contextPath = $("#common-form").attr("action");
-    $("#common-form").attr("action", contextPath+"/api/unit/data/"+ projectId);
+    $("#common-form").attr("action", contextPath+"/api/unit/data/"+ projectInfoId);
     $("#common-form").attr("method", "GET");
     $("#common-form").submit();
 }
 
-var showNetworkGraph = function(projectId){
+var showNetworkGraph = function(projectInfoId){
     var contextPath = $("#common-form").attr("action");
     $("#common-form").attr("action", contextPath+"/api/graph");
     $("#common-form").attr("method", "POST");
-    $("#frm_projectId").val(projectId)
+    $("#frm_projectInfoId").val(projectInfoId)
     $("#common-form").submit();
 }

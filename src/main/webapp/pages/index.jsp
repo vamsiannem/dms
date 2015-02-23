@@ -51,8 +51,8 @@
 </form>
 -->
 <div class="footer1">
-	<span class="copylink">copyright A @ 2004-2015. All Rights reserved</span>
-	<span class="contactus"><a href="">Contact Us</a>&nbsp;&nbsp;&nbsp;<a href="">Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a href="">Terms of use</a></span>
+	<span class="copylink">Copyright @ 20014-2016. All Rights reserved</span>
+	<span class="contactus options"><a class="ref_option" href="">Contact Us</a>&nbsp;&nbsp;&nbsp;<a class="ref_option" href="" >Privacy Policy</a>&nbsp;&nbsp;&nbsp;<a class="ref_option" href="" >Terms of use</a></span>
 </div>
 </body>
 </html>

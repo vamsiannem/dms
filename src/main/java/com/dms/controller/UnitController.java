@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -63,7 +64,7 @@ public class UnitController extends BaseController {
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UnitController.class);
 
     private Random random = new Random(100000);
-    private static final String VAR_PROJECT_ID = "projectId";
+    private static final String VAR_PROJECT_INFO_ID = "projectInfoId";
     private static final String VAR_UNIT_NO = "unitSerialNo";
     ObjectMapper mapper = new ObjectMapper();
 
@@ -82,7 +83,7 @@ public class UnitController extends BaseController {
      */
     @RequestMapping(value="/data/view", method = RequestMethod.POST)
     public ModelAndView renderProductUploadView(){
-        ModelAndView mav = new ModelAndView("fileselection");
+        ModelAndView mav = new ModelAndView("upload_unit_data");
         return mav;
     }
 
@@ -103,7 +104,7 @@ public class UnitController extends BaseController {
             System.out.println("Not Multipart!!!");
             throw new Exception("Required multipart form input");
         }
-        ModelAndView mav= new ModelAndView("fileselection");
+        ModelAndView mav= new ModelAndView("upload_unit_data");
         // Create a factory for disk-based file items
         DiskFileItemFactory factory = new DiskFileItemFactory();
         // 1 MB is the file size limit.
@@ -124,7 +125,7 @@ public class UnitController extends BaseController {
 
             Map<String, String> formFields = (Map<String, String>) map.get("formFields");
             uploadedFileName = formFields.get("filePath");
-            productRepository.saveProducts(productData, formFields.get(VAR_PROJECT_ID));
+            productRepository.saveProducts(productData, Long.parseLong(formFields.get(VAR_PROJECT_INFO_ID)));
         } catch (FileUploadException ex) {
             logger.error("Error while uploading the CSV", ex);
             statusMessage = "An error occurred while uploading CSV";
@@ -218,8 +219,8 @@ public class UnitController extends BaseController {
     private void processFormField(FileItem item, Map<String, String> formFields) {
         if (item.isFormField()) {
             String name = item.getFieldName();
-            if(name !=null && name.equalsIgnoreCase(VAR_PROJECT_ID)){
-                formFields.put(VAR_PROJECT_ID, item.getString());
+            if(name !=null && name.equalsIgnoreCase(VAR_PROJECT_INFO_ID)){
+                formFields.put(VAR_PROJECT_INFO_ID, item.getString());
             }
             if(name !=null && name.equalsIgnoreCase(VAR_UNIT_NO)){
                 formFields.put(VAR_UNIT_NO, item.getString());
@@ -254,7 +255,7 @@ public class UnitController extends BaseController {
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             method= RequestMethod.PUT)
-    public String addNetworkUnit(@PathVariable("projectId")String projectId,
+    public String addNetworkUnit(@PathVariable("projectId") String projectId,
                                                   @RequestParam("companyName")String companyName,
                                                   @RequestParam("platform")String platform,
                                                   @RequestParam("controlSystem")String controlSystem,
@@ -279,9 +280,7 @@ public class UnitController extends BaseController {
                 unitSerialNo.trim().length()==0 ){
             throw new Exception("Empty spaces are not allowed.");
         }
-        if( unitRepository.getUnitIfo(projectId)!=null){
-            throw new Exception("A unit is already configured with same projectId:"+ projectId);
-        }
+
         NetworkUnit networkUnit = new NetworkUnit();
         networkUnit.setCompanyName(companyName);
         networkUnit.setProjectId(projectId);
@@ -303,11 +302,11 @@ public class UnitController extends BaseController {
      * Update a network unit on DMS db.
      * @return
      */
-    @RequestMapping(value = "/{projectId}",
+    @RequestMapping(value = "/{projectInfoId}",
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             method= RequestMethod.POST)
-    public String updateNetworkUnit(@PathVariable("projectId")String projectId,
+    public String updateNetworkUnit(@PathVariable("projectInfoId") Long projectInfoId, @RequestParam("projectId") String projectId,
                                  @RequestParam("companyName")String companyName,
                                  @RequestParam("platform")String platform,
                                  @RequestParam("controlSystem")String controlSystem,
@@ -333,9 +332,9 @@ public class UnitController extends BaseController {
             throw new Exception("Empty spaces are not allowed.");
         }
 
-        NetworkUnit networkUnit = unitRepository.getUnitIfo(projectId);
+        NetworkUnit networkUnit = unitRepository.getUnitIfo(projectInfoId);
         if(null == networkUnit){
-            throw new Exception("No Unit configured with the given projectId:" + projectId);
+            throw new Exception("No Unit configured with the given projectInfoId:" + projectInfoId);
         }
         networkUnit.setCompanyName(companyName);
         networkUnit.setChannel(channel);
@@ -353,36 +352,36 @@ public class UnitController extends BaseController {
     }
 
     /**
-     * Show Network Unit Image Data based on projectId
+     * Show Network Unit Image Data based on projectInfoId
      * @return
      * @throws IOException
      */
-    @RequestMapping(value= "/data/{projectId}",
+    @RequestMapping(value= "/data/{projectInfoId}",
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             method= RequestMethod.GET)
-    public ModelAndView getDataForProductNUnit(@PathVariable("projectId") String projectId) throws IOException {
+    public ModelAndView getDataForProductNUnit(@PathVariable("projectInfoId") Long projectInfoId) throws IOException {
         ModelAndView mav = new ModelAndView("network_unit");
-        List<ProductData> productData = productRepository.getDataForProduct(projectId);
+        List<ProductData> productData = productRepository.getDataForProduct(projectInfoId);
         if(productData!=null && productData.size()>0){
             mav.addObject("companyName", productData.get(0).getNetworkUnit().getCompanyName());
             mav.addObject("unitSerialNo", productData.get(0).getNetworkUnit().getUnitSerialNo());
         }
         mav.addObject("network_unit_data", mapper.writeValueAsString(productData));
-        mav.addObject("network_unit", unitRepository.getUnitIfo(projectId));
+        mav.addObject("network_unit", unitRepository.getUnitIfo(projectInfoId));
         return mav;
     }
 
     /**
-     * Fetch all nodes for a Network Unit
+     * Fetch all nodes (vNetAddress) for a Network Unit.
      * @return
      * @throws IOException
      */
-    @RequestMapping(value= "/{projectId}/node",
+    @RequestMapping(value= "/{projectInfoId}/node",
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             method= RequestMethod.GET)
-    public ModelAndView getAllNodes(@PathVariable("projectId") String projectId) throws IOException {
+    public ModelAndView getAllNodes(@PathVariable("projectInfoId") Long projectInfoId) throws IOException {
         ModelAndView mav = new ModelAndView();
-        List<String> nodes = productRepository.getVNetAddress(projectId);
+        List<String> nodes = productRepository.getVNetAddress(projectInfoId);
         mav.addObject("nodes", nodes);
         return mav;
     }

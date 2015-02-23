@@ -1,4 +1,5 @@
 /*
+ * @author: Vamsi Krishna
  * Copyright (c) 2015. All Rights Reserved
  */
 
@@ -26,10 +27,10 @@ public interface ProductRepository {
     /**
      * Get all the data for a company. This data is used to display
      * graphs, charts to the user.
-     * @param companyName
+     * @param projectInfoId
      * @return list of product data.
      */
-    List<ProductData> getDataForProduct(String companyName);
+    List<ProductData> getDataForProduct(Long projectInfoId);
 
    // List<ProductData> getDataForProduct(String companyName, String unitSerialNo);
 
@@ -38,9 +39,9 @@ public interface ProductRepository {
     /**
      * File Uploaded for a company is persisted in product tables.
      */
-    void saveProducts(List<ProductData> productDataList, String projectId);
+    void saveProducts(List<ProductData> productDataList, Long projectInfoId);
 
    // List<String> getAllCompanies();
 
-    List<String> getVNetAddress(String projectId);
+    List<String> getVNetAddress(Long projectInfoId);
 }
