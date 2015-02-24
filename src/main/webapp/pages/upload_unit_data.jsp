@@ -15,6 +15,11 @@
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/context-menu.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jquery-1.11.1.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
+     	<script language="javascript" type="text/javascript">
+            var networkUnits= JSON.parse('${networkUnits}');
+
+        </script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/upload_unit_data.js"></script>
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
@@ -46,21 +51,30 @@
     <div><h3 style="text-align:center">Upload CSV Data</h3></div>
     <div style="float:left;width: 600px;height: 350px;border: 2px solid #fff;"><span style="padding:5px;">
       <div>
-        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/upload" method="post" enctype="multipart/form-data">
-            <div class="content">
+        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/upload" method="post" enctype="multipart/form-data" style="position:relative; height:180px">
+            <div class="content" >
                 <div>
-                    <input type="text" name="projectId" class="input_field" placeholder="Project ID" title="Enter Network Unit's Project Id">
+                    <label>Network Unit:
+                    <span>
+                        <select class="input_field" style='width:240px;'  id="networkUnitSelect" name="networkUnitSelect">
+                            <option value="----">-- Please Select --</option>
+                        </select>
+                    </span>
+                    <div id="wrapper" style='position:fixed; top: 115px; left: 592px; z-index:5' ></div>
                 </div>
-                <div>
+                <div style='margin-top:5px;'>
                     <p class="form">
+                        <label style='padding-right:15px;'>Select File:</label>
                         <input type="text" id="path" class="input_field" placeholder="Select a File to Upload">
-                    	<label class="add-photo-btn">upload<span><input type="file" id="myfile" name="myfile"></span>
-                    </label>
+                    	<label class="add-photo-btn">Upload
+                    	    <span><input type="file" id="myfile" name="myfile"></span>
+                        </label>
                     </p>
                 </div>
-                <div>
+    	    </div>
+    	    <div style="margin-left:125px">
     	            <input type="submit" value="Submit" class="button">
-    	        </div>
+    	            <input type="reset" value="Reset" class="button" style="margin-left:10px">
     	    </div>
     	</form>
       </div>

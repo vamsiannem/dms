@@ -135,7 +135,7 @@ HEADER
 	padding: 40px 30px 30px 30px;
 }
 .header1 {
-    background: url('../images/bg3.jpg') no-repeat center center fixed;
+    background: #483D8B no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -279,7 +279,7 @@ FOOTER
 *******************/
 
 .footer1 {
-    background: url('../images/bg4.jpg') no-repeat center center fixed;
+    background: #483D8B no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -432,3 +432,15 @@ FOOTER
 .shadow {
     box-shadow: 6px 6px 7px #888888;
   }
+
+
+  /* Tool Tip CSS Start */
+    .tooltip{
+        background:#483D8B;
+        color:white;
+        padding:5px;
+        box-shadow:0 0 10px 0 rgba(0, 0, 0, 1);
+        border-radius:10px;
+        opacity:0;
+    }
+  /* Tooltip CSS End*/

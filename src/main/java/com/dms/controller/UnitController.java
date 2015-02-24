@@ -84,6 +84,11 @@ public class UnitController extends BaseController {
     @RequestMapping(value="/data/view", method = RequestMethod.POST)
     public ModelAndView renderProductUploadView(){
         ModelAndView mav = new ModelAndView("upload_unit_data");
+        try {
+            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return mav;
     }
 
