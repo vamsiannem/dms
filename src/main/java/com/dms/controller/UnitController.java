@@ -64,8 +64,8 @@ public class UnitController extends BaseController {
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UnitController.class);
 
     private Random random = new Random(100000);
-    private static final String VAR_PROJECT_INFO_ID = "projectInfoId";
-    private static final String VAR_UNIT_NO = "unitSerialNo";
+    private static final String VAR_NETWORK_UNIT = "networkUnitSelect";
+    private static final String VAR_FILE_PATH = "path";
     ObjectMapper mapper = new ObjectMapper();
 
     @Resource
@@ -130,7 +130,7 @@ public class UnitController extends BaseController {
 
             Map<String, String> formFields = (Map<String, String>) map.get("formFields");
             uploadedFileName = formFields.get("filePath");
-            productRepository.saveProducts(productData, Long.parseLong(formFields.get(VAR_PROJECT_INFO_ID)));
+            productRepository.saveProducts(productData, Long.parseLong(formFields.get(VAR_NETWORK_UNIT)));
         } catch (FileUploadException ex) {
             logger.error("Error while uploading the CSV", ex);
             statusMessage = "An error occurred while uploading CSV";
@@ -143,6 +143,8 @@ public class UnitController extends BaseController {
             mav.addObject("status", statusMessage);
             mav.addObject("flag", "red");
             return mav;
+        } finally {
+            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
         }
 
         mav.addObject("status", statusMessage);
@@ -180,7 +182,6 @@ public class UnitController extends BaseController {
         List<ProductData> productDataList = new ArrayList<ProductData>(50);
 
         String fileName = file.getName();
-        CSVReader reader;
         CsvBeanReader csvBeanReader = null;
         String tempFileName = "temp_dms_"+ random.nextInt() +".csv";
         File tempFile =  new File(FileUtils.getTempDirectoryPath() + File.separator+tempFileName);
@@ -189,10 +190,10 @@ public class UnitController extends BaseController {
             if (fileName.endsWith(".csv")) {
                 FileUtils.copyInputStreamToFile(file.getInputStream(), tempFile);
                 final CellProcessor[] processors = new CellProcessor[] {
-                        new NotNull(), // time
+                        new DefaultString(), // time
                         new DefaultString(), // vNetAddress
-                        new ParseInt(), // type
-                        new NotNull(), // status
+                        new Optional(new ParseInt()), // type
+                        new Optional(), // status
                         new Optional(new ParseDouble()), // limImbalance
                         new Optional(new ParseDouble()), // limResistance
                         new Optional(new ConvertNullTo("-")), // limCapacitance
@@ -204,11 +205,20 @@ public class UnitController extends BaseController {
                         new Optional(new ConvertNullTo(0.0, new ParseDouble())) //  linePhase
                 };
                 csvBeanReader = new CsvBeanReader(new FileReader(tempFile), CsvPreference.STANDARD_PREFERENCE);
-                final String[] header = csvBeanReader.getHeader(true);
+                csvBeanReader.getHeader(false);
+                final String[] header = csvBeanReader.getHeader(false);
                 ProductData product;
                 while( (product = csvBeanReader.read(ProductData.class, header, processors)) !=null){
-                    if(product !=null){
-                        productDataList.add(product);
+                    String row = csvBeanReader.getUntokenizedRow();
+                    if(csvBeanReader.getLineNumber()==1004 || csvBeanReader.getLineNumber() > 3425){
+                        System.out.println(product);
+                    }
+                    if(row!=null && !row.trim().startsWith(",,,,,,,,,,,,") ){
+                        if(product !=null){
+                            productDataList.add(product);
+                        }
+                    } else {
+                        break;
                     }
                 }
             } else {
@@ -224,13 +234,10 @@ public class UnitController extends BaseController {
     private void processFormField(FileItem item, Map<String, String> formFields) {
         if (item.isFormField()) {
             String name = item.getFieldName();
-            if(name !=null && name.equalsIgnoreCase(VAR_PROJECT_INFO_ID)){
-                formFields.put(VAR_PROJECT_INFO_ID, item.getString());
+            if(name !=null && name.equalsIgnoreCase(VAR_NETWORK_UNIT)){
+                formFields.put(VAR_NETWORK_UNIT, item.getString());
             }
-            if(name !=null && name.equalsIgnoreCase(VAR_UNIT_NO)){
-                formFields.put(VAR_UNIT_NO, item.getString());
-            }
-            if(name !=null && name.equalsIgnoreCase("path")){
+            if(name !=null && name.equalsIgnoreCase(VAR_FILE_PATH)){
                 formFields.put("filePath", item.getString());
             }
 

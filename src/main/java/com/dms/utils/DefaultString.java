@@ -24,7 +24,7 @@ public class DefaultString extends CellProcessorAdaptor {
 
     @Override
     public Object execute(Object value, CsvContext context) {
-        String stringValue = value.toString();
+        String stringValue = value!=null ? value.toString() : null;
         return next.execute(stringValue, context);
     }
 }

@@ -36,7 +36,7 @@
   </div>
     <div>
 
-	<div style="float:left;" id="statusMessage">
+	<div style="float:left; margin-left:18px; margin-top:10px;" id="statusMessage">
         <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
                 <c:out value="${status}"> </c:out>
         </span>

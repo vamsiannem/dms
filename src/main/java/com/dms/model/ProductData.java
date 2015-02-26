@@ -21,7 +21,8 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name="product_data")
+@Table(name="product_data",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"network_unit_id", "vNetAddress","time"})})
 public class ProductData implements Serializable {
 
     @ManyToOne(optional = false, targetEntity = NetworkUnit.class, fetch = FetchType.EAGER)
@@ -204,5 +205,16 @@ public class ProductData implements Serializable {
 
     public void setNetworkUnit(NetworkUnit networkUnit) {
         this.networkUnit = networkUnit;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductData{" +
+                "time='" + time + '\'' +
+                ", vNetAddress='" + vNetAddress + '\'' +
+                ", type=" + type +
+                ", status='" + status + '\'' +
+                ", projectInfoId=" + networkUnit.getProjectInfoId() +
+                '}';
     }
 }

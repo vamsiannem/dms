@@ -39,7 +39,7 @@ public interface ProductRepository {
     /**
      * File Uploaded for a company is persisted in product tables.
      */
-    void saveProducts(List<ProductData> productDataList, Long projectInfoId);
+    void saveProducts(List<ProductData> productDataList, Long projectInfoId) throws Exception;
 
    // List<String> getAllCompanies();
 

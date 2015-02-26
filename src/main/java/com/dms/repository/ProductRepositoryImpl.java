@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+
+import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ProductRepositoryImpl implements ProductRepository{
+
+    private final Logger logger = LoggerFactory.getLogger(ProductRepositoryImpl.class);
 
     private static final Integer MAX_RESULTS = 2000;
 
@@ -48,7 +50,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     @Override
     public List<ProductData> getAllAvailableProducts() {
 
-       Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.getCurrentSession();
         String hqlQuery = "FROM ProductData p";
         Query query = session.createQuery(hqlQuery);
         query.setMaxResults(ALL_MAX_RESULTS);
@@ -57,35 +59,63 @@ public class ProductRepositoryImpl implements ProductRepository{
 
     @Override
     public List<ProductData> getDataForProduct(Long projectInfoId) {
-       Session session = sessionFactory.getCurrentSession();
-       Criteria query = session.createCriteria(ProductData.class)
-               .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
-               .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
-               .addOrder(Order.desc("id"))
-               .setMaxResults(MAX_RESULTS)
-               .setProjection(Projections.projectionList()
-                       .add(Projections.property("time"))
-                       .add(Projections.property("vNetAddress"))
-                       .add(Projections.property("type"))
-                       .add(Projections.property("status"))
-                       .add(Projections.property("limImbalance"))
-                       .add(Projections.property("limResistance"))
-                       .add(Projections.property("limCapacitance"))
-                       .add(Projections.property("nu.companyName"))
-                       .add(Projections.property("nu.unitSerialNo"))
-                       .add(Projections.property("nu.projectInfoId"))
-                       .add(Projections.property("nu.projectId")));
+        Session session = sessionFactory.getCurrentSession();
+        Criteria query = session.createCriteria(ProductData.class)
+                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
+                .addOrder(Order.desc("id"))
+                .setMaxResults(MAX_RESULTS)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("time"))
+                        .add(Projections.property("vNetAddress"))
+                        .add(Projections.property("type"))
+                        .add(Projections.property("status"))
+                        .add(Projections.property("limImbalance"))
+                        .add(Projections.property("limResistance"))
+                        .add(Projections.property("limCapacitance"))
+                        .add(Projections.property("nu.companyName"))
+                        .add(Projections.property("nu.unitSerialNo"))
+                        .add(Projections.property("nu.projectInfoId"))
+                        .add(Projections.property("nu.projectId")));
         return createProductsList(query.list());
     }
 
 
-      @Override
-    public void saveProducts(List<ProductData> productDataList, Long projectInfoId) {
+    @Override
+    public void saveProducts(List<ProductData> productDataList, Long projectInfoId) throws Exception {
         Session session = sessionFactory.getCurrentSession();
-        for (ProductData productData : productDataList){
-            productData.setNetworkUnit(unitRepository.getUnitIfo(projectInfoId));
-            session.save(productData);
+        NetworkUnit unit = unitRepository.getUnitIfo(projectInfoId);
+        if(unit == null){
+            throw new Exception("No network unit configured for the selected Project !!!");
         }
+        int skippedRecordCount = 0;
+        int failedRecordCount = 0;
+        for (int i=0; i< productDataList.size(); i++){
+            ProductData productData = productDataList.get(i);
+            productData.setNetworkUnit(unit);
+            Criteria query = session.createCriteria(ProductData.class)
+                    .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                    .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
+                    .add(Restrictions.eq("time", productData.getTime()))
+                    .add(Restrictions.eq("vNetAddress", productData.getvNetAddress()))
+                    .setProjection(Projections.rowCount());
+            int rows =  query.uniqueResult().hashCode();
+            if(rows !=0){
+                skippedRecordCount++;
+                continue;
+            }
+            try {
+                session.save(productData);
+            } catch (HibernateException he){
+                System.err.println("Error while inserting record ->"+ productData.toString()+ ", Error Msg:"+ he.getCause().getMessage());
+                failedRecordCount++;
+            }
+            if ((i+1)%30 == 0){
+                session.flush();
+                session.clear();
+            }
+        }
+        logger.info("CSV File Upload stats: \n Project Id: %d \n Total Records Processed: %d \n Skipped Records: %d \n Failed Records: %d", new Object[] {unit.getProjectId(), productDataList.size(), skippedRecordCount, failedRecordCount});
     }
 
     @Override
@@ -98,7 +128,7 @@ public class ProductRepositoryImpl implements ProductRepository{
                 .setMaxResults(MAX_RESULTS)
                 .setProjection(Projections.distinct(Projections.projectionList()
                         .add(Projections.property("vNetAddress"))));
-                //.setResultTransformer(Transformers.aliasToBean(String.class));
+        //.setResultTransformer(Transformers.aliasToBean(String.class));
         return query.list();
     }
 
