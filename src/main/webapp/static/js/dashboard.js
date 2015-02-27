@@ -54,11 +54,13 @@ function applySelectEventForDataTable(tableId, table){
             First column is hidden column for Project_Info_Id.
          */
         if(colIdx === 5){
+            var rowIdx = table.cell(this).index().row;
             var firstColumnValues = $(table.column(0).nodes());
-            $.each($(table.column( colIdx ).nodes()), function(index, value){
-               var projectInfoId = $(firstColumnValues[index]).text();
+            //$.each($(table.column( colIdx ).nodes()), function(index, value){
+               var projectInfoId = $(firstColumnValues[rowIdx]).text();
+               console.log("Project Info ID:"+ projectInfoId);
                getNodesList(projectInfoId);
-            });
+            //});
         }
       });
 
