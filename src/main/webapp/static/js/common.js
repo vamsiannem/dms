@@ -87,6 +87,7 @@ var getNodesList = function(projectInfoId) {
         var nodes = response.nodes;
         if(nodes.length ==0){
            $("#statusMessage").html("No Data Log available for Project:"+ projectInfoId+", Please sync the data first.")
+           return;
         }
         if(nodes.length == 1){
             showNetworkGraph(projectInfoId);
