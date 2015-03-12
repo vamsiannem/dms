@@ -209,12 +209,13 @@ public class ProductData implements Serializable {
 
     @Override
     public String toString() {
+        Long projectInfoId = this.getNetworkUnit() != null ? this.getNetworkUnit().getProjectInfoId(): null;
         return "ProductData{" +
                 "time='" + time + '\'' +
                 ", vNetAddress='" + vNetAddress + '\'' +
                 ", type=" + type +
                 ", status='" + status + '\'' +
-                ", projectInfoId=" + networkUnit.getProjectInfoId() +
+                ", projectInfoId=" + projectInfoId +
                 '}';
     }
 }
