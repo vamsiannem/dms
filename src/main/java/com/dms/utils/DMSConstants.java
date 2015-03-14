@@ -18,4 +18,9 @@ public interface DMSConstants {
     String ADHOC_SYNC_DONE = "Sync Complete for Unit with Serial No: %s";
     String ADHOC_SYNC_CANCELED = "Sync Canceled for Unit with Serial No: %s";
     String ADHOC_SYNC_NOT_ALLOWED = "Sync already In Progress for Unit with Serial No: %s, Please try later.";
+
+    String DUMMY_URL ="http://abc.com/dataLog";
+    String DUMMY_METHOD = "GET";
+    String DUMMY_HEADERS = "Content-type:application/json;Accept:application/json";
+    String DUMMY_PARAM = "type=0&vNetAddress=0&period=10";
 }

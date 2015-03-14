@@ -11,7 +11,8 @@ $(document).ready(function() {
                    {data: 'channel', title: 'Channel', class: 'center'},
                    {data: 'ipAddress', title: 'IP Address', class: 'center'},
                    {data: 'alive', title: 'Status', class: 'center'}
-                   ]
+                   ],
+               "sort": false
                };
   var table = $('#network_unit_table').DataTable(table_config);
   applySelectEventForDataTable("network_unit_table", table);
@@ -58,6 +59,7 @@ function applySelectEventForDataTable(tableId, table){
         }
       });
 
+
     /*$('#'+tableId).on( 'click', 'tr',
         function () {
             *//*if ( $(this).hasClass('selected') ) {
@@ -79,11 +81,15 @@ function applySelectEventForDataTable(tableId, table){
  $(function() {
     var dialog, form,
     // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
-    emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-    name = $( "#name" ),
-    email = $( "#email" ),
-    password = $( "#password" ),
-    allFields = $( [] ).add( name ).add( email ).add( password ),
+    //emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    projectId = $( "#projectId" ),
+    client = $( "#companyName" ),
+    platform = $( "#platform" ),
+    controlSystem = $( "#controlSystem" ),
+    channel = $( "#channel" ),
+    ipAddress = $( "#ipAddress" ),
+    unitSerialNo = $( "#unitSerialNo" ),
+    allFields = $( [] ).add( projectId ).add( client ).add( platform ).add( controlSystem ).add( channel ).add( ipAddress ).add(unitSerialNo),
     tips = $( ".validateTips" );
     function updateTips( t ) {
         tips
@@ -103,6 +109,14 @@ function applySelectEventForDataTable(tableId, table){
         return true;
         }
     }
+    function checkNotEmpty(o, n){
+        if( $.trim(o.val()).length == 0 ){
+           o.addClass( "ui-state-error" );
+            updateTips(n + "cannot be blank.");
+            return false;
+        }
+        return true;
+    }
     function checkRegexp( o, regexp, n ) {
         if ( !( regexp.test( o.val() ) ) ) {
         o.addClass( "ui-state-error" );
@@ -112,44 +126,78 @@ function applySelectEventForDataTable(tableId, table){
         return true;
         }
     }
-    function addUser() {
+    function createAccount() {
         var valid = true;
         allFields.removeClass( "ui-state-error" );
-        valid = valid && checkLength( name, "username", 3, 16 );
-        valid = valid && checkLength( email, "email", 6, 80 );
-        valid = valid && checkLength( password, "password", 5, 16 );
-        valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+        valid = valid && checkNotEmpty( projectId, "ProjectId ");
+        valid = valid && checkNotEmpty( client, "Client ");
+        valid = valid && checkNotEmpty( platform, "Platform ");
+        valid = valid && checkNotEmpty( controlSystem, "ControlSystem ");
+        valid = valid && checkNotEmpty( channel, "Channel ");
+        valid = valid && checkNotEmpty( ipAddress, "IPAddress ");
+        valid = valid && checkNotEmpty( unitSerialNo, "UnitSerialNo ");
+
+        /*valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
         valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
-        valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+        valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );*/
         if ( valid ) {
-        $( "#users tbody" ).append( "<tr>" +
-        "<td>" + name.val() + "</td>" +
-        "<td>" + email.val() + "</td>" +
-        "<td>" + password.val() + "</td>" +
-        "</tr>" );
-        dialog.dialog( "close" );
+            console.log("Valid INput... fire ajax call to persist project information");
+            /// ajax call here.
+            addNetworkUnit();
+
         }
         return valid;
     }
+    addNetworkUnit = function(){
+        var reqParam = "companyName="+client.val()+"&platform="+
+                        platform.val()+"&controlSystem="+controlSystem.val()+"&channel="+channel.val()+
+                        "&ipAddress="+ipAddress.val()+"&unitSerialNo="+unitSerialNo.val();
+        var request = $.ajax({
+          url: "unit/"+projectId.val()+".json",
+          type: "PUT",
+          dataType: "json",
+          data: reqParam
+        });
+
+        request.done(function( response ) {
+          if( response && response.status=='success' ){
+            console.log("Success");
+            tips.text("Project created successfully");
+            $("#statusMessage").html("Project created successfully");
+            dialog.dialog("close");
+            //reloadAllUnits();
+            $("#orderBy").val("createdDate");
+            $("#list_10").click();
+          } else {
+            tips.text("An error has occurred while persisting. Project creation failed for Project ID:"+ projectId.val());
+          }
+        });
+
+        request.fail(function( jqXHR, textStatus ) {
+          console.log( "Request failed: " + textStatus );
+          tips.text("Unexpected Error! Unable to Create Project with ProjectId:"+ projectId.val());
+        });
+    }
     dialog = $( "#dialog-form" ).dialog({
         autoOpen: false,
-        height: 500,
+        height: 450,
         width: 700,
         modal: true,
         buttons: {
-        "Create an account": addUser,
+        "Create Project": createAccount,
         Cancel: function() {
         dialog.dialog( "close" );
         }
         },
         close: function() {
         form[ 0 ].reset();
+        tips.text("All form fields are required.");
         allFields.removeClass( "ui-state-error" );
         }
     });
     form = dialog.find( "form" ).on( "submit", function( event ) {
         event.preventDefault();
-        addUser();
+        createAccount();
     });
     $( "#create-project" ).button().on( "click", function() {
         dialog.dialog( "open" );

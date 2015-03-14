@@ -5,6 +5,7 @@
 
 package com.dms.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.persistence.*;
@@ -13,14 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by support on 31/1/15.
+ * Created by VamsiKrishna on 31/1/15.
  */
 @Entity
 @Table(name = "unit_config")
 public class UnitConnectionConfig implements Serializable {
 
+    //private static final long serialVersionUID = 5795175829506892556L;
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     /**
@@ -100,5 +103,15 @@ public class UnitConnectionConfig implements Serializable {
             headersMap.put(keyValue[0], keyValue[1]);
         }
         return headersMap;
+    }
+
+
+    @JsonIgnore
+    public NetworkUnit getNetworkUnit() {
+        return networkUnit;
+    }
+
+    public void setNetworkUnit(NetworkUnit networkUnit) {
+        this.networkUnit = networkUnit;
     }
 }

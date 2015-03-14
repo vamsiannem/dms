@@ -10,26 +10,23 @@
 package com.dms.controller;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.dms.dto.User;
 import com.dms.model.NetworkUnit;
 import com.dms.model.ProductData;
 import com.dms.model.UnitConnectionConfig;
 import com.dms.repository.NetworkUnitRepository;
 import com.dms.repository.ProductRepository;
-import com.dms.utils.DefaultString;
-import com.dms.utils.EnumHelper;
-import com.dms.utils.JsonBuilder;
+import com.dms.utils.*;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.HibernateException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.Optional;
@@ -42,9 +39,12 @@ import org.supercsv.prefs.CsvPreference;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 /**
@@ -58,6 +58,7 @@ import java.util.*;
  *
  */
 @Controller
+@SessionAttributes("user")
 @RequestMapping(value="/unit")
 public class UnitController extends BaseController {
 
@@ -251,9 +252,16 @@ public class UnitController extends BaseController {
     @RequestMapping(
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             method= RequestMethod.GET)
-    public ModelAndView getAllUnits() throws IOException {
+    public ModelAndView getAllUnits(@RequestParam(required = false, defaultValue = "projectInfoId", value = "orderBy") String orderBy) throws IOException {
+        Collection<NetworkUnit> units = null;
+        if(orderBy!=null && !orderBy.equals("")){
+            units = unitRepository.getAllUnitsInOrder(orderBy);
+        } else {
+            units = unitRepository.getAll();
+        }
         ModelAndView mav = new ModelAndView("networks");
-        mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+        mav.addObject("networkUnits", mapper.writeValueAsString(units));
+
         //mav.addObject("companies", mapper.writeValueAsString(productRepository.getAllCompanies()));
         //mav.addObject("products", mapper.writeValueAsString(productRepository.getAllAvailableProducts()));
         return mav;
@@ -267,21 +275,22 @@ public class UnitController extends BaseController {
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             method= RequestMethod.PUT)
-    public String addNetworkUnit(@PathVariable("projectId") String projectId,
+    public ModelAndView addNetworkUnit(@PathVariable("projectId") String projectId,
                                                   @RequestParam("companyName")String companyName,
                                                   @RequestParam("platform")String platform,
                                                   @RequestParam("controlSystem")String controlSystem,
                                                   @RequestParam("channel")String channel,
                                                   @RequestParam("ipAddress")String ipAddress,
                                                   @RequestParam("unitSerialNo")String unitSerialNo,
-                                                  @RequestParam("restUrl")String url,
+                                                  HttpSession session
+                                                  /*@RequestParam("restUrl")String url,
                                                   @RequestParam("headers") String headers,
-                                                  @RequestParam("method")String method) throws Exception {
-        String status = "success";
+                                                  @RequestParam("method")String method*/) throws Exception {
+        String addStatus = "success";
         // plz write validations here for each input field.
         if(null == projectId || null == companyName || null == platform || null == controlSystem
-                || null == channel || null == ipAddress || null == unitSerialNo || null ==url
-                || null == headers || null == method)
+                || null == channel || null == ipAddress || null == unitSerialNo /*|| null ==url
+                || null == headers || null == method*/)
             throw new Exception("All fields are mandatory.");
         if(projectId.trim().length()==0 ||
                 companyName.trim().length()==0 ||
@@ -290,24 +299,36 @@ public class UnitController extends BaseController {
                 channel.trim().length()==0 ||
                 ipAddress.trim().length()==0 ||
                 unitSerialNo.trim().length()==0 ){
-            throw new Exception("Empty spaces are not allowed.");
+            throw new Exception("Any of the Fields cannot be left blank or empty.");
         }
 
         NetworkUnit networkUnit = new NetworkUnit();
-        networkUnit.setCompanyName(companyName);
         networkUnit.setProjectId(projectId);
-        networkUnit.setChannel(channel);
-        networkUnit.setAlive(false);
+        networkUnit.setCompanyName(companyName);
+        networkUnit.setPlatform(platform);
         networkUnit.setControlSystem(controlSystem);
+        networkUnit.setChannel(channel);
         networkUnit.setIpAddress(ipAddress);
+        networkUnit.setAlive(false);
         networkUnit.setUnitSerialNo(unitSerialNo);
+        networkUnit.setCreatedBy(((com.dms.model.User) session.getAttribute(DMSConstants.SESSION_USER)).getName());
+        networkUnit.setCreatedDate(new Date(System.currentTimeMillis()));
         UnitConnectionConfig config = new UnitConnectionConfig();
-        config.setUrl(url);
-        config.setHeaders(headers);
-        config.setMethod(EnumHelper.load(RequestMethod.class, method));
+        config.setUrl(DMSConstants.DUMMY_URL);
+        config.setHeaders(DMSConstants.DUMMY_HEADERS);
+        config.setMethod(EnumHelper.load(RequestMethod.class, DMSConstants.DUMMY_METHOD));
+        config.setBodyParams(DMSConstants.DUMMY_PARAM);
         networkUnit.setUnitConnectionConfig(config);
-        unitRepository.create(networkUnit);
-        return status;
+        ModelAndView mav = new ModelAndView();
+        try {
+            unitRepository.create(networkUnit);
+            mav.addObject("status", addStatus);
+        } catch (HibernateException he){
+            logger.error(he.getCause().getMessage());
+            he.printStackTrace();
+            mav.addObject("status", "Failed");
+        }
+        return mav;
     }
 
     /**

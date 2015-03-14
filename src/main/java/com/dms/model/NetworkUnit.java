@@ -5,9 +5,12 @@
 
 package com.dms.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by support on 25/1/15.
@@ -44,6 +47,13 @@ public class NetworkUnit implements Serializable {
 
     @Column(name="is_alive", nullable=false)
     private boolean isAlive;
+
+    @Column(name = "created_date", nullable = false, columnDefinition = "TIMESTAMP")
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date createdDate;
+
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "unit_config_id", referencedColumnName = "id", nullable = false)
@@ -130,5 +140,21 @@ public class NetworkUnit implements Serializable {
 
     public void setUnitConnectionConfig(UnitConnectionConfig unitConnectionConfig) {
         this.unitConnectionConfig = unitConnectionConfig;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(java.sql.Date createdDate) {
+        this.createdDate = new Date(createdDate.getTime());
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

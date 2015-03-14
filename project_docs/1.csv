@@ -1,0 +1,6 @@
+Time,VNetAddress,Type,Message,,,,,,,,,
+Time,VNetAddress,Type,Status,LimImbalance,LimResistance,LimCapacitance,LimResistanceCm,LimCapacitanceCm,LineVoltage,LineCurrent,LineFrequency,LinePhase
+2014-10-24T10:26:15,1,1,V-LIM Started,,,,,,,,,
+2014-10-24T10:26:16,1,2,0x0,0,186258176,1.#QNANe+000,-1,9.95E+01,0,0,0,0
+,,,,,,,,,,,,
+,,,,,,,,,,,,

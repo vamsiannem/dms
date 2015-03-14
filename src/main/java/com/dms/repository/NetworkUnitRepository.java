@@ -7,6 +7,7 @@ package com.dms.repository;
 
 import com.dms.model.NetworkUnit;
 import com.dms.model.UnitConnectionConfig;
+import org.hibernate.HibernateException;
 
 import java.util.Collection;
 
@@ -16,8 +17,9 @@ import java.util.Collection;
 public interface NetworkUnitRepository {
     NetworkUnit getUnitIfo(Long projectInfoId);
     NetworkUnit update(NetworkUnit unit);
-    NetworkUnit create(NetworkUnit unit);
+    NetworkUnit create(NetworkUnit unit) throws HibernateException;
     void delete(Long projectInfoId);
     UnitConnectionConfig getUnitConfig(Long projectInfoId);
     Collection<NetworkUnit> getAll();
+    Collection<NetworkUnit> getAllUnitsInOrder(String orderBy);
 }

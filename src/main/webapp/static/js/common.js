@@ -119,3 +119,27 @@ var showNetworkGraph = function(projectInfoId){
     $("#frm_projectInfoId").val(projectInfoId)
     $("#common-form").submit();
 }
+
+var reloadAllUnits = function(){
+    reqParam = "orderBy=createdDate";
+    var request = $.ajax({
+      url: "unit.json",
+      type: "GET",
+      dataType: "json",
+      data: reqParam
+    });
+
+    request.done(function( response ) {
+      if( response && response.networkUnits !=null){
+        $("#orderBy").val("createdDate");
+        $("#list_10").click();
+      } else {
+        $("#statusMessage").html("An error has occurred while reloading all units, Please try again later.");
+      }
+    });
+
+    request.fail(function( jqXHR, textStatus ) {
+      console.log( "Request failed: " + textStatus );
+      $("#statusMessage").html("An error has occurred while reloading all units, Please try again later.");
+    });
+}

@@ -57,37 +57,110 @@
 </div>
 <div style="padding-left: 15px;padding-top: 4px;float:left;">
 
-    <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
+    <div style="float:left;width: 1040px;height: 600px;border: 2px solid #fff;">
     <div id="dialog-form" title="Create New Project" style="background: url('../images/bg.png')">
         <p class="validateTips">All form fields are required.</p>
         <form>
-            <fieldset >
+            <fieldset style="border:1px solid #483D8B; padding: 10px;" >
                 <div>
-                <label class='dialog-label' for="projectId">Project ID</label>
-                <input type="text" name="projectId" id="projectId" value="" class="text ui-widget-content ui-corner-all">
-                <label class='dialog-label' for="client">Client</label>
-                <input type="text" name="client" id="client" value=""  class="text ui-widget-content ui-corner-all">
+                    <h3 style="font-style: inherit;text-decoration: underline;font-family: Times New Roman;text-align:center">
+                        Unit Details
+                    </h3>
                 </div>
                 <div>
-                <label class='dialog-label' for="platform">Platform</label>
-                <input type="text" name="platform" id="platform" value="" class="text ui-widget-content ui-corner-all">
+                    <label class='dialog-label' for="projectId">
+                        <span>Project Id</span>
+                        <input type="text" name="projectId" id="projectId" placeholder="Enter project id" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                    <label class='dialog-label' for="companyName">
+                        <span>Client</span>
+                        <input type="text" name="companyName" id="companyName" placeholder="Client Name" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                    <label class='dialog-label' for="platform">
+                        <span>Platform</span>
+                        <input type="text" name="platform" id="platform" placeholder="platform" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                </div>
+                <div style="clear:both;"></div>
+                <div>
+                    <label class='dialog-label' for="controlSystem">
+                        <span>Control System</span>
+                        <input type="text" name="controlSystem" id="controlSystem" placeholder="Control System" class="text ui-widget-content ui-corner-all"/>
+                    </label>
 
-                <label class='dialog-label' for="controlSystem">Control System</label>
-                <input type="text" name="controlSystem" id="controlSystem" value="" class="text ui-widget-content ui-corner-all">
+                    <label class='dialog-label' for="channel">
+                        <span>Channel</span>
+                        <input type="text" name="channel" id="channel" placeholder="Channel" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                    <label class='dialog-label' for="ipAddress">
+                        <span>IP Address</span>
+                        <input type="text" name="ipAddress" id="ipAddress" placeholder="IP Address" class="text ui-widget-content ui-corner-all"/>
+                    </label>
                 </div>
+                <div style="clear:both;"></div>
                 <div>
-                <label class='dialog-label' for="channel">Channel</label>
-                <input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all">
-                <label class='dialog-label' for="ipAddress">IP Address</label>
-                <input type="text" name="ipAddress" id="ipAddress" value="" class="text ui-widget-content ui-corner-all">
-                </div>
-                <div>
-                <label class='dialog-label' for="unitSerialNo">Unit Serial No:</label>
-                <input type="text" name="unitSerialNo" id="unitSerialNo" value="" class="text ui-widget-content ui-corner-all">
+                    <label class='dialog-label' for="unitSerialNo">
+                        <span>Unit Serial No:</span>
+                        <input type="text" name="unitSerialNo" id="unitSerialNo" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>
+                    </label>
                 </div>
                 <!-- Allow form submission with keyboard without duplicating the dialog button -->
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </fieldset>
+            <!-- This is for auto sync capabilities. Currently not required.
+            <fieldset style="border:1px solid #483D8B; padding: 10px;">
+                <div>
+                    <h3 style="font-style: inherit;text-decoration: underline;font-family: Times New Roman;text-align:center">
+                        Unit Sync Configuration
+                    </h3>
+                </div>
+                <div>
+                    <label class='dialog-label' for="URL">
+                        <span>URL:</span>
+                        <input type="text" name="url" id="url" placeholder="Enter HTTP URL" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                    <label class='dialog-label' for="headers">
+                        <span>Request Headers:</span>
+                        <select id="headers" name="headers" multiple="true" class="ui-widget-content ui-corner-all">
+                            <option value="C-NA">Content: NOT APPLICABLE</option>
+                            <option value="C-JSON">Content: JSON</option>
+                            <option value="C-XML">Content: XML</option>
+                            <option value="C-TEXT">Content: PLAIN TEXT</option>
+                            <option value="A-NA">Accept: NOT APPLICABLE</option>
+                            <option value="A-JSON">Accept: JSON</option>
+                            <option value="A-XML">Accept: XML</option>
+                            <option value="A-TEXT">Accept: PLAIN TEXT</option>
+                        </select>
+                    </label>
+                    <label class='dialog-label' for="method">
+                        <span>Request Method:</span>
+                        <select id="method" name="method" class="ui-widget-content ui-corner-all">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                        </select>
+                    </label>
+                </div>
+                <div style="clear:both;"></div>
+                <div>
+                    <label class='dialog-label' for="unitSerialNo">
+                        <span>Type:</span>
+                        <input type="text" name="unitSerialNo" id="unitSerialNo" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                </div>
+                <div>
+                    <label class='dialog-label' for="unitSerialNo">
+                        <span>vNet Address:</span>
+                        <input type="text" name="unitSerialNo" id="unitSerialNo" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                </div>
+                <div>
+                    <label class='dialog-label' for="unitSerialNo">
+                        <span>Period:</span>
+                        <input type="text" name="unitSerialNo" id="unitSerialNo" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+                </div>
+            </fieldset>
+            This code will be used for auto sync. Currently not required. -->
         </form>
     </div>
 	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
@@ -103,6 +176,7 @@
 <div>
     <form style="visibility:hidden" name="common-form"  id="common-form" action="<%= request.getContextPath() %>" method="post">
         <input type="hidden" id="frm_projectInfoId" name="frm_projectInfoId">
+        <input type="hidden" id="orderBy" name="orderBy">
     </form>
  </div>
 </body>

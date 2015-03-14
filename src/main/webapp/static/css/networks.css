@@ -1,7 +1,17 @@
 .ui-widget-header {
     border: 1px solid #e78f08;
-    background: url('../images/bg.png') 50% 50% repeat-x;
+    background: #483D8B 50% 50% repeat-x;
     color: #ffffff;
     font-weight: bold;
 }
 
+.dialog-label{
+    width: 130px; float: left; margin: 0 79px 0 0;
+ }
+
+.dialog-label span {
+    display: block; margin: 0 0 3px; font-size: 14px; font-weight: bold;
+}
+
+.dialog-label input { width: 130px; border: 1px solid #cccccc; padding: 5px; font-size:12px; }
+.dialog-label select { width: 180px; border: 1px solid #cccccc; padding: 5px; font-size:12px; }

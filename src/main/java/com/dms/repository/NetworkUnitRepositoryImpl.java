@@ -7,8 +7,10 @@ package com.dms.repository;
 
 import com.dms.model.NetworkUnit;
 import com.dms.model.UnitConnectionConfig;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +41,9 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     }
 
     @Override
-    public NetworkUnit create(NetworkUnit unit) {
+    public NetworkUnit create(NetworkUnit unit) throws HibernateException{
         Session session = sessionFactory.getCurrentSession();
+        //session.save(unit.getUnitConnectionConfig());
         session.saveOrUpdate(unit);
         return unit;
     }
@@ -67,5 +70,11 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     public Collection<NetworkUnit> getAll() {
         Session session = sessionFactory.getCurrentSession();
         return session.createCriteria(NetworkUnit.class).list();
+    }
+
+    @Override
+    public Collection<NetworkUnit> getAllUnitsInOrder(String orderBy) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createCriteria(NetworkUnit.class).addOrder(Order.desc(orderBy)).list();
     }
 }
