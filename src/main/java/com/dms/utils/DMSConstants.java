@@ -23,4 +23,10 @@ public interface DMSConstants {
     String DUMMY_METHOD = "GET";
     String DUMMY_HEADERS = "Content-type:application/json;Accept:application/json";
     String DUMMY_PARAM = "type=0&vNetAddress=0&period=10";
+
+    String EXPORT_FILE_PREFIX = "vlim-datalog_";
+    String SUFFIX_CSV = ".csv";
+    String[] HEADERS_CSV = new String[] { "Time", "vNetAddress", "Type", "Status",
+            "limImbalance", "limResistance", "limCapacitance", "limResistanceCm",
+            "limCapacitanceCm", "lineVoltage", "lineCurrent", "lineFrequency", "linePhase" };
 }

@@ -51,7 +51,7 @@
     <div><h3 style="text-align:center">Upload CSV Data</h3></div>
     <div style="float:left;width: 600px;height: 350px;border: 2px solid #fff;"><span style="padding:5px;">
       <div>
-        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/upload" method="post" enctype="multipart/form-data" style="position:relative; height:180px">
+        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/import" method="post" enctype="multipart/form-data" style="position:relative; height:180px">
             <div class="content" >
                 <div>
                     <label>Network Unit:

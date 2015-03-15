@@ -24,6 +24,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.HibernateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -62,11 +64,7 @@ import java.util.*;
 @RequestMapping(value="/unit")
 public class UnitController extends BaseController {
 
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UnitController.class);
-
-    private Random random = new Random(100000);
-    private static final String VAR_NETWORK_UNIT = "networkUnitSelect";
-    private static final String VAR_FILE_PATH = "path";
+    private static final Logger logger = LoggerFactory.getLogger(UnitController.class);
     ObjectMapper mapper = new ObjectMapper();
 
     @Resource
@@ -82,7 +80,7 @@ public class UnitController extends BaseController {
      * Go to file selection page where you can select and upload data file.
      * @return
      */
-    @RequestMapping(value="/data/view", method = RequestMethod.POST)
+    /*@RequestMapping(value="/data/view", method = RequestMethod.POST)
     public ModelAndView renderProductUploadView(){
         ModelAndView mav = new ModelAndView("upload_unit_data");
         try {
@@ -93,12 +91,12 @@ public class UnitController extends BaseController {
         return mav;
     }
 
-    /**
+    *//**
      * Upload csv data file for a company/unit.
      * @param request
      * @return
      * @throws Exception
-     */
+     *//*
     @RequestMapping(value="/data/upload",
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes=MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -243,7 +241,7 @@ public class UnitController extends BaseController {
             }
 
         }
-    }
+    }*/
 
     /**
      * List all network units present in DMS database

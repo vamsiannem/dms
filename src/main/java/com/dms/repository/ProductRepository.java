@@ -9,7 +9,10 @@
  */
 package com.dms.repository;
 
+import com.dms.dto.UnitDataDateLimit;
 import com.dms.model.ProductData;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,12 +20,16 @@ import java.util.List;
  * @author Vamsi
  */
 public interface ProductRepository {
-    
+
+    UnitDataDateLimit getUnitDataLimits();
+
     /**
      * 
      * @return  List of product names available in the product data table.
      */
     List<ProductData> getAllAvailableProducts();
+
+    List<Object[]> getUnitData(Long projectInfoId, String startDate, String endDate);
     
     /**
      * Get all the data for a company. This data is used to display

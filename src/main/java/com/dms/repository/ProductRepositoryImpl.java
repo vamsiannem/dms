@@ -9,23 +9,32 @@
  */
 package com.dms.repository;
 
+import com.dms.dto.UnitDataDateLimit;
 import com.dms.model.NetworkUnit;
 import com.dms.model.ProductData;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 
+import com.dms.utils.DateUtils;
 import org.hibernate.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.dms.utils.DateUtils.convertMysqlDateToDisplayDate;
 
 /**
  *
@@ -39,6 +48,11 @@ public class ProductRepositoryImpl implements ProductRepository{
 
     private static final Integer MAX_RESULTS = 2000;
 
+    /**
+     * Currently we set this value for Excel 2003 max supported rows.
+     */
+    private static final Integer MAX_RESULTS_EXPORT = 65536;
+
     private static final Integer ALL_MAX_RESULTS = 4000;
 
     @Resource
@@ -48,6 +62,24 @@ public class ProductRepositoryImpl implements ProductRepository{
     NetworkUnitRepository unitRepository;
 
     @Override
+    public UnitDataDateLimit getUnitDataLimits() {
+        Session session = sessionFactory.getCurrentSession();
+        SQLQuery query = session.createSQLQuery("SELECT min(date(p.time)), max(date(p.time)) FROM product_data p");
+
+        Object[] result = (Object[]) query.uniqueResult();
+        UnitDataDateLimit res = null;
+        try {
+            res = new UnitDataDateLimit(
+                    convertMysqlDateToDisplayDate(result[0].toString()),
+                    convertMysqlDateToDisplayDate(result[1].toString())
+            );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @Override
     public List<ProductData> getAllAvailableProducts() {
 
         Session session = sessionFactory.getCurrentSession();
@@ -55,6 +87,34 @@ public class ProductRepositoryImpl implements ProductRepository{
         Query query = session.createQuery(hqlQuery);
         query.setMaxResults(ALL_MAX_RESULTS);
         return createProductsList(query.list());
+    }
+
+    @Override
+    public List<Object[]> getUnitData(Long projectInfoId, String startDate, String endDate) {
+        Session session = sessionFactory.getCurrentSession();
+        Object[] values = {startDate,endDate};
+        Criteria query = session.createCriteria(ProductData.class)
+                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
+                .add(Restrictions.sqlRestriction("date({alias}.time) between ? and ?",
+                        values, new org.hibernate.type.Type[]{StandardBasicTypes.STRING, StandardBasicTypes.STRING}))
+                .addOrder(Order.asc("id"))
+                .setMaxResults(MAX_RESULTS_EXPORT)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("time"))
+                        .add(Projections.property("vNetAddress"))
+                        .add(Projections.property("type"))
+                        .add(Projections.property("status"))
+                        .add(Projections.property("limImbalance"))
+                        .add(Projections.property("limResistance"))
+                        .add(Projections.property("limCapacitance"))
+                        .add(Projections.property("limResistanceCm"))
+                        .add(Projections.property("limCapacitanceCm"))
+                        .add(Projections.property("lineVoltage"))
+                        .add(Projections.property("lineCurrent"))
+                        .add(Projections.property("lineFrequency"))
+                        .add(Projections.property("linePhase")));
+        return createProductsExport(query.list());
     }
 
     @Override
@@ -79,7 +139,6 @@ public class ProductRepositoryImpl implements ProductRepository{
                         .add(Projections.property("nu.projectId")));
         return createProductsList(query.list());
     }
-
 
     @Override
     public void saveProducts(List<ProductData> productDataList, Long projectInfoId) throws Exception {
@@ -117,6 +176,7 @@ public class ProductRepositoryImpl implements ProductRepository{
         }
         logger.info("CSV File Upload stats: \n Project Id: %d \n Total Records Processed: %d \n Skipped Records: %d \n Failed Records: %d", new Object[] {unit.getProjectId(), productDataList.size(), skippedRecordCount, failedRecordCount});
     }
+
 
     @Override
     public List<String> getVNetAddress(Long projectInfoId) {
@@ -156,6 +216,19 @@ public class ProductRepositoryImpl implements ProductRepository{
             nu.setProjectId((String)row[10]);
             productData.setNetworkUnit(nu);
             productDataList.add(productData);
+        }
+        return productDataList;
+    }
+
+    private List<Object[]> createProductsExport(List results) {
+        if(results == null || results.size() == 0) {
+            return new ArrayList<Object[]>();
+        }
+        List<Object[]> productDataList = new ArrayList<Object[]>(results.size());
+        Iterator iterator = results.iterator();
+        while (iterator.hasNext()){
+            Object[] row = (Object[]) iterator.next();
+            productDataList.add(row);
         }
         return productDataList;
     }

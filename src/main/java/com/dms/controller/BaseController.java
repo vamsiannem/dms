@@ -5,6 +5,7 @@
 
 package com.dms.controller;
 
+import com.dms.exception.NoResultsException;
 import com.dms.exception.UnitSyncInProgressException;
 import org.hibernate.HibernateException;
 import org.json.JSONException;
@@ -44,6 +45,13 @@ public abstract class BaseController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public @ResponseBody
     String handleOtherExceptions(Throwable throwable,  HttpServletRequest request) {
+        return throwable.getMessage();
+    }
+
+    @ExceptionHandler(value = {NoResultsException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    String handleNoResultsExceptions(Throwable throwable,  HttpServletRequest request) {
         return throwable.getMessage();
     }
 }
