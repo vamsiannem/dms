@@ -26,9 +26,10 @@
         var products= JSON.parse('${products}');
     </script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/network_graph.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
 
 
-    <!-- <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script> -->
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
@@ -58,9 +59,11 @@
 
 
         <div style="padding-left: 15px;padding-top: 4px;float:left;">
-            <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;">
-                <div style="margin: 25px;  border: 1px solid #ffafa4;" id="resizable">
-                    <div id="chart1">  </div>
+            <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;overflow-y:hidden">
+                <div style="margin: 10px;  border: 1px solid #ffafa4;" id="resizable">
+
+                    <div id="chart1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
                 </div>
             </div>&nbsp;
             <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
