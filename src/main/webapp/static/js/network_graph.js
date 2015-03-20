@@ -1,6 +1,12 @@
 $(document).ready(function() {
+    var anotherPlotData = new Array();
+    var i=0;
     $.each(plotData, function (index, item) {
+            // "2014-10-24 14:36"
+            var dt = item[0].split(/[-: ]/);
+            item[0] = new Date(dt[0], dt[1]-1, dt[2], dt[3], dt[4], 00);
            item[1]= parseFloat(item[1]);
+
     });
     console.log(plotData);
 
@@ -56,16 +62,15 @@ $(document).ready(function() {
                     type: 'spline'
                 },
                 title: {
-                    text: 'Snow depth at Vikjafjellet, Norway'
+                    text: 'Line Chart Analysis of Unit'
                 },
                 subtitle: {
-                    text: 'Irregular time data in Highcharts JS'
+                    text: 'Source: DMS Unit Data'
                 },
                 xAxis: {
                     type: 'datetime',
                     dateTimeLabelFormats: { // don't display the dummy year
-                        month: '%e. %b',
-                        year: '%b'
+                        day: '%e of %b'
                     },
                     title: {
                         text: 'Date'
@@ -73,13 +78,13 @@ $(document).ready(function() {
                 },
                 yAxis: {
                     title: {
-                        text: 'Snow depth (m)'
+                        text: 'Measurement'
                     },
                     min: 0
                 },
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+                    pointFormat: '{point.x:%e. %b %H:%M}  :  {point.y:.2f} '
                 },
 
                 plotOptions: {
@@ -91,37 +96,10 @@ $(document).ready(function() {
                 },
 
                 series: [{
-                    name: 'Winter 2007-2008',
-                    // Define the data points. All series have a dummy year
-                    // of 1970/71 in order to be compared on the same x axis. Note
-                    // that in JavaScript, months start at 0 for January, 1 for February etc.
-                    data: [
-                        [Date.UTC(1970,  9, 27), 0   ],
-                        [Date.UTC(1970, 10, 10), 0.6 ],
-                        [Date.UTC(1970, 10, 18), 0.7 ],
-                        [Date.UTC(1970, 11,  2), 0.8 ],
-                        [Date.UTC(1970, 11,  9), 0.6 ],
-                        [Date.UTC(1970, 11, 16), 0.6 ],
-                        [Date.UTC(1970, 11, 28), 0.67],
-                        [Date.UTC(1971,  0,  1), 0.81],
-                        [Date.UTC(1971,  0,  8), 0.78],
-                        [Date.UTC(1971,  0, 12), 0.98],
-                        [Date.UTC(1971,  0, 27), 1.84],
-                        [Date.UTC(1971,  1, 10), 1.80],
-                        [Date.UTC(1971,  1, 18), 1.80],
-                        [Date.UTC(1971,  1, 24), 1.92],
-                        [Date.UTC(1971,  2,  4), 2.49],
-                        [Date.UTC(1971,  2, 11), 2.79],
-                        [Date.UTC(1971,  2, 15), 2.73],
-                        [Date.UTC(1971,  2, 25), 2.61],
-                        [Date.UTC(1971,  3,  2), 2.76],
-                        [Date.UTC(1971,  3,  6), 2.82],
-                        [Date.UTC(1971,  3, 13), 2.8 ],
-                        [Date.UTC(1971,  4,  3), 2.1 ],
-                        [Date.UTC(1971,  4, 26), 1.1 ],
-                        [Date.UTC(1971,  5,  9), 0.25],
-                        [Date.UTC(1971,  5, 12), 0   ]
-                    ]
+                    name: 'LimResistance',
+                    data:
+                        plotData
+
                 }]
             });
 
