@@ -11,7 +11,8 @@ package com.dms.utils;
 public interface DMSConstants {
     Integer MAX_POSSIBLE_NETWORK_UNITS = 10;
     Integer DEFAULT_THREAD_POOL_SIZE = MAX_POSSIBLE_NETWORK_UNITS/2;
-    static final String SESSION_USER = "USER";
+    static final String SESSION_USER_FULL_NAME = "USER_NAME";
+    static final String SESSION_USER_ID = "USER_ID";
     String PACKAGE_ROOT = "com.dms";
     String ADHOC_SYNC_IN_PROGRESS = "Sync In Progress for Unit with Serial No: %s";
     String ADHOC_SYNC_IN_PROGRESS_VIEW = "Sync In Progress";

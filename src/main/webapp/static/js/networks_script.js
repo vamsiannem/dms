@@ -16,6 +16,13 @@ $(document).ready(function() {
                };
   var table = $('#network_unit_table').DataTable(table_config);
   applySelectEventForDataTable("network_unit_table", table);
+  $( "#installationDate" ).datepicker({
+       defaultDate: "+1w",
+       changeMonth: true,
+       changeYear: true,
+       numberOfMonths: 1,
+       dateFormat: "dd/mm/yy"
+     });
 
 });
 
@@ -89,6 +96,7 @@ function applySelectEventForDataTable(tableId, table){
     channel = $( "#channel" ),
     ipAddress = $( "#ipAddress" ),
     unitSerialNo = $( "#unitSerialNo" ),
+    installationDate = $( "#installationDate" ),
     allFields = $( [] ).add( projectId ).add( client ).add( platform ).add( controlSystem ).add( channel ).add( ipAddress ).add(unitSerialNo),
     tips = $( ".validateTips" );
     function updateTips( t ) {
@@ -136,6 +144,7 @@ function applySelectEventForDataTable(tableId, table){
         valid = valid && checkNotEmpty( channel, "Channel ");
         valid = valid && checkNotEmpty( ipAddress, "IPAddress ");
         valid = valid && checkNotEmpty( unitSerialNo, "UnitSerialNo ");
+        valid = valid && checkNotEmpty( installationDate, "InstallationDate ");
 
         /*valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
         valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
@@ -151,7 +160,7 @@ function applySelectEventForDataTable(tableId, table){
     addNetworkUnit = function(){
         var reqParam = "companyName="+client.val()+"&platform="+
                         platform.val()+"&controlSystem="+controlSystem.val()+"&channel="+channel.val()+
-                        "&ipAddress="+ipAddress.val()+"&unitSerialNo="+unitSerialNo.val();
+                        "&ipAddress="+ipAddress.val()+"&unitSerialNo="+unitSerialNo.val()+"&installationDate="+ installationDate.val();
         var request = $.ajax({
           url: "unit/"+projectId.val()+".json",
           type: "PUT",
@@ -166,7 +175,7 @@ function applySelectEventForDataTable(tableId, table){
             $("#statusMessage").html("Project created successfully");
             dialog.dialog("close");
             //reloadAllUnits();
-            $("#orderBy").val("createdDate");
+            $("#orderBy").val("lastModifiedDate");
             $("#list_10").click();
           } else {
             tips.text("An error has occurred while persisting. Project creation failed for Project ID:"+ projectId.val());

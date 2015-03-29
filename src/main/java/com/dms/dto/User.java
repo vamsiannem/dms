@@ -15,17 +15,38 @@ import java.util.Set;
 public class User implements Serializable{
 
     private Integer userId;
-    private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private Integer mappedRoleId;
 
-    public String getUsername() {
-        return username;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername(){
+        return lastName+" "+ firstName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -36,14 +57,6 @@ public class User implements Serializable{
         this.email = email;
     }
 
-    public Integer getMappedRoleId() {
-        return mappedRoleId;
-    }
-
-    public void setMappedRoleId(Integer mappedRoleId) {
-        this.mappedRoleId = mappedRoleId;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -52,11 +65,11 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getMappedRoleId() {
+        return mappedRoleId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setMappedRoleId(Integer mappedRoleId) {
+        this.mappedRoleId = mappedRoleId;
     }
 }

@@ -5,7 +5,6 @@
 
 package com.dms.interceptors;
 
-import com.dms.model.User;
 import com.dms.repository.UserRepository;
 import com.dms.utils.DMSConstants;
 import org.springframework.stereotype.Component;
@@ -40,9 +39,10 @@ public class SecurityContextFilter implements Filter{
         if(!requestURI.contains("/login") && !requestURI.contains("index.jsp")){
             HttpSession httpSession = httpServletRequest.getSession(false);
             if(httpSession != null){
-                User user = (User) httpSession.getAttribute(DMSConstants.SESSION_USER);
-                if( user != null){
-                    System.out.println("Valid session for User with Name: +" + user.getName());
+                Integer userId = (Integer) httpSession.getAttribute(DMSConstants.SESSION_USER_ID);
+                String userName = (String) httpSession.getAttribute(DMSConstants.SESSION_USER_FULL_NAME);
+                if( userId != null){
+                    System.out.println("Valid session for User with Name: +" + userName);
                 } else {
                     ((HttpServletResponse)servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED);
                     return;

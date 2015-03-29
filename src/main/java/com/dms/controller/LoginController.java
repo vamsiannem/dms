@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -41,7 +40,8 @@ public class LoginController {
     public ModelAndView doLogin(HttpServletRequest request, @RequestParam("username") String username,@RequestParam("password") String password) throws Exception {
         User user = loginRepository.doLogin(username, password);
         if(user != null){
-            request.getSession(true).setAttribute(DMSConstants.SESSION_USER, user);
+            request.getSession(true).setAttribute(DMSConstants.SESSION_USER_FULL_NAME, user.getFullName());
+            request.getSession(true).setAttribute(DMSConstants.SESSION_USER_ID, user.getId());
         } else {
            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             throw new Exception("Invalid username or password");

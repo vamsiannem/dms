@@ -33,7 +33,8 @@ public class UserRepositoryImpl implements UserRepository {
     public Integer addUser(com.dms.dto.User user) {
         Session session = sessionFactory.getCurrentSession();
         User boUser = new User();
-        boUser.setName(user.getUsername());
+        boUser.setFirstName(user.getFirstName());
+        boUser.setLastName(user.getLastName());
         boUser.setEmail(user.getEmail());
         boUser.setPassword(user.getPassword());
         Role role = (Role) session.get(Role.class, user.getMappedRoleId());

@@ -81,15 +81,15 @@ public class NavigationController extends BaseController {
 
 
             //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-            objects[1] = product.getLimResistance()!=null ? df.format(product.getLimResistance()): 0;
+            objects[1] = product.getInsulationResistance()!=null ? df.format(product.getInsulationResistance()): 0;
             plotGraphData.add(objects);
         }
 
         mav.addObject("products", mapper.writeValueAsString(products));
         mav.addObject("plotData", mapper.writeValueAsString(plotGraphData));
         if(products!=null && products.size()>0){
-            mav.addObject("companyName", products.get(0).getNetworkUnit().getCompanyName());
-            mav.addObject("unitSerialNo", products.get(0).getNetworkUnit().getUnitSerialNo());
+            mav.addObject("companyName", products.get(0).getProjectInfo().getCompanyName());
+            mav.addObject("unitSerialNo", products.get(0).getProjectInfo().getUnitSerialNo());
             mav.addObject("node", products.get(0).getvNetAddress());
         }
         mav.addObject("network_unit", unitRepository.getUnitIfo(projectInfoId));

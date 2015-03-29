@@ -5,7 +5,6 @@
 
 package com.dms.model;
 
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,8 +15,8 @@ import java.util.Date;
  * Created by support on 25/1/15.
  */
 @Entity
-@Table(name = "network_unit")
-public class NetworkUnit implements Serializable {
+@Table(name = "project_info")
+public class ProjectInfo implements Serializable {
 
     @Id
     @Column(name="project_info_id")
@@ -26,9 +25,6 @@ public class NetworkUnit implements Serializable {
 
     @Column(name="project_id", length = 6)
     private String projectId;
-
-    @Column(name="company_name", nullable=false)
-    private String companyName;
 
     @Column(name="unit_serial_no", nullable=false)
     private String unitSerialNo;
@@ -42,25 +38,54 @@ public class NetworkUnit implements Serializable {
     @Column(name="channel", nullable=false)
     private String channel;
 
+    @Column(name = "description")
+    private String description;
+
+    /*
+        when this unit is installed on client location.
+        User is expected to enter a date, while creating a project.
+     */
+    @Column(name = "installation_date", nullable = false, columnDefinition = "TIME")
+    @Temporal(value = TemporalType.TIME)
+    private Date installationDate;
+
     @Column(name="ip_address", nullable=false)
     private String ipAddress;
 
     @Column(name="is_alive", nullable=false)
     private boolean isAlive;
 
-    @Column(name = "created_date", nullable = false, columnDefinition = "TIMESTAMP")
+    /*
+       Who has created this project in DMS system.
+       Currently only admin user is defined in this system.
+     */
+    @Column(name = "last_modified_by", nullable = false)
+    private String lastModifiedBy;
+
+    /*
+        When this project is created.
+        Defaults to current system timestamp.
+     */
+    @Column(name = "last_modified_date", nullable = false, columnDefinition = "TIMESTAMP")
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private Date lastModifiedDate;
 
-    @Column(name = "created_by", nullable = false)
-    private String createdBy;
+    @Column(name = "part_no")
+    private String partNo;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "refNo")
+    private String refNo;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "unit_config_id", referencedColumnName = "id", nullable = false)
     private UnitConnectionConfig unitConnectionConfig;
 
-    @OneToMany(mappedBy = "networkUnit", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projectInfo", fetch = FetchType.EAGER)
     private Collection<UnitSyncStatus> unitSyncStatus;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_info_id", referencedColumnName = "id", nullable = false)
+    private ClientInfo clientInfo;
 
     public Long getProjectInfoId() {
         return projectInfoId;
@@ -79,11 +104,9 @@ public class NetworkUnit implements Serializable {
     }
 
     public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+        if(clientInfo!=null)
+            return clientInfo.getName();
+        return null;
     }
 
     public String getUnitSerialNo() {
@@ -118,6 +141,22 @@ public class NetworkUnit implements Serializable {
         this.channel = channel;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getInstallationDate() {
+        return installationDate;
+    }
+
+    public void setInstallationDate(Date installationDate) {
+        this.installationDate = installationDate;
+    }
+
     public String getIpAddress() {
         return ipAddress;
     }
@@ -134,6 +173,38 @@ public class NetworkUnit implements Serializable {
         this.isAlive = isAlive;
     }
 
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getPartNo() {
+        return partNo;
+    }
+
+    public void setPartNo(String partNo) {
+        this.partNo = partNo;
+    }
+
+    public String getRefNo() {
+        return refNo;
+    }
+
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
+    }
+
     public UnitConnectionConfig getUnitConnectionConfig() {
         return unitConnectionConfig;
     }
@@ -142,19 +213,19 @@ public class NetworkUnit implements Serializable {
         this.unitConnectionConfig = unitConnectionConfig;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Collection<UnitSyncStatus> getUnitSyncStatus() {
+        return unitSyncStatus;
     }
 
-    public void setCreatedDate(java.sql.Date createdDate) {
-        this.createdDate = new Date(createdDate.getTime());
+    public void setUnitSyncStatus(Collection<UnitSyncStatus> unitSyncStatus) {
+        this.unitSyncStatus = unitSyncStatus;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public ClientInfo getClientInfo() {
+        return clientInfo;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setClientInfo(ClientInfo clientInfo) {
+        this.clientInfo = clientInfo;
     }
 }

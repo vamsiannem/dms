@@ -92,7 +92,8 @@ public class UserRepositoryImplTest {
 
     private User createSampleUser(){
         User user = new User();
-        user.setName("Vamsi");
+        user.setFirstName("VamsiKrishna");
+        user.setLastName("Annem");
         user.setPassword("test");
         user.setRole(role);
         return user;
@@ -100,7 +101,8 @@ public class UserRepositoryImplTest {
 
     private com.dms.dto.User createSampleDTOUser(){
         com.dms.dto.User dtoUser = new com.dms.dto.User();
-        dtoUser.setUsername("TEST");
+        dtoUser.setLastName("TEST");
+        dtoUser.setFirstName("TEST");
         dtoUser.setEmail("adfs");
         dtoUser.setPassword("FDADDA");
         dtoUser.setMappedRoleId(role.getId());

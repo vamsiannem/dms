@@ -99,6 +99,11 @@
                 </div>
                 <div style="clear:both;"></div>
                 <div>
+                    <label class='dialog-label' for="installationDate">
+                        <span>Installation Date:</span>
+                        <input type="text" name="installationDate" id="installationDate" placeholder="Unit Install Date" class="text ui-widget-content ui-corner-all"/>
+                    </label>
+
                     <label class='dialog-label' for="unitSerialNo">
                         <span>Unit Serial No:</span>
                         <input type="text" name="unitSerialNo" id="unitSerialNo" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>

@@ -5,15 +5,15 @@
 
 package com.dms.unit.sync;
 
-import com.dms.model.NetworkUnit;
+import com.dms.model.ProjectInfo;
 
 
 /**
  * Created by Vamsi 19/2/15.
  */
 public interface UnitDataLogManagementService {
-    void syncDataFor(NetworkUnit unit);
-    String getSyncStatus(NetworkUnit unit);
+    void syncDataFor(ProjectInfo unit);
+    String getSyncStatus(ProjectInfo unit);
     String[] getSyncStatus();
 
 }

@@ -253,9 +253,6 @@ public class ProductDataController extends BaseController{
                 ProductData product;
                 while( (product = csvBeanReader.read(ProductData.class, header, processors)) !=null){
                     String row = csvBeanReader.getUntokenizedRow();
-                    if(csvBeanReader.getLineNumber()==1004 || csvBeanReader.getLineNumber() > 3425){
-                        System.out.println(product);
-                    }
                     if(row!=null && !row.trim().startsWith(",,,,,,,,,,,,") ){
                         if(product !=null){
                             productDataList.add(product);
@@ -288,16 +285,18 @@ public class ProductDataController extends BaseController{
     }
 
     private CellProcessor[] getProcessors(){
+        // Currently This supports cell processors for V-LIM mk1 only
+        // TODO : Extend this to support new type of Network Units.
         return new CellProcessor[] {
                 new DefaultString(), // time
                 new DefaultString(), // vNetAddress
-                new Optional(new ParseInt()), // type
+                new Optional(new ParseInt()), // dataType
                 new Optional(), // status
-                new Optional(new ParseDouble()), // limImbalance
-                new Optional(new ParseDouble()), // limResistance
-                new Optional(new ConvertNullTo("-")), // limCapacitance
-                new Optional(new ConvertNullTo(0.0, new ParseDouble())), // limResistanceCm
-                new Optional(new ConvertNullTo("-")), // limCapacitanceCm
+                new Optional(new ParseDouble()), // l1l2Ratio
+                new Optional(new ParseDouble()), // insulationResistance
+                new Optional(new ConvertNullTo("-")), // insulationCapacitance
+                new Optional(new ConvertNullTo(0.0, new ParseDouble())), // downstream_insulation_resistance
+                new Optional(new ConvertNullTo("-")), // downstream_insulation_capacitance
                 new Optional(new ConvertNullTo(0.0, new ParseDouble())), // lineVoltage
                 new Optional(new ConvertNullTo(0.0, new ParseDouble())), // lineCurrent
                 new Optional(new ConvertNullTo(0.0, new ParseDouble())), // lineFrequency

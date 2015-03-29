@@ -51,7 +51,7 @@ public class UnitConnectionConfig implements Serializable {
     private String bodyParams;
 
     @OneToOne(mappedBy = "unitConnectionConfig")
-    private NetworkUnit networkUnit;
+    private ProjectInfo projectInfo;
 
 
     public Long getId() {
@@ -107,11 +107,11 @@ public class UnitConnectionConfig implements Serializable {
 
 
     @JsonIgnore
-    public NetworkUnit getNetworkUnit() {
-        return networkUnit;
+    public ProjectInfo getProjectInfo() {
+        return projectInfo;
     }
 
-    public void setNetworkUnit(NetworkUnit networkUnit) {
-        this.networkUnit = networkUnit;
+    public void setProjectInfo(ProjectInfo projectInfo) {
+        this.projectInfo = projectInfo;
     }
 }

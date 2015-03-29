@@ -29,7 +29,7 @@ public class LoginRepositoryImpl implements LoginRepository {
     public User doLogin(String username, String password){
         Session session = sessionFactory.getCurrentSession();
         Map<String, String> restrictions = new HashMap<String, String>(2);
-        restrictions.put("name", username);
+        restrictions.put("userName", username);
         restrictions.put("password", password);
         User user = (User) session.createCriteria(User.class).add(Restrictions.allEq(restrictions)).uniqueResult();
         if(user !=null){

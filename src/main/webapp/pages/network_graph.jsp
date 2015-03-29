@@ -62,7 +62,7 @@
             <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;overflow-y:hidden">
                 <div style="margin: 10px;  border: 1px solid #ffafa4;" id="resizable">
 
-                    <div id="chart1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    <div id="line-chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
                 </div>
             </div>&nbsp;

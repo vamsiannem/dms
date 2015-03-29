@@ -5,7 +5,7 @@
 
 package com.dms.repository;
 
-import com.dms.model.NetworkUnit;
+import com.dms.model.ProjectInfo;
 import com.dms.model.UnitSyncStatus;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -45,12 +45,12 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
 
     @Override
     public Collection<UnitSyncStatus> getLastRun() {
-        Collection<NetworkUnit> units = unitRepository.getAll();
+        Collection<ProjectInfo> units = unitRepository.getAll();
         Collection<UnitSyncStatus> syncStatusCollection = null;
         if (units != null && units.size() > 0){
             Session session = sessionFactory.getCurrentSession();
             syncStatusCollection = new ArrayList<UnitSyncStatus>(units.size());
-            for(NetworkUnit unit: units){
+            for(ProjectInfo unit: units){
                 Collection<UnitSyncStatus> result = getSyncStatus(unit.getProjectInfoId(), 1);
                 if (result !=null && result.size() == 1) {
                     Iterator<UnitSyncStatus> iterator =result.iterator();
@@ -75,12 +75,12 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
 
     @Override
     public Map<Long, Collection<UnitSyncStatus>> getLastWeekSyncStatus() {
-        Collection<NetworkUnit> units = unitRepository.getAll();
+        Collection<ProjectInfo> units = unitRepository.getAll();
         Map<Long, Collection<UnitSyncStatus>> map = null;
         if (units != null && units.size()>0 ) {
             map = new HashMap<Long, Collection<UnitSyncStatus>>(units.size());
             Session session = sessionFactory.getCurrentSession();
-            for(NetworkUnit unit: units){
+            for(ProjectInfo unit: units){
                 Collection<UnitSyncStatus> result = getSyncStatus(unit.getProjectInfoId(), 7);
                 if (result !=null && result.size()>0) {
                     map.put(unit.getProjectInfoId(), result);
@@ -93,7 +93,7 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
     private Collection<UnitSyncStatus> getSyncStatus(Long projectInfoId, int howManyRuns){
         Session session = sessionFactory.getCurrentSession();
         Criteria criteria = session.createCriteria(UnitSyncStatus.class)
-                .add(Restrictions.eq("networkUnit.projectInfoId", projectInfoId))
+                .add(Restrictions.eq("projectInfo.projectInfoId", projectInfoId))
                 .addOrder(Order.desc("endTime"))
                 .setFirstResult(0)
                 .setMaxResults(howManyRuns);

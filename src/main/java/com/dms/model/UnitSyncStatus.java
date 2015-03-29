@@ -21,8 +21,8 @@ public class UnitSyncStatus implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "network_unit_id", referencedColumnName = "project_info_id", nullable = false)
-    private NetworkUnit networkUnit;
+    @JoinColumn(name = "project_info_id", referencedColumnName = "project_info_id", nullable = false)
+    private ProjectInfo projectInfo;
 
     @Column(name = "start_time")
     private Date startTime;
@@ -41,12 +41,12 @@ public class UnitSyncStatus implements Serializable {
         this.id = id;
     }
 
-    public NetworkUnit getNetworkUnit() {
-        return networkUnit;
+    public ProjectInfo getProjectInfo() {
+        return projectInfo;
     }
 
-    public void setNetworkUnit(NetworkUnit networkUnit) {
-        this.networkUnit = networkUnit;
+    public void setProjectInfo(ProjectInfo projectInfo) {
+        this.projectInfo = projectInfo;
     }
 
     public Date getStartTime() {

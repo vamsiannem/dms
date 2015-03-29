@@ -5,7 +5,7 @@
 
 package com.dms.repository;
 
-import com.dms.model.NetworkUnit;
+import com.dms.model.ProjectInfo;
 import com.dms.model.UnitConnectionConfig;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -28,20 +28,20 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     SessionFactory sessionFactory;
 
     @Override
-    public NetworkUnit getUnitIfo(Long projectInfoId) {
+    public ProjectInfo getUnitIfo(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
-        return (NetworkUnit) session.get(NetworkUnit.class, projectInfoId);
+        return (ProjectInfo) session.get(ProjectInfo.class, projectInfoId);
     }
 
     @Override
-    public NetworkUnit update(NetworkUnit unit) {
+    public ProjectInfo update(ProjectInfo unit) {
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(unit);
         return unit;
     }
 
     @Override
-    public NetworkUnit create(NetworkUnit unit) throws HibernateException{
+    public ProjectInfo create(ProjectInfo unit) throws HibernateException{
         Session session = sessionFactory.getCurrentSession();
         //session.save(unit.getUnitConnectionConfig());
         session.saveOrUpdate(unit);
@@ -51,7 +51,7 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     @Override
     public void delete(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
-        Object unit = session.get(NetworkUnit.class, projectInfoId);
+        Object unit = session.get(ProjectInfo.class, projectInfoId);
         if(unit!=null){
             session.delete(unit);
         } else {
@@ -62,19 +62,19 @@ public class NetworkUnitRepositoryImpl implements NetworkUnitRepository {
     @Override
     public UnitConnectionConfig getUnitConfig(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
-        NetworkUnit unit = (NetworkUnit) session.get(NetworkUnit.class, projectInfoId);
+        ProjectInfo unit = (ProjectInfo) session.get(ProjectInfo.class, projectInfoId);
         return unit.getUnitConnectionConfig();
     }
 
     @Override
-    public Collection<NetworkUnit> getAll() {
+    public Collection<ProjectInfo> getAll() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createCriteria(NetworkUnit.class).list();
+        return session.createCriteria(ProjectInfo.class).list();
     }
 
     @Override
-    public Collection<NetworkUnit> getAllUnitsInOrder(String orderBy) {
+    public Collection<ProjectInfo> getAllUnitsInOrder(String orderBy) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createCriteria(NetworkUnit.class).addOrder(Order.desc(orderBy)).list();
+        return session.createCriteria(ProjectInfo.class).addOrder(Order.desc(orderBy)).list();
     }
 }

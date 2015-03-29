@@ -121,7 +121,7 @@ var showNetworkGraph = function(projectInfoId){
 }
 
 var reloadAllUnits = function(){
-    reqParam = "orderBy=createdDate";
+    reqParam = "orderBy=lastModifiedDate";
     var request = $.ajax({
       url: "unit.json",
       type: "GET",
@@ -131,7 +131,7 @@ var reloadAllUnits = function(){
 
     request.done(function( response ) {
       if( response && response.networkUnits !=null){
-        $("#orderBy").val("createdDate");
+        $("#orderBy").val("lastModifiedDate");
         $("#list_10").click();
       } else {
         $("#statusMessage").html("An error has occurred while reloading all units, Please try again later.");

@@ -7,7 +7,7 @@ package com.dms.unit.sync;
 
 import com.dms.dto.UnitSyncResponse;
 import com.dms.exception.UnitSyncInProgressException;
-import com.dms.model.NetworkUnit;
+import com.dms.model.ProjectInfo;
 import com.dms.model.UnitConnectionConfig;
 import com.dms.utils.DMSConstants;
 import com.jayway.restassured.RestAssured;
@@ -110,16 +110,16 @@ public class UnitSyncScheduledExecutorService {
 
     /**
      *
-     * @param networkUnit
+     * @param projectInfo
      */
-    public void triggerImmediateSync(NetworkUnit networkUnit) throws UnitSyncInProgressException {
+    public void triggerImmediateSync(ProjectInfo projectInfo) throws UnitSyncInProgressException {
         Integer someDelay = 5; // in seconds.
-        if(networkUnit!=null){
-            String unitSerialNo = networkUnit.getUnitSerialNo();
+        if(projectInfo !=null){
+            String unitSerialNo = projectInfo.getUnitSerialNo();
             if(isBatchSyncInProgress() || isAdhocSyncInProgress(unitSerialNo)){
                 throw new UnitSyncInProgressException(DMSConstants.ADHOC_SYNC_NOT_ALLOWED.replaceFirst("%s", unitSerialNo));
             }
-            ScheduledFuture future = executorService.schedule(new AdhocUnitSyncHandler(networkUnit.getUnitConnectionConfig()), someDelay, TimeUnit.SECONDS);
+            ScheduledFuture future = executorService.schedule(new AdhocUnitSyncHandler(projectInfo.getUnitConnectionConfig()), someDelay, TimeUnit.SECONDS);
             adhocSyncStatusTracker.put(unitSerialNo, future);
 
         }

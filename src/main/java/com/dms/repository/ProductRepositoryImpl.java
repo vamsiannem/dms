@@ -10,25 +10,22 @@
 package com.dms.repository;
 
 import com.dms.dto.UnitDataDateLimit;
-import com.dms.model.NetworkUnit;
+import com.dms.model.ClientInfo;
+import com.dms.model.ProjectInfo;
 import com.dms.model.ProductData;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 
-import com.dms.utils.DateUtils;
 import org.hibernate.*;
-import org.hibernate.annotations.Type;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
-import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -94,7 +91,7 @@ public class ProductRepositoryImpl implements ProductRepository{
         Session session = sessionFactory.getCurrentSession();
         Object[] values = {startDate,endDate};
         Criteria query = session.createCriteria(ProductData.class)
-                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                .createAlias("projectInfo", "nu", CriteriaSpecification.INNER_JOIN)
                 .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                 .add(Restrictions.sqlRestriction("date({alias}.time) between ? and ?",
                         values, new org.hibernate.type.Type[]{StandardBasicTypes.STRING, StandardBasicTypes.STRING}))
@@ -103,13 +100,13 @@ public class ProductRepositoryImpl implements ProductRepository{
                 .setProjection(Projections.projectionList()
                         .add(Projections.property("time"))
                         .add(Projections.property("vNetAddress"))
-                        .add(Projections.property("type"))
+                        .add(Projections.property("dataType"))
                         .add(Projections.property("status"))
-                        .add(Projections.property("limImbalance"))
-                        .add(Projections.property("limResistance"))
-                        .add(Projections.property("limCapacitance"))
-                        .add(Projections.property("limResistanceCm"))
-                        .add(Projections.property("limCapacitanceCm"))
+                        .add(Projections.property("l1L2Ratio"))
+                        .add(Projections.property("insulationResistance"))
+                        .add(Projections.property("insulationCapacitance"))
+                        .add(Projections.property("downstreamInsulationResistance"))
+                        .add(Projections.property("downstreamInsulationCapacitance"))
                         .add(Projections.property("lineVoltage"))
                         .add(Projections.property("lineCurrent"))
                         .add(Projections.property("lineFrequency"))
@@ -121,7 +118,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     public List<ProductData> getDataForProduct(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
         Criteria query = session.createCriteria(ProductData.class)
-                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                .createAlias("projectInfo", "nu", CriteriaSpecification.INNER_JOIN)
                 .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                 .addOrder(Order.desc("id"))
                 .setMaxResults(MAX_RESULTS)
@@ -130,10 +127,11 @@ public class ProductRepositoryImpl implements ProductRepository{
                         .add(Projections.property("vNetAddress"))
                         .add(Projections.property("type"))
                         .add(Projections.property("status"))
-                        .add(Projections.property("limImbalance"))
-                        .add(Projections.property("limResistance"))
-                        .add(Projections.property("limCapacitance"))
-                        .add(Projections.property("nu.companyName"))
+                        .add(Projections.property("l1L2Ratio"))
+                        .add(Projections.property("insulationResistance"))
+                        .add(Projections.property("insulationCapacitance"))
+                        .add(Projections.property("nu.clientInfo.id"))
+                        .add(Projections.property("nu.clientInfo.name"))
                         .add(Projections.property("nu.unitSerialNo"))
                         .add(Projections.property("nu.projectInfoId"))
                         .add(Projections.property("nu.projectId")));
@@ -143,7 +141,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     @Override
     public void saveProducts(List<ProductData> productDataList, Long projectInfoId) throws Exception {
         Session session = sessionFactory.getCurrentSession();
-        NetworkUnit unit = unitRepository.getUnitIfo(projectInfoId);
+        ProjectInfo unit = unitRepository.getUnitIfo(projectInfoId);
         if(unit == null){
             throw new Exception("No network unit configured for the selected Project !!!");
         }
@@ -151,9 +149,9 @@ public class ProductRepositoryImpl implements ProductRepository{
         int failedRecordCount = 0;
         for (int i=0; i< productDataList.size(); i++){
             ProductData productData = productDataList.get(i);
-            productData.setNetworkUnit(unit);
+            productData.setProjectInfo(unit);
             Criteria query = session.createCriteria(ProductData.class)
-                    .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                    .createAlias("projectInfo", "nu", CriteriaSpecification.INNER_JOIN)
                     .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                     .add(Restrictions.eq("time", productData.getTime()))
                     .add(Restrictions.eq("vNetAddress", productData.getvNetAddress()))
@@ -182,7 +180,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     public List<String> getVNetAddress(Long projectInfoId) {
         Session session = sessionFactory.getCurrentSession();
         Criteria query = session.createCriteria(ProductData.class)
-                .createAlias("networkUnit", "nu", CriteriaSpecification.INNER_JOIN)
+                .createAlias("projectInfo", "nu", CriteriaSpecification.INNER_JOIN)
                 .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                 .addOrder(Order.desc("vNetAddress"))
                 .setMaxResults(MAX_RESULTS)
@@ -204,17 +202,20 @@ public class ProductRepositoryImpl implements ProductRepository{
             Object[] row = (Object[]) iterator.next();
             productData.setTime((String) row[0]);
             productData.setvNetAddress((String) row[1]);
-            productData.setType((Integer) row[2]);
+            productData.setDataType((Integer) row[2]);
             productData.setStatus((String) row[3]);
-            productData.setLimImbalance((Double) row[4]);
-            productData.setLimResistance((Double) row[5]);
-            productData.setLimCapacitance((String) row[6]);
-            NetworkUnit nu = new NetworkUnit();
-            nu.setCompanyName((String) row[7]);
-            nu.setUnitSerialNo((String) row[8]);
-            nu.setProjectInfoId((Long) row[9]);
-            nu.setProjectId((String)row[10]);
-            productData.setNetworkUnit(nu);
+            productData.setL1L2Ratio((Double) row[4]);
+            productData.setInsulationResistance((Double) row[5]);
+            productData.setInsulationCapacitance((String) row[6]);
+            ProjectInfo nu = new ProjectInfo();
+            ClientInfo clientInfo = new ClientInfo();
+            clientInfo.setId((Integer) row[7]);
+            clientInfo.setName((String) row[8]);
+            nu.setUnitSerialNo((String) row[9]);
+            nu.setProjectInfoId((Long) row[10]);
+            nu.setProjectId((String) row[11]);
+            nu.setClientInfo(clientInfo);
+            productData.setProjectInfo(nu);
             productDataList.add(productData);
         }
         return productDataList;
