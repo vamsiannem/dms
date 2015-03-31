@@ -5,10 +5,13 @@
 
 package com.dms.controller;
 
+import com.dms.dto.UploadCSVMetadata;
+import com.dms.exception.InvalidRequest;
 import com.dms.exception.NoResultsException;
 import com.dms.model.ProductData;
 import com.dms.repository.NetworkUnitRepository;
 import com.dms.repository.ProductRepository;
+import com.dms.sysenum.UploadCSVType;
 import com.dms.utils.DMSConstants;
 import com.dms.utils.DateUtils;
 import com.dms.utils.DefaultString;
@@ -31,19 +34,21 @@ import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseDouble;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.util.*;
+
+import static com.dms.utils.DMSConstants.*;
 
 /**
  * Created by VamsiKrishna on 14/3/15.
@@ -56,7 +61,8 @@ public class ProductDataController extends BaseController{
 
     private Random random = new Random(100000);
     private static final String VAR_NETWORK_UNIT = "networkUnitSelect";
-    private static final String VAR_FILE_PATH = "path";
+    private static final String VAR_FILE_NAME = "fileName";
+    private static ServletFileUpload servletFileUpload = null;
     ObjectMapper mapper = new ObjectMapper();
 
     @Resource
@@ -64,6 +70,15 @@ public class ProductDataController extends BaseController{
 
     @Resource
     private NetworkUnitRepository unitRepository;
+
+    @Resource
+    private UploadCSVHelper uploadCSVHelper;
+
+    @PostConstruct
+    public void init(){
+        initFileUploadServlet();
+    }
+
 
 
 
@@ -88,57 +103,49 @@ public class ProductDataController extends BaseController{
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes=MediaType.MULTIPART_FORM_DATA_VALUE,
             method= RequestMethod.POST)
-    public ModelAndView uploadProductDataFromCSV(HttpServletRequest request) throws Exception {
+    public ModelAndView uploadProductDataFromCSV(HttpServletRequest request) {
         String statusMessage = "File uploaded Successfully.";
-        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-        if(!isMultipart){
-            System.out.println("Not Multipart!!!");
-            throw new Exception("Required multipart form input");
-        }
         ModelAndView mav= new ModelAndView("upload_unit_data");
-        // Create a factory for disk-based file items
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        // 1 MB is the file size limit.
-        factory.setSizeThreshold(1048576);
-        // Configure a repository (to ensure a secure temp location is used)
-        File repository = FileUtils.getTempDirectory();
-        factory.setRepository(repository);
-
-        // Create a new file upload handler
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        upload.setSizeMax(1048576*2);
         String uploadedFileName = null;
         try {
             // Parse the request
-            List<FileItem> items = upload.parseRequest(request);
+            List<FileItem> items = servletFileUpload.parseRequest(request);
+            validateRequest(items, request);
             Map<String, Object> map = createProduct(items);
             List<ProductData> productData = (List<ProductData>) map.get("productData");
-
             Map<String, String> formFields = (Map<String, String>) map.get("formFields");
             uploadedFileName = formFields.get("filePath");
             productRepository.saveProducts(productData, Long.parseLong(formFields.get(VAR_NETWORK_UNIT)));
         } catch (FileUploadException ex) {
             logger.error("Error while uploading the CSV", ex);
-            statusMessage = "An error occurred while uploading CSV";
+            statusMessage = "An error occurred while uploading CSV.";
+            mav.addObject("status", statusMessage);
+            mav.addObject("flag", "red");
+            return mav;
+        } catch (InvalidRequest e) {
+            logger.error("Error while uploading the CSV", e);
+            statusMessage = e.getMessage();
             mav.addObject("status", statusMessage);
             mav.addObject("flag", "red");
             return mav;
         } catch (Exception e) {
             logger.error("Error while uploading the CSV", e);
-            statusMessage = "An error occurred while uploading CSV";
+            statusMessage = "Unknown error occurred while uploading CSV, Contact System Admin.";
             mav.addObject("status", statusMessage);
             mav.addObject("flag", "red");
             return mav;
         } finally {
-            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+            try {
+                mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
         mav.addObject("status", statusMessage);
         mav.addObject("flag", "green");
         mav.addObject("file", uploadedFileName );
         return mav;
     }
-
 
     @RequestMapping(value="/export", method = RequestMethod.GET)
     public ModelAndView renderProductDownloadView(){
@@ -150,6 +157,7 @@ public class ProductDataController extends BaseController{
         }
         return mav;
     }
+
 
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void exportProductData(@RequestParam("networkUnitSelect") Long projectInfoId,
@@ -176,7 +184,8 @@ public class ProductDataController extends BaseController{
             String headerValue = String.format("attachment; filename=\"%s\"",
                     tempFileName);
             response.setHeader(headerKey, headerValue);
-            CellProcessor[] processors = getProcessors();
+            // TODO : Change the Upload CSV Type to take multiple values.
+            CellProcessor[] processors = uploadCSVHelper.getProcessors(UploadCSVType.VLIM_MK1);
             ICsvListWriter writer = null;
             try {
                 //String absFilePath = FileUtils.getTempDirectory()+File.separator+ tempFileName;
@@ -208,6 +217,48 @@ public class ProductDataController extends BaseController{
         }
 
 
+    }
+
+    private void validateRequest(List<FileItem> items, HttpServletRequest request) throws InvalidRequest {
+        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+        String errorMsg = null;
+        if(!isMultipart){
+            logger.error("Request is expected to be of type:" + MediaType.MULTIPART_FORM_DATA_VALUE);
+            errorMsg = "Required multi-part form input";
+        }
+        String uploadedFileName = "";
+        Iterator<FileItem> itemIterator = items.iterator();
+        while (itemIterator.hasNext()) {
+            FileItem item = itemIterator.next();
+
+            if (!item.isFormField()) {
+                String name = item.getFieldName();
+                if(name !=null && name.equalsIgnoreCase("myfile")){
+                    uploadedFileName = item.getName();
+                }
+            }
+        }
+        if(uploadedFileName.toLowerCase().startsWith(DMSConstants.UPLOAD_CSV_NAME_PREFIX.toLowerCase())
+                && uploadedFileName.endsWith("csv")) {
+            String[] fileNameSplit = uploadedFileName.split("_");
+            if (fileNameSplit.length==3) {
+                try {
+                    Long.parseLong(fileNameSplit[1]);
+                    DateUtils.getDate(fileNameSplit[2], DateUtils.MYSQL_DT_FMT);
+                } catch (ParseException pe){
+                    errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
+                } catch (NumberFormatException nfe) {
+                    errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
+                }
+            } else {
+                errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
+            }
+        } else {
+            errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
+        }
+        if (errorMsg != null){
+            throw new InvalidRequest(errorMsg);
+        }
     }
 
     private Map<String, Object> createProduct(List<FileItem> items) throws Exception {
@@ -246,18 +297,35 @@ public class ProductDataController extends BaseController{
         try {
             if (fileName.endsWith(".csv")) {
                 FileUtils.copyInputStreamToFile(file.getInputStream(), tempFile);
-                final CellProcessor[] processors = getProcessors();
+                UploadCSVType type = uploadCSVHelper.getCSVFileType(tempFile);
+                UploadCSVMetadata metadata = uploadCSVHelper.getMetaData(type);
+                if(type == null){
+                    throw new InvalidRequest("Unable to find CSV Type of the Input File. \n " +
+                            "Allowed CSV Types:"+ UploadCSVType.values() );
+                }
+                final CellProcessor[] processors = metadata.getCellProcessors();
                 csvBeanReader = new CsvBeanReader(new FileReader(tempFile), CsvPreference.STANDARD_PREFERENCE);
-                csvBeanReader.getHeader(false);
-                final String[] header = csvBeanReader.getHeader(false);
-                ProductData product;
-                while( (product = csvBeanReader.read(ProductData.class, header, processors)) !=null){
+                final String[] header = metadata.getCsvHeaders();
+                ProductData product = null;
+
+                while( true ){
+                    try {
+                        product = csvBeanReader.read(ProductData.class, header, processors);
+                    } catch (SuperCsvCellProcessorException e){
+                        logger.error(e.getMessage());
+                        logger.info("The above error is expected because of " +
+                                "the headers spanning across multiple lines");
+                        continue;
+                    }
+                    if ( product==null ){
+                        break;
+                    }
                     String row = csvBeanReader.getUntokenizedRow();
-                    if(row!=null && !row.trim().startsWith(",,,,,,,,,,,,") ){
-                        if(product !=null){
+                    if(row!=null && !row.trim().contains(",,,,,,,") &&
+                            !row.trim().contains(metadata.getTypeIdentifierString()) &&
+                            product !=null){
                             productDataList.add(product);
-                        }
-                    } else {
+                    } else if(row == null ||  (row!=null && row.startsWith(",,,,,,")) ){
                         break;
                     }
                 }
@@ -277,31 +345,29 @@ public class ProductDataController extends BaseController{
             if(name !=null && name.equalsIgnoreCase(VAR_NETWORK_UNIT)){
                 formFields.put(VAR_NETWORK_UNIT, item.getString());
             }
-            if(name !=null && name.equalsIgnoreCase(VAR_FILE_PATH)){
+            if(name !=null && name.equalsIgnoreCase(VAR_FILE_NAME)){
                 formFields.put("filePath", item.getString());
             }
 
         }
     }
 
-    private CellProcessor[] getProcessors(){
-        // Currently This supports cell processors for V-LIM mk1 only
-        // TODO : Extend this to support new type of Network Units.
-        return new CellProcessor[] {
-                new DefaultString(), // time
-                new DefaultString(), // vNetAddress
-                new Optional(new ParseInt()), // dataType
-                new Optional(), // status
-                new Optional(new ParseDouble()), // l1l2Ratio
-                new Optional(new ParseDouble()), // insulationResistance
-                new Optional(new ConvertNullTo("-")), // insulationCapacitance
-                new Optional(new ConvertNullTo(0.0, new ParseDouble())), // downstream_insulation_resistance
-                new Optional(new ConvertNullTo("-")), // downstream_insulation_capacitance
-                new Optional(new ConvertNullTo(0.0, new ParseDouble())), // lineVoltage
-                new Optional(new ConvertNullTo(0.0, new ParseDouble())), // lineCurrent
-                new Optional(new ConvertNullTo(0.0, new ParseDouble())), // lineFrequency
-                new Optional(new ConvertNullTo(0.0, new ParseDouble())) //  linePhase
-        };
+
+    private void initFileUploadServlet(){
+        if(servletFileUpload == null) {
+            // Create a factory for disk-based file items
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            // 1 MB is the file size limit.
+            factory.setSizeThreshold(1048576);
+            // Configure a repository (to ensure a secure temp location is used)
+            File repository = FileUtils.getTempDirectory();
+            factory.setRepository(repository);
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            upload.setFileSizeMax(1048576*2);
+            servletFileUpload = upload;
+        }
     }
 
 

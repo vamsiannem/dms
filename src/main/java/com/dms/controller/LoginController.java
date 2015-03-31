@@ -11,6 +11,7 @@ import com.dms.repository.NetworkUnitRepository;
 import com.dms.utils.DMSConstants;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,7 +27,7 @@ import java.io.IOException;
 @RequestMapping("/login")
 public class LoginController {
 
-    private static final Logger logger = Logger.getLogger(LoginController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     private ObjectMapper mapper = new ObjectMapper();
 

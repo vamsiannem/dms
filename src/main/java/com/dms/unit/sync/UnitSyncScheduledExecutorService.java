@@ -78,13 +78,13 @@ public class UnitSyncScheduledExecutorService {
         public void run() {
             setBatchSyncInProgress(true);
             for (UnitConnectionConfig config : unitsForSync){
-                logger.info("Batch Sync: Started capturing data log for URL: %s", config.getUrl());
+                logger.info("Batch Sync: Started capturing data log for URL: {}", config.getUrl());
                 Response resp = RestAssured.given().baseUri(config.getUrl()).headers(config.getHeadersMap())
                         .body(config.getBodyParams()).post();
                 //resp.
                 // Submit this response to other executor service which will take care of
                 // reading the data from response and persist it to the ProductData table.
-                logger.info("Batch Sync: Ended capturing data log for URL: %s", config.getUrl());
+                logger.info("Batch Sync: Ended capturing data log for URL: {}", config.getUrl());
             }
             setBatchSyncInProgress(false);
         }
@@ -99,12 +99,12 @@ public class UnitSyncScheduledExecutorService {
 
         @Override
         public void run() {
-            logger.info("Adhoc Sync: Started capturing data log for URL: %s", syncNowConfig.getUrl());
+            logger.info("Adhoc Sync: Started capturing data log for URL: {}", syncNowConfig.getUrl());
             Response resp = RestAssured.given().baseUri(syncNowConfig.getUrl()).headers(syncNowConfig.getHeadersMap())
                     .body(syncNowConfig.getBodyParams()).post();
             // Submit this response to other executor service which will take care of
             // reading the data from response and persist it to the ProductData table.
-            logger.info("Adhoc Sync: Ended capturing data log for URL: %s", syncNowConfig.getUrl());
+            logger.info("Adhoc Sync: Ended capturing data log for URL: {}", syncNowConfig.getUrl());
         }
     }
 
@@ -134,7 +134,7 @@ public class UnitSyncScheduledExecutorService {
     public boolean isAdhocSyncInProgress(String unitSerialNo){
         ScheduledFuture future= adhocSyncStatusTracker.get(unitSerialNo);
         if(future !=null){
-            logger.debug("The job may be still running or it wud have completed recently for Unit with SerialNo: %d", unitSerialNo);
+            logger.debug("The job may be still running or it wud have completed recently for Unit with SerialNo: {}", unitSerialNo);
             boolean isDone = future.isDone();
             return isDone;
         }
@@ -163,13 +163,13 @@ public class UnitSyncScheduledExecutorService {
                         for(String unitSerial: adhocSyncStatusTracker.keySet()){
                             ScheduledFuture _future = adhocSyncStatusTracker.get(unitSerial);
                             if(_future.isCancelled()){
-                                logger.error("Sync job cancelled for Unit with SerialNo: %s", unitSerial);
+                                logger.error("Sync job cancelled for Unit with SerialNo: {}", unitSerial);
                                 adhocSyncStatusTracker.remove(unitSerial);
                             } else if(_future.isDone()){
-                                logger.info("Sync job done for Unit with SerialNo: %s", unitSerial);
+                                logger.info("Sync job done for Unit with SerialNo: {}", unitSerial);
                                 adhocSyncStatusTracker.remove(unitSerial);
                             } else {
-                                logger.debug("Sync job IN_PROGRESS for Unit with SerialNo: %s", unitSerial);
+                                logger.debug("Sync job IN_PROGRESS for Unit with SerialNo: {}", unitSerial);
                             }
                         }
                     }

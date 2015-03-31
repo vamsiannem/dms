@@ -57,7 +57,7 @@ $(document).ready(function() {
                 $("#common-form").submit();
         });
     $('#myfile').change(function(){
-    		$('#path').val($(this).val());
+    		$('#fileName').val($(this).val());
     });
 
 });

@@ -77,7 +77,7 @@ public class ProductData implements Serializable {
     private String mode;
 
     @Column(name = "reading_number")
-    private String readingNumber;
+    private Long readingNumber;
 
     @Column(name = "lim_voltage")
     private Double limVoltage;
@@ -95,25 +95,25 @@ public class ProductData implements Serializable {
     private Double limResistance;
 
     @Column(name="vlife_mk1_column1")
-    private String vLifeMK1Column1;
+    private Double vLifeMK1Column1;
 
     @Column(name="vlife_mk1_column2")
-    private String vLifeMK1Column2;
+    private Double vLifeMK1Column2;
 
     @Column(name="vlife_mk1_column3")
-    private String vLifeMK1Column3;
+    private Double vLifeMK1Column3;
 
     @Column(name="vlife_mk1_column4")
-    private String vLifeMK1Column4;
+    private Double vLifeMK1Column4;
 
     @Column(name = "vlife_Mode")
-    private String vLifeMode;
+    private Double vLifeMode;
 
     @Column(name= "vlife_param")
     private Double vLifeParam;
 
     @Column( name="vlife_voltage")
-    private String vLifeVoltage;
+    private Double vLifeVoltage;
 
     @Column(name="vlim_mk2_type3_column1")
     private String vLimMK2TY3Column1;
@@ -274,11 +274,11 @@ public class ProductData implements Serializable {
         this.mode = mode;
     }
 
-    public String getReadingNumber() {
+    public Long getReadingNumber() {
         return readingNumber;
     }
 
-    public void setReadingNumber(String readingNumber) {
+    public void setReadingNumber(Long readingNumber) {
         this.readingNumber = readingNumber;
     }
 
@@ -322,43 +322,43 @@ public class ProductData implements Serializable {
         this.limResistance = limResistance;
     }
 
-    public String getvLifeMK1Column1() {
+    public Double getvLifeMK1Column1() {
         return vLifeMK1Column1;
     }
 
-    public void setvLifeMK1Column1(String vLifeMK1Column1) {
+    public void setvLifeMK1Column1(Double vLifeMK1Column1) {
         this.vLifeMK1Column1 = vLifeMK1Column1;
     }
 
-    public String getvLifeMK1Column2() {
+    public Double getvLifeMK1Column2() {
         return vLifeMK1Column2;
     }
 
-    public void setvLifeMK1Column2(String vLifeMK1Column2) {
+    public void setvLifeMK1Column2(Double vLifeMK1Column2) {
         this.vLifeMK1Column2 = vLifeMK1Column2;
     }
 
-    public String getvLifeMK1Column3() {
+    public Double getvLifeMK1Column3() {
         return vLifeMK1Column3;
     }
 
-    public void setvLifeMK1Column3(String vLifeMK1Column3) {
+    public void setvLifeMK1Column3(Double vLifeMK1Column3) {
         this.vLifeMK1Column3 = vLifeMK1Column3;
     }
 
-    public String getvLifeMK1Column4() {
+    public Double getvLifeMK1Column4() {
         return vLifeMK1Column4;
     }
 
-    public void setvLifeMK1Column4(String vLifeMK1Column4) {
+    public void setvLifeMK1Column4(Double vLifeMK1Column4) {
         this.vLifeMK1Column4 = vLifeMK1Column4;
     }
 
-    public String getvLifeMode() {
+    public Double getvLifeMode() {
         return vLifeMode;
     }
 
-    public void setvLifeMode(String vLifeMode) {
+    public void setvLifeMode(Double vLifeMode) {
         this.vLifeMode = vLifeMode;
     }
 
@@ -370,11 +370,11 @@ public class ProductData implements Serializable {
         this.vLifeParam = vLifeParam;
     }
 
-    public String getvLifeVoltage() {
+    public Double getvLifeVoltage() {
         return vLifeVoltage;
     }
 
-    public void setvLifeVoltage(String vLifeVoltage) {
+    public void setvLifeVoltage(Double vLifeVoltage) {
         this.vLifeVoltage = vLifeVoltage;
     }
 

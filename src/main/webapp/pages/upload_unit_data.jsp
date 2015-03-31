@@ -53,8 +53,8 @@
       <div>
         <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/import" method="post" enctype="multipart/form-data" style="position:relative; height:180px">
             <div class="content" >
-                <div>
-                    <label>Network Unit:
+                <div style="margin-bottom:10px;">
+                    <label style="padding-right:27px;">Project:</label>
                     <span>
                         <select class="input_field" style='width:240px;'  id="networkUnitSelect" name="networkUnitSelect">
                             <option value="----">-- Please Select --</option>
@@ -64,16 +64,16 @@
                 </div>
                 <div style='margin-top:5px;'>
                     <p class="form">
-                        <label style='padding-right:15px;'>Select File:</label>
-                        <input type="text" id="path" class="input_field" placeholder="Select a File to Upload">
-                    	<label class="add-photo-btn">Upload
+                        <label style='padding-right:15px;'>File Path:</label>
+                        <input type="text" id="fileName" name="fileName" class="input_field" placeholder="Select a File to Upload">
+                    	<label class="add-photo-btn">Load File
                     	    <span><input type="file" id="myfile" name="myfile"></span>
                         </label>
                     </p>
                 </div>
     	    </div>
     	    <div style="margin-left:125px">
-    	            <input type="submit" value="Submit" class="button">
+    	            <input type="submit" value="Upload File" class="button">
     	            <input type="reset" value="Reset" class="button" style="margin-left:10px">
     	    </div>
     	</form>

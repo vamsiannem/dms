@@ -172,7 +172,8 @@ public class ProductRepositoryImpl implements ProductRepository{
                 session.clear();
             }
         }
-        logger.info("CSV File Upload stats: \n Project Id: %d \n Total Records Processed: %d \n Skipped Records: %d \n Failed Records: %d", new Object[] {unit.getProjectId(), productDataList.size(), skippedRecordCount, failedRecordCount});
+        logger.info("CSV File Upload stats: \n Project Id: {} \n Total Records Processed: {} \n Skipped Records: {} \n Failed Records: {}",
+                unit.getProjectId(), productDataList.size(), skippedRecordCount, failedRecordCount);
     }
 
 
