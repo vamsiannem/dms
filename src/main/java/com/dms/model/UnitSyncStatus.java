@@ -5,6 +5,8 @@
 
 package com.dms.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,10 +18,12 @@ import java.util.Date;
 @Table(name = "unit_sync_status")
 public class UnitSyncStatus implements Serializable {
 
+    private static final long serialVersionUID = -4810571120050630261L;
     @Id
     @Column(name="id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_info_id", referencedColumnName = "project_info_id", nullable = false)
     private ProjectInfo projectInfo;

@@ -1,7 +1,7 @@
  $(document).ready(function() {
 
   var table_config = {
-               data: products,
+               data: dataCoreMeasurements,
                columns: [
                    {data: 'networkUnit.projectInfoId', title: 'Project Info Id', class: 'hide_column'},
                    {data: 'time', title: 'Time', class: 'center', "width": "20%"},
@@ -14,9 +14,9 @@
                    {data: 'networkUnit.projectId', title: 'Project Id', class: 'center'}
                    ]
                };
-  var table = $('#networks_table').DataTable(table_config);
+  var table = $('#project_data_table').DataTable(table_config);
   if(!$(".dataTables_empty").length) {
-    applySelectEventForDataTable("networks_table", table);
+    applySelectEventForDataTable("project_data_table", table);
   }
 
 });

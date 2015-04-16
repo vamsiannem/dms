@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
   var table_config = {
-               data: networkUnits,
+               data: projects,
                columns: [
                    {data: 'projectInfoId', title: 'ProjectInfo Id', class: 'hide_column'},
                    {data: 'projectId', title: 'ProjectID', class: 'center'},
@@ -14,8 +14,8 @@ $(document).ready(function() {
                    ],
                "sort": false
                };
-  var table = $('#network_unit_table').DataTable(table_config);
-  applySelectEventForDataTable("network_unit_table", table);
+  var table = $('#projects_table').DataTable(table_config);
+  applySelectEventForDataTable("projects_table", table);
   $( "#installationDate" ).datepicker({
        defaultDate: "+1w",
        changeMonth: true,
@@ -60,8 +60,8 @@ function applySelectEventForDataTable(tableId, table){
             var firstColumnValues = $(table.column(0).nodes());
             //$.each($(table.column( colIdx ).nodes()), function(index, value){
                var projectInfoId = $(firstColumnValues[rowIdx]).text();
-               console.log("Project Info ID:"+ projectInfoId);
-               getNodesList(projectInfoId);
+               var projectId = $($(table.column(1).nodes())[rowIdx]).text();
+               getNodesList(projectInfoId, projectId);
             //});
         }
       });
@@ -97,7 +97,8 @@ function applySelectEventForDataTable(tableId, table){
     ipAddress = $( "#ipAddress" ),
     unitSerialNo = $( "#unitSerialNo" ),
     installationDate = $( "#installationDate" ),
-    allFields = $( [] ).add( projectId ).add( client ).add( platform ).add( controlSystem ).add( channel ).add( ipAddress ).add(unitSerialNo),
+    consignedEngineer = $("#consignedEngineer"),
+    allFields = $( [] ).add( projectId ).add( client ).add( platform ).add( controlSystem ).add( channel ).add( ipAddress ).add(unitSerialNo).add(consignedEngineer),
     tips = $( ".validateTips" );
     function updateTips( t ) {
         tips
@@ -145,6 +146,8 @@ function applySelectEventForDataTable(tableId, table){
         valid = valid && checkNotEmpty( ipAddress, "IPAddress ");
         valid = valid && checkNotEmpty( unitSerialNo, "UnitSerialNo ");
         valid = valid && checkNotEmpty( installationDate, "InstallationDate ");
+        valid = valid && checkNotEmpty( consignedEngineer, "ConsignedEngineer ");
+
 
         /*valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
         valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
@@ -160,9 +163,10 @@ function applySelectEventForDataTable(tableId, table){
     addNetworkUnit = function(){
         var reqParam = "companyName="+client.val()+"&platform="+
                         platform.val()+"&controlSystem="+controlSystem.val()+"&channel="+channel.val()+
-                        "&ipAddress="+ipAddress.val()+"&unitSerialNo="+unitSerialNo.val()+"&installationDate="+ installationDate.val();
+                        "&ipAddress="+ipAddress.val()+"&unitSerialNo="+unitSerialNo.val()+
+                        "&installationDate="+ installationDate.val()+"&consignedEngineer="+consignedEngineer.val();
         var request = $.ajax({
-          url: "unit/"+projectId.val()+".json",
+          url: "project/"+projectId.val()+".json",
           type: "PUT",
           dataType: "json",
           data: reqParam

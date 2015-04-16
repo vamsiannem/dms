@@ -7,9 +7,8 @@ package com.dms.controller;
 
 import com.dms.model.User;
 import com.dms.repository.LoginRepository;
-import com.dms.repository.NetworkUnitRepository;
+import com.dms.repository.ProjectRepository;
 import com.dms.utils.DMSConstants;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,7 +34,7 @@ public class LoginController {
     private LoginRepository loginRepository;
 
     @Resource
-    private NetworkUnitRepository unitRepository;
+    private ProjectRepository projectRepository;
 
     @RequestMapping(method = RequestMethod.POST, headers = {"content-type=application/x-www-form-urlencoded"})
     public ModelAndView doLogin(HttpServletRequest request, @RequestParam("username") String username,@RequestParam("password") String password) throws Exception {
@@ -49,7 +48,7 @@ public class LoginController {
         }
         ModelAndView modelAndView = new ModelAndView("dashboard");
         try {
-            modelAndView.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+            modelAndView.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
         } catch (IOException e) {
             e.printStackTrace();
         }

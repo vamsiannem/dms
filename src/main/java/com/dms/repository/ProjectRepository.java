@@ -14,12 +14,12 @@ import java.util.Collection;
 /**
  * Created by support on 1/2/15.
  */
-public interface NetworkUnitRepository {
-    ProjectInfo getUnitIfo(Long projectInfoId);
+public interface ProjectRepository {
+    ProjectInfo get(Long projectInfoId);
     ProjectInfo update(ProjectInfo unit);
     ProjectInfo create(ProjectInfo unit) throws HibernateException;
     void delete(Long projectInfoId);
     UnitConnectionConfig getUnitConfig(Long projectInfoId);
     Collection<ProjectInfo> getAll();
-    Collection<ProjectInfo> getAllUnitsInOrder(String orderBy);
+    Collection<ProjectInfo> getAll(String orderBy);
 }

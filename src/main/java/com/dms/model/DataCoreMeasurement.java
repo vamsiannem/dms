@@ -21,13 +21,18 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name="product_data",
+@Table(name="data_core_measurements",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"project_info_id", "vNetAddress","time"})})
-public class ProductData implements Serializable {
+public class DataCoreMeasurement implements Serializable {
 
+    private static final long serialVersionUID = -671385228972170150L;
     @ManyToOne(optional = false, targetEntity = ProjectInfo.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_info_id", referencedColumnName = "project_info_id", nullable = false)
     private ProjectInfo projectInfo;
+
+    @OneToOne(optional = true, targetEntity = DataVlifeMkOne.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "data_vlife_mkone_id", referencedColumnName = "id", nullable = true)
+    private DataVlifeMkOne dataVlifeMkOne;
 
     @Id
     @Column(name="id")
@@ -73,39 +78,6 @@ public class ProductData implements Serializable {
     @Column(name="line_phase")
     private Double linePhase;
 
-    @Column(name = "mode")
-    private String mode;
-
-    @Column(name = "reading_number")
-    private Long readingNumber;
-
-    @Column(name = "lim_voltage")
-    private Double limVoltage;
-
-    @Column(name = "lim_current")
-    private String limCurrent;
-
-    @Column(name= "temperature")
-    private Double temperature;
-
-    @Column(name="line_voltage2")
-    private Double lineVoltage2;
-
-    @Column(name="lim_resistance")
-    private Double limResistance;
-
-    @Column(name="vlife_mk1_column1")
-    private Double vLifeMK1Column1;
-
-    @Column(name="vlife_mk1_column2")
-    private Double vLifeMK1Column2;
-
-    @Column(name="vlife_mk1_column3")
-    private Double vLifeMK1Column3;
-
-    @Column(name="vlife_mk1_column4")
-    private Double vLifeMK1Column4;
-
     @Column(name = "vlife_Mode")
     private Double vLifeMode;
 
@@ -114,15 +86,6 @@ public class ProductData implements Serializable {
 
     @Column( name="vlife_voltage")
     private Double vLifeVoltage;
-
-    @Column(name="vlim_mk2_type3_column1")
-    private String vLimMK2TY3Column1;
-
-    @Column(name="vlim_mk2_type3_column2")
-    private String vLimMK2TY3Column2;
-
-    @Column(name="vlim_mk2_type3_column3")
-    private String vLimMK2TY3Column3;
 
     @Column(name="live_earth_noise")
     private String liveEarthNoise;
@@ -266,94 +229,6 @@ public class ProductData implements Serializable {
     }
 
 
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    public Long getReadingNumber() {
-        return readingNumber;
-    }
-
-    public void setReadingNumber(Long readingNumber) {
-        this.readingNumber = readingNumber;
-    }
-
-    public Double getLimVoltage() {
-        return limVoltage;
-    }
-
-    public void setLimVoltage(Double limVoltage) {
-        this.limVoltage = limVoltage;
-    }
-
-    public String getLimCurrent() {
-        return limCurrent;
-    }
-
-    public void setLimCurrent(String limCurrent) {
-        this.limCurrent = limCurrent;
-    }
-
-    public Double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
-    }
-
-    public Double getLineVoltage2() {
-        return lineVoltage2;
-    }
-
-    public void setLineVoltage2(Double lineVoltage2) {
-        this.lineVoltage2 = lineVoltage2;
-    }
-
-    public Double getLimResistance() {
-        return limResistance;
-    }
-
-    public void setLimResistance(Double limResistance) {
-        this.limResistance = limResistance;
-    }
-
-    public Double getvLifeMK1Column1() {
-        return vLifeMK1Column1;
-    }
-
-    public void setvLifeMK1Column1(Double vLifeMK1Column1) {
-        this.vLifeMK1Column1 = vLifeMK1Column1;
-    }
-
-    public Double getvLifeMK1Column2() {
-        return vLifeMK1Column2;
-    }
-
-    public void setvLifeMK1Column2(Double vLifeMK1Column2) {
-        this.vLifeMK1Column2 = vLifeMK1Column2;
-    }
-
-    public Double getvLifeMK1Column3() {
-        return vLifeMK1Column3;
-    }
-
-    public void setvLifeMK1Column3(Double vLifeMK1Column3) {
-        this.vLifeMK1Column3 = vLifeMK1Column3;
-    }
-
-    public Double getvLifeMK1Column4() {
-        return vLifeMK1Column4;
-    }
-
-    public void setvLifeMK1Column4(Double vLifeMK1Column4) {
-        this.vLifeMK1Column4 = vLifeMK1Column4;
-    }
-
     public Double getvLifeMode() {
         return vLifeMode;
     }
@@ -378,30 +253,6 @@ public class ProductData implements Serializable {
         this.vLifeVoltage = vLifeVoltage;
     }
 
-    public String getvLimMK2TY3Column1() {
-        return vLimMK2TY3Column1;
-    }
-
-    public void setvLimMK2TY3Column1(String vLimMK2TY3Column1) {
-        this.vLimMK2TY3Column1 = vLimMK2TY3Column1;
-    }
-
-    public String getvLimMK2TY3Column2() {
-        return vLimMK2TY3Column2;
-    }
-
-    public void setvLimMK2TY3Column2(String vLimMK2TY3Column2) {
-        this.vLimMK2TY3Column2 = vLimMK2TY3Column2;
-    }
-
-    public String getvLimMK2TY3Column3() {
-        return vLimMK2TY3Column3;
-    }
-
-    public void setvLimMK2TY3Column3(String vLimMK2TY3Column3) {
-        this.vLimMK2TY3Column3 = vLimMK2TY3Column3;
-    }
-
     public String getLiveEarthNoise() {
         return liveEarthNoise;
     }
@@ -421,7 +272,7 @@ public class ProductData implements Serializable {
     @Override
     public String toString() {
         Long projectInfoId = this.getProjectInfo() != null ? this.getProjectInfo().getProjectInfoId(): null;
-        return "ProductData{" +
+        return "DataCoreMeasurement{" +
                 "time='" + time + '\'' +
                 ", vNetAddress='" + vNetAddress + '\'' +
                 ", dataType=" + dataType +

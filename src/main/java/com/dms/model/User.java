@@ -18,6 +18,7 @@ import java.util.Date;
 @Table(name = "user")
 public class User implements Serializable{
 
+    private static final long serialVersionUID = -2023473829154970577L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

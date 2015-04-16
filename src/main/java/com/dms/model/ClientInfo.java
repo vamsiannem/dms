@@ -6,14 +6,16 @@
 package com.dms.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by VamsiKrishna on 29/3/15.
  */
 @Entity
 @Table(name = "client_info")
-public class ClientInfo {
+public class ClientInfo implements Serializable{
 
+    private static final long serialVersionUID = 7247218388669237162L;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

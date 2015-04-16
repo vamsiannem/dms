@@ -39,7 +39,7 @@ public interface DMSConstants {
     int VLIFE_MK1_NUM_OF_COLS = 17;
     int VLIFE_MK2_TY4_NUM_OF_COLS = 9;
     int VLIM_MK1_NUM_OF_COLS = 13;
-    int VLIM_MK2_TY3_NUM_OF_COLS = 16;
+    //int VLIM_MK2_TY3_NUM_OF_COLS = 16;
 
     String[] VLIFE_MK1_HEADERS = {"time","dataType","status","mode", "readingNumber", "insulationResistance",
             "limVoltage", "limCurrent", "temperature", "lineVoltage", "lineVoltage2",
@@ -48,8 +48,17 @@ public interface DMSConstants {
     String[] VLIM_MK1_HEADERS = { "time", "vNetAddress", "dataType", "status",
             "l1L2Ratio", "insulationResistance", "insulationCapacitance", "downstreamInsulationResistance",
             "downstreamInsulationCapacitance", "lineVoltage", "lineCurrent", "lineFrequency", "linePhase" };
-    String[] VLIM_MK2_TY3_HEADERS = { "time", "vNetAddress", "dataType", "status",
+    /*String[] VLIM_MK2_TY3_HEADERS = { "time", "vNetAddress", "dataType", "status",
             "l1L2Ratio", "insulationResistance", "insulationCapacitance", "downstreamInsulationResistance",
             "downstreamInsulationCapacitance", "lineVoltage", "lineCurrent", "lineFrequency",
-            "linePhase", "vLimMK2TY3Column1", "vLimMK2TY3Column2", "vLimMK2TY3Column3" };
+            "linePhase", "vLimMK2TY3Column1", "vLimMK2TY3Column2", "vLimMK2TY3Column3" };*/
+
+
+    // Data Core Measurements export limits
+    /**
+     * Currently we set this value for Excel 2003 max supported rows.
+     */
+    Integer MAX_RESULTS_EXPORT = 65536;
+
+    Integer ALL_MAX_RESULTS = 4000;
 }

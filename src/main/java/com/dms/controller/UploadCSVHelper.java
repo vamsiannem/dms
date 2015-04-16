@@ -34,15 +34,16 @@ public class UploadCSVHelper {
         UploadCSVMetadata vlife_mk1 = new UploadCSVMetadata(VLIFE_MK1_HEADERS, VLIFE_MK1_NUM_OF_COLS, VLIFE_MK1_TYPE_IDFR_STR);
         UploadCSVMetadata vlife_mk2_ty4 =  new UploadCSVMetadata(VLIFE_MK2_TY4_HEADERS, VLIFE_MK2_TY4_NUM_OF_COLS, VLIFE_MK2_TY4_TYPE_IDFR_STR);
         UploadCSVMetadata vlim_mk1 =  new UploadCSVMetadata(VLIM_MK1_HEADERS, VLIM_MK1_NUM_OF_COLS, VLIM_TYPE_IDFR_STR);
-        UploadCSVMetadata vlim_mk2_ty3 =  new UploadCSVMetadata(VLIM_MK2_TY3_HEADERS, VLIM_MK2_TY3_NUM_OF_COLS, VLIM_TYPE_IDFR_STR);
+        // vlim_mk2_ty3 is temporarily not supported/disabled.
+        //UploadCSVMetadata vlim_mk2_ty3 =  new UploadCSVMetadata(VLIM_MK2_TY3_HEADERS, VLIM_MK2_TY3_NUM_OF_COLS, VLIM_TYPE_IDFR_STR);
         vlife_mk1.setCellProcessors(getCellProcessors(VLIFE_MK1));
         vlife_mk2_ty4.setCellProcessors(getCellProcessors(VLIFE_MK2_TY4));
         vlim_mk1.setCellProcessors(getCellProcessors(VLIM_MK1));
-        vlim_mk2_ty3.setCellProcessors(getCellProcessors(VLIM_MK2_TY3));
+        //vlim_mk2_ty3.setCellProcessors(getCellProcessors(VLIM_MK2_TY3));
         metadataMap.put(VLIFE_MK1, vlife_mk1);
         metadataMap.put(VLIFE_MK2_TY4, vlife_mk2_ty4);
         metadataMap.put(VLIM_MK1, vlim_mk1);
-        metadataMap.put(VLIM_MK2_TY3, vlim_mk2_ty3);
+        //metadataMap.put(VLIM_MK2_TY3, vlim_mk2_ty3);
     }
 
     public CellProcessor[] getProcessors(UploadCSVType csvType){
@@ -81,10 +82,10 @@ public class UploadCSVHelper {
                         if(numOfColumns == metadataMap.get(VLIM_MK1).getNumOfcols()){
                             csvType = VLIM_MK1;
                             break;
-                        } else if (numOfColumns == metadataMap.get(VLIM_MK2_TY3).getNumOfcols()){
+                        } /*else if (numOfColumns == metadataMap.get(VLIM_MK2_TY3).getNumOfcols()){
                             csvType = VLIM_MK2_TY3;
                             break;
-                        }
+                        }*/
                     }
                 }
                 if(numOfLinesToScan-- == 0 ){
@@ -101,7 +102,7 @@ public class UploadCSVHelper {
 
 
     private CellProcessor[] getCellProcessors(UploadCSVType csvType){
-        CellProcessor[] cellProcessors = null;
+        CellProcessor[] cellProcessors;
         String[] headers = null;
         switch (csvType) {
             case VLIFE_MK1:
@@ -162,7 +163,7 @@ public class UploadCSVHelper {
                         new Optional(new ConvertNullTo(0.0, new ParseDouble())) //  linePhase
                 };
                 break;
-            case VLIM_MK2_TY3:
+            /*case VLIM_MK2_TY3:
                 cellProcessors = new CellProcessor[] {
                         new DefaultString(), // time
                         new DefaultString(), // vNetAddress
@@ -181,7 +182,8 @@ public class UploadCSVHelper {
                         new Optional(new ConvertNullTo("")), // Field -2 for Ty-3
                         new Optional(new ConvertNullTo("")), // Field -3 for Ty-3
                 };
-                break;
+                break;*/
+            default: cellProcessors = null; break;
         }
 
         return cellProcessors;

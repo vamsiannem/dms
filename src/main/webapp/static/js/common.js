@@ -8,26 +8,26 @@ $(document).ready(function() {
     });
     $("#list_of_networks").click(function() {
         var contextPath = $("#common-form").attr("action");
-        $("#common-form").attr("action", contextPath+"/api/unit");
+        $("#common-form").attr("action", contextPath+"/api/project");
         $("#common-form").attr("method", "GET");
         $("#common-form").attr("accept", "application/json");
         $("#common-form").submit();
     });
     $("#list_10").click(function() {
         var contextPath = $("#common-form").attr("action");
-        $("#common-form").attr("action", contextPath+"/api/unit");
+        $("#common-form").attr("action", contextPath+"/api/project");
         $("#common-form").attr("method", "GET");
         $("#common-form").submit();
     });
     $("#list_20").click(function() {
         var contextPath = $("#common-form").attr("action");
-        $("#common-form").attr("action", contextPath+"/api/unit/data/import");
+        $("#common-form").attr("action", contextPath+"/api/project/data/import");
         $("#common-form").attr("method", "GET");
         $("#common-form").submit();
     });
     $("#list_21").click(function() {
             var contextPath = $("#common-form").attr("action");
-            $("#common-form").attr("action", contextPath+"/api/unit/data/export");
+            $("#common-form").attr("action", contextPath+"/api/project/data/export");
             $("#common-form").attr("method", "GET");
             $("#common-form").submit();
     });
@@ -52,7 +52,7 @@ $(document).ready(function() {
     });
     $("#list_33").click(function() {
                 var contextPath = $("#common-form").attr("action");
-                $("#common-form").attr("action", contextPath+"/api/unit");
+                $("#common-form").attr("action", contextPath+"/api/project");
                 $("#common-form").attr("method", "POST");
                 $("#common-form").submit();
         });
@@ -75,9 +75,9 @@ function appendNewData2Dropdown(dropdownId, dataArray, emptyExistingOptions){
 }
 
 //var base_url =
-var getNodesList = function(projectInfoId) {
+var getNodesList = function(projectInfoId, projectId) {
     var request = $.ajax({
-      url: "unit/"+projectInfoId+"/node.json",
+      url: "project/"+projectInfoId+"/node.json",
       type: "GET",
       dataType: "json"
     });
@@ -86,7 +86,7 @@ var getNodesList = function(projectInfoId) {
       if( typeof response === 'object' && typeof(response.nodes) != 'undefined'){
         var nodes = response.nodes;
         if(nodes.length ==0){
-           $("#statusMessage").html("No Data Log available for Project:"+ projectInfoId+", Please sync the data first.")
+           $("#statusMessage").html("No Data Log available for Project:"+ projectId +", Please sync the data first.")
            return;
         }
         if(nodes.length == 1){
@@ -107,7 +107,7 @@ var getNodesList = function(projectInfoId) {
 
 var showNetworkImage = function(projectInfoId){
     var contextPath = $("#common-form").attr("action");
-    $("#common-form").attr("action", contextPath+"/api/unit/data/"+ projectInfoId);
+    $("#common-form").attr("action", contextPath+"/api/project/data/"+ projectInfoId);
     $("#common-form").attr("method", "GET");
     $("#common-form").submit();
 }
@@ -130,7 +130,7 @@ var reloadAllUnits = function(){
     });
 
     request.done(function( response ) {
-      if( response && response.networkUnits !=null){
+      if( response && response.projects !=null){
         $("#orderBy").val("lastModifiedDate");
         $("#list_10").click();
       } else {
@@ -149,7 +149,7 @@ var reloadAllUnits = function(){
 function fillNetworkUnitDropDown(){
     $('#networkUnitSelect').html('');
     $('#networkUnitSelect').append($('<option>', { value: '----',  text: '-- Please Select --' }));
-    $.each(networkUnits, function (i, item) {
+    $.each(projects, function (i, item) {
         var toolTipText = 'Project Id:'+ item.projectId + ',Client:'+ item.companyName+ ',Platform:'+item.platform
                             +',Control System:'+ item.controlSystem+ ',Channel:'+item.channel
                             +',Unit Serial No:'+item.unitSerialNo;

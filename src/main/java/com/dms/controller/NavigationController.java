@@ -5,9 +5,9 @@
 
 package com.dms.controller;
 
-import com.dms.model.ProductData;
-import com.dms.repository.NetworkUnitRepository;
-import com.dms.repository.ProductRepository;
+import com.dms.model.DataCoreMeasurement;
+import com.dms.repository.DataCoreMeasurementRepository;
+import com.dms.repository.ProjectRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,16 +32,16 @@ public class NavigationController extends BaseController {
 
     ObjectMapper mapper = new ObjectMapper();
     @Resource
-    private ProductRepository productRepository;
+    private DataCoreMeasurementRepository dataCoreMeasurementRepository;
 
     @Resource
-    private NetworkUnitRepository unitRepository;
+    private ProjectRepository projectRepository;
 
     @RequestMapping(value="/home", method = RequestMethod.POST)
     public ModelAndView renderDashboardView(){
         ModelAndView mav = new ModelAndView("dashboard");
         try {
-            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+            mav.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
         } catch (IOException e) {
             //
         }
@@ -56,9 +56,9 @@ public class NavigationController extends BaseController {
 
     @RequestMapping(value="/graph", method = RequestMethod.POST)
     public ModelAndView renderGraphView(@RequestParam("frm_projectInfoId") Long projectInfoId) throws IOException {
-        ModelAndView mav = new ModelAndView("network_graph");
-        List<ProductData> products =  productRepository.getDataForProduct(projectInfoId);
-        List<Object[]> plotGraphData = new ArrayList<Object[]>(products.size());
+        ModelAndView mav = new ModelAndView("project_data_graph");
+        List<DataCoreMeasurement> dataMeasurements =  dataCoreMeasurementRepository.getDataMeasurements(projectInfoId);
+        List<Object[]> plotGraphData = new ArrayList<Object[]>(dataMeasurements.size());
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(9);
         String oldFormat = "yyyy-MM-dd'T'HH:mm:ss";
@@ -69,10 +69,10 @@ public class NavigationController extends BaseController {
 
 
 
-        for(ProductData product: products){
+        for(DataCoreMeasurement data: dataMeasurements){
             Object[] objects = new Object[2];
             try {
-                objects[0] = (sdf2.format(sdf1.parse(product.getTime())));
+                objects[0] = (sdf2.format(sdf1.parse(data.getTime())));
 
             } catch (ParseException e) {
                 // TODO Auto-generated catch block
@@ -81,18 +81,18 @@ public class NavigationController extends BaseController {
 
 
             //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-            objects[1] = product.getInsulationResistance()!=null ? df.format(product.getInsulationResistance()): 0;
+            objects[1] = data.getInsulationResistance()!=null ? df.format(data.getInsulationResistance()): 0;
             plotGraphData.add(objects);
         }
 
-        mav.addObject("products", mapper.writeValueAsString(products));
+        mav.addObject("dataMeasurements", mapper.writeValueAsString(dataMeasurements));
         mav.addObject("plotData", mapper.writeValueAsString(plotGraphData));
-        if(products!=null && products.size()>0){
-            mav.addObject("companyName", products.get(0).getProjectInfo().getCompanyName());
-            mav.addObject("unitSerialNo", products.get(0).getProjectInfo().getUnitSerialNo());
-            mav.addObject("node", products.get(0).getvNetAddress());
+        if(dataMeasurements!=null && dataMeasurements.size()>0){
+            mav.addObject("companyName", dataMeasurements.get(0).getProjectInfo().getCompanyName());
+            mav.addObject("unitSerialNo", dataMeasurements.get(0).getProjectInfo().getUnitSerialNo());
+            mav.addObject("node", dataMeasurements.get(0).getvNetAddress());
         }
-        mav.addObject("network_unit", unitRepository.getUnitIfo(projectInfoId));
+        mav.addObject("project_data", projectRepository.get(projectInfoId));
         return mav;
     }
 

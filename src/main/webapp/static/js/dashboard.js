@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
   var table_config = {
-     data: networkUnits,
+     data: projects,
      "searching": false,
      "sort": false,
      "info": false,
@@ -16,9 +16,9 @@ $(document).ready(function() {
          {data: 'channel', title: 'Channel', class: 'center'},
          ]
   };
-  var table = $('#network_unit_table').DataTable(table_config);
+  var table = $('#projects_table').DataTable(table_config);
   if(!$(".dataTables_empty").length) {
-    applySelectEventForDataTable("network_unit_table", table);
+    applySelectEventForDataTable("projects_table", table);
   }
 
 
@@ -58,8 +58,8 @@ function applySelectEventForDataTable(tableId, table){
             var firstColumnValues = $(table.column(0).nodes());
             //$.each($(table.column( colIdx ).nodes()), function(index, value){
                var projectInfoId = $(firstColumnValues[rowIdx]).text();
-               console.log("Project Info ID:"+ projectInfoId);
-               getNodesList(projectInfoId);
+               var projectId = $($(table.column(1).nodes())[rowIdx]).text();
+               getNodesList(projectInfoId, projectId);
             //});
         }
       });

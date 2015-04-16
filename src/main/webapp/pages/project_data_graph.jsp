@@ -23,9 +23,9 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jqplot/jqplot.canvasTextRenderer.js"></script>
     <script language="javascript" type="text/javascript">
         var plotData= JSON.parse('${plotData}');
-        var products= JSON.parse('${products}');
+        var dataCoreMeasurements = JSON.parse('${dataMeasurements}');
     </script>
-    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/network_graph.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/project_data_graph.js"></script>
     <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
     <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
 
@@ -36,7 +36,7 @@
     <div class="header1">
         <span style="float:left"><img src=""/></span>
             <span class='options' ><a href="" class="ref_option">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Help</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Admin</a></span>
-        <h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel}-${node} </h2>
+        <h2>${project_info.companyName}-${project_info.controlSystem}-${project_info.channel}-${node} </h2>
 
     </div>
     <div>

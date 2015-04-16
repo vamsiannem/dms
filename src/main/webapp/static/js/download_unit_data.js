@@ -91,7 +91,7 @@ $(document).ready(function() {
         var reqParam = "projectInfoId="+networkUnit.val()+"&from="+
                         from.val()+"&to="+to.val();
         var request = $.ajax({
-          url: "/dms/api/unit/data/export",
+          url: "/dms/api/project/data/export",
           type: "POST",
           data: reqParam
         });

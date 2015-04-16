@@ -19,7 +19,7 @@
      	<script type="text/javascript" charset="utf8" src="<%= request.getContextPath() %>/static/js/jquery-ui.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
      	<script language="javascript" type="text/javascript">
-            var networkUnits= JSON.parse('${networkUnits}');
+            var projects= JSON.parse('${projects}');
 
         </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/download_unit_data.js"></script>
@@ -55,7 +55,7 @@
     <div style="float:left;width: 70%;height: 350px;border: 2px solid #fff;"><span style="padding:5px;">
         <div><p class="validateTips"></p></div>
       <div>
-        <form name="file_download_form" id="file_download_form" action="<%= request.getContextPath() %>/api/unit/data/export" method="post" style="position:relative; height:180px">
+        <form name="file_download_form" id="file_download_form" action="<%= request.getContextPath() %>/api/project/data/export" method="post" style="position:relative; height:180px">
             <div class="content" >
                 <div>
                     <label>Network Unit:

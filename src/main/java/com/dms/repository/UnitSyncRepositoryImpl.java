@@ -29,7 +29,7 @@ public class UnitSyncRepositoryImpl implements UnitSyncRepository {
     private SessionFactory sessionFactory;
 
     @Resource
-    private NetworkUnitRepository unitRepository;
+    private ProjectRepository unitRepository;
 
     @Override
     public UnitSyncStatus getLastRun(Long unitProjectInfoId) {

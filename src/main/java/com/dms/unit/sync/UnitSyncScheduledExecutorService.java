@@ -83,7 +83,7 @@ public class UnitSyncScheduledExecutorService {
                         .body(config.getBodyParams()).post();
                 //resp.
                 // Submit this response to other executor service which will take care of
-                // reading the data from response and persist it to the ProductData table.
+                // reading the data from response and persist it to the DataCoreMeasurement table.
                 logger.info("Batch Sync: Ended capturing data log for URL: {}", config.getUrl());
             }
             setBatchSyncInProgress(false);
@@ -103,7 +103,7 @@ public class UnitSyncScheduledExecutorService {
             Response resp = RestAssured.given().baseUri(syncNowConfig.getUrl()).headers(syncNowConfig.getHeadersMap())
                     .body(syncNowConfig.getBodyParams()).post();
             // Submit this response to other executor service which will take care of
-            // reading the data from response and persist it to the ProductData table.
+            // reading the data from response and persist it to the DataCoreMeasurement table.
             logger.info("Adhoc Sync: Ended capturing data log for URL: {}", syncNowConfig.getUrl());
         }
     }

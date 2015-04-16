@@ -8,13 +8,12 @@ package com.dms.controller;
 import com.dms.dto.UploadCSVMetadata;
 import com.dms.exception.InvalidRequest;
 import com.dms.exception.NoResultsException;
-import com.dms.model.ProductData;
-import com.dms.repository.NetworkUnitRepository;
-import com.dms.repository.ProductRepository;
+import com.dms.model.DataCoreMeasurement;
+import com.dms.repository.DataCoreMeasurementRepository;
+import com.dms.repository.ProjectRepository;
 import com.dms.sysenum.UploadCSVType;
 import com.dms.utils.DMSConstants;
 import com.dms.utils.DateUtils;
-import com.dms.utils.DefaultString;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -29,10 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.supercsv.cellprocessor.ConvertNullTo;
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseDouble;
-import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.io.CsvBeanReader;
@@ -48,16 +43,14 @@ import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 
-import static com.dms.utils.DMSConstants.*;
-
 /**
  * Created by VamsiKrishna on 14/3/15.
  */
 @Controller
-@RequestMapping(value="/unit/data")
-public class ProductDataController extends BaseController{
+@RequestMapping(value="/project/data")
+public class ProjectDataController extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(UnitController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     private Random random = new Random(100000);
     private static final String VAR_NETWORK_UNIT = "networkUnitSelect";
@@ -66,27 +59,25 @@ public class ProductDataController extends BaseController{
     ObjectMapper mapper = new ObjectMapper();
 
     @Resource
-    private ProductRepository productRepository;
+    private DataCoreMeasurementRepository dataCoreMeasurementRepository;
 
     @Resource
-    private NetworkUnitRepository unitRepository;
+    private ProjectRepository projectRepository;
 
     @Resource
     private UploadCSVHelper uploadCSVHelper;
+
 
     @PostConstruct
     public void init(){
         initFileUploadServlet();
     }
 
-
-
-
     @RequestMapping(value="/import", method = RequestMethod.GET)
-    public ModelAndView renderProductUploadView(){
-        ModelAndView mav = new ModelAndView("upload_unit_data");
+    public ModelAndView renderProjectUploadView(){
+        ModelAndView mav = new ModelAndView("upload_project_data");
         try {
-            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+            mav.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,19 +94,19 @@ public class ProductDataController extends BaseController{
             produces= {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes=MediaType.MULTIPART_FORM_DATA_VALUE,
             method= RequestMethod.POST)
-    public ModelAndView uploadProductDataFromCSV(HttpServletRequest request) {
+    public ModelAndView uploadProjectDataFromCSV(HttpServletRequest request) {
         String statusMessage = "File uploaded Successfully.";
-        ModelAndView mav= new ModelAndView("upload_unit_data");
+        ModelAndView mav= new ModelAndView("upload_project_data");
         String uploadedFileName = null;
         try {
             // Parse the request
             List<FileItem> items = servletFileUpload.parseRequest(request);
             validateRequest(items, request);
-            Map<String, Object> map = createProduct(items);
-            List<ProductData> productData = (List<ProductData>) map.get("productData");
+            Map<String, Object> map = createProjectData(items);
+            List<DataCoreMeasurement> dataCoreMeasurement = (List<DataCoreMeasurement>) map.get("dataCoreMeasurement");
             Map<String, String> formFields = (Map<String, String>) map.get("formFields");
             uploadedFileName = formFields.get("filePath");
-            productRepository.saveProducts(productData, Long.parseLong(formFields.get(VAR_NETWORK_UNIT)));
+            dataCoreMeasurementRepository.saveDataMeasurements(dataCoreMeasurement, Long.parseLong(formFields.get(VAR_NETWORK_UNIT)));
         } catch (FileUploadException ex) {
             logger.error("Error while uploading the CSV", ex);
             statusMessage = "An error occurred while uploading CSV.";
@@ -136,7 +127,7 @@ public class ProductDataController extends BaseController{
             return mav;
         } finally {
             try {
-                mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+                mav.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -148,10 +139,10 @@ public class ProductDataController extends BaseController{
     }
 
     @RequestMapping(value="/export", method = RequestMethod.GET)
-    public ModelAndView renderProductDownloadView(){
+    public ModelAndView renderProjectDownloadView(){
         ModelAndView mav = new ModelAndView("download_unit_data");
         try {
-            mav.addObject("networkUnits", mapper.writeValueAsString(unitRepository.getAll()));
+            mav.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -160,7 +151,7 @@ public class ProductDataController extends BaseController{
 
 
     @RequestMapping(value = "/export", method = RequestMethod.POST)
-    public void exportProductData(@RequestParam("networkUnitSelect") Long projectInfoId,
+    public void exportProjectData(@RequestParam("networkUnitSelect") Long projectInfoId,
                                   @RequestParam("from") String fromDate,
                                   @RequestParam("to") String toDate,
                                   HttpServletResponse response,
@@ -177,8 +168,8 @@ public class ProductDataController extends BaseController{
         }
         List<Object[]> products;
         if( fromDt!=null && toDt!=null){
-            products = productRepository.getUnitData(projectInfoId, fromDt, toDt);
-            String unitSerialNo =  unitRepository.getUnitIfo(projectInfoId).getUnitSerialNo();
+            products = dataCoreMeasurementRepository.getDataMeasurements(projectInfoId, fromDt, toDt);
+            String unitSerialNo =  projectRepository.get(projectInfoId).getUnitSerialNo();
             String tempFileName = DMSConstants.EXPORT_FILE_PREFIX + unitSerialNo+"_"+DateUtils.getDisplayDate(new Date())+DMSConstants.SUFFIX_CSV;
             String headerKey = "Content-Disposition";
             String headerValue = String.format("attachment; filename=\"%s\"",
@@ -212,11 +203,7 @@ public class ProductDataController extends BaseController{
                     }
                 }
             }
-
-
         }
-
-
     }
 
     private void validateRequest(List<FileItem> items, HttpServletRequest request) throws InvalidRequest {
@@ -243,6 +230,7 @@ public class ProductDataController extends BaseController{
             String[] fileNameSplit = uploadedFileName.split("_");
             if (fileNameSplit.length==3) {
                 try {
+                    // TODO : validate the Unit Serial No
                     Long.parseLong(fileNameSplit[1]);
                     DateUtils.getDate(fileNameSplit[2], DateUtils.MYSQL_DT_FMT);
                 } catch (ParseException pe){
@@ -261,10 +249,10 @@ public class ProductDataController extends BaseController{
         }
     }
 
-    private Map<String, Object> createProduct(List<FileItem> items) throws Exception {
+    private Map<String, Object> createProjectData(List<FileItem> items) throws Exception {
         // Currently we are expecting only one product.
         Map<String, Object> stringObjectMap = new HashMap<String, Object>(2);
-        List<ProductData> productDataList = null;
+        List<DataCoreMeasurement> dataCoreMeasurementList = null;
         Map<String, String> formFields = new HashMap<String, String>(2);
         String companyName = null;
 
@@ -275,19 +263,19 @@ public class ProductDataController extends BaseController{
             if (item.isFormField()) {
                 processFormField(item, formFields);
             } else {
-                productDataList =  processUploadedFile(item);
+                dataCoreMeasurementList =  processUploadedFile(item);
             }
         }
-        stringObjectMap.put("productData", productDataList);
+        stringObjectMap.put("dataCoreMeasurement", dataCoreMeasurementList);
         stringObjectMap.put("formFields", formFields);
         return stringObjectMap;
     }
 
-    private List<ProductData> processUploadedFile(FileItem file) throws Exception {
+    private List<DataCoreMeasurement> processUploadedFile(FileItem file) throws Exception {
         if (file.isFormField()) {
             return null;
         }
-        List<ProductData> productDataList = new ArrayList<ProductData>(50);
+        List<DataCoreMeasurement> dataCoreMeasurementList = new ArrayList<DataCoreMeasurement>(50);
 
         String fileName = file.getName();
         CsvBeanReader csvBeanReader = null;
@@ -306,11 +294,11 @@ public class ProductDataController extends BaseController{
                 final CellProcessor[] processors = metadata.getCellProcessors();
                 csvBeanReader = new CsvBeanReader(new FileReader(tempFile), CsvPreference.STANDARD_PREFERENCE);
                 final String[] header = metadata.getCsvHeaders();
-                ProductData product = null;
+                DataCoreMeasurement product = null;
 
                 while( true ){
                     try {
-                        product = csvBeanReader.read(ProductData.class, header, processors);
+                        product = csvBeanReader.read(DataCoreMeasurement.class, header, processors);
                     } catch (SuperCsvCellProcessorException e){
                         logger.error(e.getMessage());
                         logger.info("The above error is expected because of " +
@@ -324,7 +312,7 @@ public class ProductDataController extends BaseController{
                     if(row!=null && !row.trim().contains(",,,,,,,") &&
                             !row.trim().contains(metadata.getTypeIdentifierString()) &&
                             product !=null){
-                            productDataList.add(product);
+                            dataCoreMeasurementList.add(product);
                     } else if(row == null ||  (row!=null && row.startsWith(",,,,,,")) ){
                         break;
                     }
@@ -336,7 +324,7 @@ public class ProductDataController extends BaseController{
             csvBeanReader.close();
             tempFile.delete();
         }
-        return productDataList;
+        return dataCoreMeasurementList;
     }
 
     private void processFormField(FileItem item, Map<String, String> formFields) {

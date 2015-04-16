@@ -25,10 +25,10 @@
         <script type="text/javascript" charset="utf8" src="<%= request.getContextPath() %>/static/js/jquery-ui.js"></script>
 
       	<script language="javascript" type="text/javascript">
-      	    var networkUnits= JSON.parse('${networkUnits}');
+      	    var projects= JSON.parse('${projects}');
         </script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/networks_script.js"></script>
-        <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/networks.css" type="text/css">
+        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/projects.js"></script>
+        <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/projects.css" type="text/css">
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
@@ -108,6 +108,10 @@
                         <span>Unit Serial No:</span>
                         <input type="text" name="unitSerialNo" id="unitSerialNo" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>
                     </label>
+                    <label class='dialog-label' for="consignedEngineer">
+                        <span>Consigned Engineer:</span>
+                        <input type="text" name="consignedEngineer" id="consignedEngineer" placeholder="Serial Number" class="text ui-widget-content ui-corner-all"/>
+                    </label>
                 </div>
                 <!-- Allow form submission with keyboard without duplicating the dialog button -->
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -169,7 +173,7 @@
         </form>
     </div>
 	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;  ">
-	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="network_unit_table" width="95%"></table>
+	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="projects_table" width="95%"></table>
 	    </div>
     </div>
 

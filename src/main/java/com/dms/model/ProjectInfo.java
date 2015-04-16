@@ -6,10 +6,14 @@
 package com.dms.model;
 
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.SortedSet;
 
 /**
  * Created by support on 25/1/15.
@@ -18,16 +22,34 @@ import java.util.Date;
 @Table(name = "project_info")
 public class ProjectInfo implements Serializable {
 
+    private static final long serialVersionUID = -8631347700179294927L;
+
+    @Sort(type = SortType.NATURAL)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "projectInfo")
+    private SortedSet<ProjectHistoryInfo> projectHistoryInfoList;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "unit_config_id", referencedColumnName = "id", nullable = false)
+    private UnitConnectionConfig unitConnectionConfig;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_info_id", referencedColumnName = "id", nullable = false)
+    private ClientInfo clientInfo;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_info_id", referencedColumnName = "id", nullable = false)
+    private ProductInfo productInfo;
+
+    @OneToMany(mappedBy = "projectInfo", fetch = FetchType.EAGER)
+    private Collection<UnitSyncStatus> unitSyncStatus;
+
     @Id
     @Column(name="project_info_id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long projectInfoId;
 
-    @Column(name="project_id", length = 6)
+    @Column(name="starjar_project_id", length = 6)
     private String projectId;
-
-    @Column(name="unit_serial_no", nullable=false)
-    private String unitSerialNo;
 
     @Column(name="platform", nullable=false)
     private String platform;
@@ -41,14 +63,6 @@ public class ProjectInfo implements Serializable {
     @Column(name = "description")
     private String description;
 
-    /*
-        when this unit is installed on client location.
-        User is expected to enter a date, while creating a project.
-     */
-    @Column(name = "installation_date", nullable = false, columnDefinition = "TIME")
-    @Temporal(value = TemporalType.TIME)
-    private Date installationDate;
-
     @Column(name="ip_address", nullable=false)
     private String ipAddress;
 
@@ -56,7 +70,7 @@ public class ProjectInfo implements Serializable {
     private boolean isAlive;
 
     /*
-       Who has created this project in DMS system.
+       Who has created/updated this project in DMS system.
        Currently only admin user is defined in this system.
      */
     @Column(name = "last_modified_by", nullable = false)
@@ -70,22 +84,8 @@ public class ProjectInfo implements Serializable {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    @Column(name = "part_no")
-    private String partNo;
-
-    @Column(name = "refNo")
-    private String refNo;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "unit_config_id", referencedColumnName = "id", nullable = false)
-    private UnitConnectionConfig unitConnectionConfig;
-
-    @OneToMany(mappedBy = "projectInfo", fetch = FetchType.EAGER)
-    private Collection<UnitSyncStatus> unitSyncStatus;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_info_id", referencedColumnName = "id", nullable = false)
-    private ClientInfo clientInfo;
+    @Column(name = "device_config")
+    private String deviceConfig;
 
     public Long getProjectInfoId() {
         return projectInfoId;
@@ -110,11 +110,7 @@ public class ProjectInfo implements Serializable {
     }
 
     public String getUnitSerialNo() {
-        return unitSerialNo;
-    }
-
-    public void setUnitSerialNo(String unitSerialNo) {
-        this.unitSerialNo = unitSerialNo;
+        return productInfo.getUnitSerialNo();
     }
 
     public String getPlatform() {
@@ -149,14 +145,6 @@ public class ProjectInfo implements Serializable {
         this.description = description;
     }
 
-    public Date getInstallationDate() {
-        return installationDate;
-    }
-
-    public void setInstallationDate(Date installationDate) {
-        this.installationDate = installationDate;
-    }
-
     public String getIpAddress() {
         return ipAddress;
     }
@@ -189,22 +177,6 @@ public class ProjectInfo implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public String getPartNo() {
-        return partNo;
-    }
-
-    public void setPartNo(String partNo) {
-        this.partNo = partNo;
-    }
-
-    public String getRefNo() {
-        return refNo;
-    }
-
-    public void setRefNo(String refNo) {
-        this.refNo = refNo;
-    }
-
     public UnitConnectionConfig getUnitConnectionConfig() {
         return unitConnectionConfig;
     }
@@ -227,5 +199,30 @@ public class ProjectInfo implements Serializable {
 
     public void setClientInfo(ClientInfo clientInfo) {
         this.clientInfo = clientInfo;
+    }
+
+    public ProductInfo getProductInfo() {
+        return productInfo;
+    }
+
+    public void setProductInfo(ProductInfo productInfo) {
+        this.productInfo = productInfo;
+    }
+
+    public String getDeviceConfig() {
+        return deviceConfig;
+    }
+
+    public void setDeviceConfig(String deviceConfig) {
+        this.deviceConfig = deviceConfig;
+    }
+
+
+    public SortedSet<ProjectHistoryInfo> getProjectHistoryInfoList() {
+        return projectHistoryInfoList;
+    }
+
+    public void setProjectHistoryInfoList(SortedSet<ProjectHistoryInfo> projectHistoryInfoList) {
+        this.projectHistoryInfoList = projectHistoryInfoList;
     }
 }

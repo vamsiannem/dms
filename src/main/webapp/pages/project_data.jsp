@@ -24,16 +24,16 @@
         <!-- DataTables -->
         <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
       	<script language="javascript" type="text/javascript">
-      	    var products= JSON.parse('${network_unit_data}');
+      	    var dataCoreMeasurements = JSON.parse('${data_core_measurements}');
         </script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/network_unit.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/project_data.js"></script>
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
 <div class="header1">
 	<span style="float:left"><img src=""/></span>
     	<span class='options' ><a href="" class="ref_option">Profile</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Help</a>&nbsp;&nbsp;&nbsp;<a href="" class="ref_option">Admin</a></span>
-	<h2>${network_unit.companyName}-${network_unit.controlSystem}-${network_unit.channel} </h2>
+	<h2>${project_info.companyName}-${project_info.controlSystem}-${project_info.channel} </h2>
 
 </div>
 <div>
@@ -56,7 +56,7 @@
 
     <div style="float:left;width: 1040px;height: 500px;border: 2px solid #fff;">
 	    <div id="table_div" style="padding:20px; border: 1px solid #ffafa4; margin: 25px; overflow:hidden;font-size:13px; ">
-	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="networks_table" width="95%"></table>
+	        <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="project_data_table" width="95%"></table>
 	    </div>
 
     </div>

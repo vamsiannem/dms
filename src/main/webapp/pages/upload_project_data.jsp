@@ -16,10 +16,10 @@
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jquery-1.11.1.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
      	<script language="javascript" type="text/javascript">
-            var networkUnits= JSON.parse('${networkUnits}');
+            var projects= JSON.parse('${projects}');
 
         </script>
-        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/upload_unit_data.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/upload_project_data.js"></script>
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
 
@@ -51,7 +51,7 @@
     <div><h3 style="text-align:center">Upload CSV Data</h3></div>
     <div style="float:left;width: 600px;height: 350px;border: 2px solid #fff;"><span style="padding:5px;">
       <div>
-        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/unit/data/import" method="post" enctype="multipart/form-data" style="position:relative; height:180px">
+        <form name="file_upload_form" id="file_upload_form" action="<%= request.getContextPath() %>/api/project/data/import" method="post" enctype="multipart/form-data" style="position:relative; height:180px">
             <div class="content" >
                 <div style="margin-bottom:10px;">
                     <label style="padding-right:27px;">Project:</label>

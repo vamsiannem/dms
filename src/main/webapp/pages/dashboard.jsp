@@ -16,7 +16,7 @@
   	<script type="text/javascript" src="../static/js/common.js"></script>
   	<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
   	<script language="javascript" type="text/javascript">
-        var networkUnits= JSON.parse('${networkUnits}');
+        var projects= JSON.parse('${projects}');
     </script>
     <script type="text/javascript" src="../static/js/dashboard.js"></script>
 </head>
@@ -47,7 +47,7 @@
                 <span style="text-decoration:underline;" >V-IR Systems Overview</span>
                 <span style="text-align:right;float:right; position:absolute; bottom:0;text-decoration:underline;font-family:serif;cursor:pointer;" id="list_of_networks">List Of Networks</span>
                 <div id="table_div" style="padding:5px; border: 1px solid #ffafa4; margin: 5px; overflow:hidden; font-size:10px;">
-                    <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="network_unit_table" width="95%"></table>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display compact" id="projects_table" width="95%"></table>
                 </div>
             </div>&nbsp;
             <div class='shadow' style="margin-left:20px;float:right;width: 450px;height: 250px;border: 2px solid #fff; cursor:pointer;text-align:center;text-decoration:underline;" id="monthly_reports">

@@ -20,7 +20,7 @@ import java.util.Map;
 @Table(name = "unit_config")
 public class UnitConnectionConfig implements Serializable {
 
-    //private static final long serialVersionUID = 5795175829506892556L;
+    private static final long serialVersionUID = -6170180512537571236L;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.AUTO)
