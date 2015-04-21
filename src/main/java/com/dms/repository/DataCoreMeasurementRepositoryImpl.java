@@ -66,17 +66,21 @@ public class DataCoreMeasurementRepositoryImpl implements DataCoreMeasurementRep
             // TODO: replace this with HQL criteria query.
             Query query = session.createSQLQuery("SELECT min(TIMESTAMP(p.time)), max(TIMESTAMP(p.time)) FROM data_core_measurements p where p.project_info_id = :projectInfoId").setParameter("projectInfoId", projectInfoId);
             Object[] result = (Object[]) query.uniqueResult();
-            ProjectDataTimeLimit res = null;
-            try {
-                String toFormat = "dd/MM/yyyy HH:mm";
-                String fromFormat = "yyyy-MM-dd HH:mm:ss";
-                res = new ProjectDataTimeLimit(
-                        getDateStrWithFormat(result[0].toString(),fromFormat, toFormat),
-                        getDateStrWithFormat(result[1].toString(),fromFormat, toFormat)
-                );
-                dataTimeLimitMap.put(projectInfoId, res);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            if(result!=null && result.length >0 && result[0]!=null){
+                ProjectDataTimeLimit res = null;
+                try {
+                    String toFormat = "dd/MM/yyyy HH:mm";
+                    String fromFormat = "yyyy-MM-dd HH:mm:ss";
+                    res = new ProjectDataTimeLimit(
+                            getDateStrWithFormat(result[0].toString(),fromFormat, toFormat),
+                            getDateStrWithFormat(result[1].toString(),fromFormat, toFormat)
+                    );
+                    dataTimeLimitMap.put(projectInfoId, res);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                dataTimeLimitMap.put(projectInfoId, new ProjectDataTimeLimit(null, null));
             }
         }
         return dataTimeLimitMap;

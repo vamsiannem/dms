@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * TODO: All the logic needs to be moved to Service layer and make this controller a light weight component.
  * Created by support on 8/12/14.
  */
 @Controller

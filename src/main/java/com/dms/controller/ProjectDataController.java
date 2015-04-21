@@ -47,6 +47,7 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
+ * TODO: All the logic needs to be moved to Service layer and make this controller a light weight component.
  * Created by VamsiKrishna on 14/3/15.
  */
 @Controller
