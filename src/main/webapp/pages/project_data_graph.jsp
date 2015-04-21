@@ -23,7 +23,7 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jqplot/jqplot.canvasTextRenderer.js"></script>
     <script language="javascript" type="text/javascript">
         var plotData= JSON.parse('${plotData}');
-        var dataCoreMeasurements = JSON.parse('${dataMeasurements}');
+
     </script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/project_data_graph.js"></script>
     <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>

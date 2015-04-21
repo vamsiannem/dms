@@ -26,12 +26,11 @@ public interface DMSConstants {
     String DUMMY_PARAM = "type=0&vNetAddress=0&period=10";
 
     String EXPORT_FILE_PREFIX = "vlim-datalog_";
+    String EXPORT_FILE_PREFIX_VLIFE_MK1 = "VIPER_";
     String SUFFIX_CSV = ".csv";
-    String[] HEADERS_CSV = new String[] { "Time", "vNetAddress", "Type", "Status",
-            "limImbalance", "limResistance", "limCapacitance", "limResistanceCm",
-            "limCapacitanceCm", "lineVoltage", "lineCurrent", "lineFrequency", "linePhase" };
 
     String UPLOAD_CSV_NAME_PREFIX = "vlim-datalog";
+    String UPLOAD_CSV_NAME_PREFIX_VLIFE_MK1 = "VIPER";
     String VLIFE_MK1_TYPE_IDFR_STR = "V-LIFE Started";
     String VLIFE_MK2_TY4_TYPE_IDFR_STR = "VlifeMode";
     String VLIM_TYPE_IDFR_STR = "LimResistanceCm,LimCapacitanceCm,LineVoltage";
@@ -40,6 +39,7 @@ public interface DMSConstants {
     int VLIFE_MK2_TY4_NUM_OF_COLS = 9;
     int VLIM_MK1_NUM_OF_COLS = 13;
     //int VLIM_MK2_TY3_NUM_OF_COLS = 16;
+    String EXPORT_VLIFE_MK1_ORM_SUFFIX = "vlife.";
 
     String[] VLIFE_MK1_HEADERS = {"time","dataType","status","mode", "readingNumber", "insulationResistance",
             "limVoltage", "limCurrent", "temperature", "lineVoltage", "lineVoltage2",

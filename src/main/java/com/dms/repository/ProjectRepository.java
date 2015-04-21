@@ -15,6 +15,7 @@ import java.util.Collection;
  * Created by support on 1/2/15.
  */
 public interface ProjectRepository {
+    Collection<Long> getAllIds();
     ProjectInfo get(Long projectInfoId);
     ProjectInfo update(ProjectInfo unit);
     ProjectInfo create(ProjectInfo unit) throws HibernateException;

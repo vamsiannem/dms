@@ -11,6 +11,7 @@
           <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">
      	<link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/context-menu.css" type="text/css">
      	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/jquery-ui.css">
+     	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/jquery.datetimepicker.css">
 
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/ajax.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/folder-tree-static.js"></script>
@@ -18,9 +19,10 @@
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jquery-1.11.1.js"></script>
      	<script type="text/javascript" charset="utf8" src="<%= request.getContextPath() %>/static/js/jquery-ui.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
+     	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jQuery/jquery.datetimepicker.js"></script>
      	<script language="javascript" type="text/javascript">
             var projects= JSON.parse('${projects}');
-
+            var projectsDataRange = JSON.parse('${projects_data_time_range}');
         </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/download_unit_data.js"></script>
 
@@ -85,8 +87,22 @@
     	</form>
       </div>
       	</span></div>
-    <div style="float:right;width: 28%;height: 350px;border: 2px solid #fff">
-	Project info
+    <div style="float:right;width: 28%;height: 350px;border: 2px solid #fff; ">
+	    <div id="header" style="text-align:center;text-decoration:underline;font-weight:bold;padding:6px;">
+	        <span> Project info </span>
+	    </div>
+	    <div id="content">
+	        <div style='margin-top:5px; padding:5px 25px;'>
+                <label class='dialog-label' for="dataStartDate" title="Selected project data core measurements captured from this date/time.">
+                    <span>Start Time:</span>
+	                <span id="dataStartDate"> </span>
+                </label>
+                <label class='dialog-label' for="dataEndDate" title="Selected project data core measurements captured till this date/time.">
+                    <span>End Time:</span>
+	                <span id="dataEndDate"> </span>
+                </label>
+            </div>
+	    </div>
     </div>
 </div>
 </div>

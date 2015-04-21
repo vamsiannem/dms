@@ -37,6 +37,9 @@ public class ProductInfo implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "type")
+    private String type;
+
     @OneToOne(mappedBy = "productInfo", fetch = FetchType.LAZY, targetEntity = ProjectInfo.class)
     @JsonIgnore
     private ProjectInfo projectInfo;
@@ -101,5 +104,13 @@ public class ProductInfo implements Serializable {
                 ", partNo='" + partNo + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

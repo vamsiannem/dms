@@ -25,6 +25,10 @@ import javax.persistence.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"project_info_id", "vNetAddress","time"})})
 public class DataCoreMeasurement implements Serializable {
 
+    public DataCoreMeasurement() {
+        dataVlifeMkOne = new DataVlifeMkOne();
+    }
+
     private static final long serialVersionUID = -671385228972170150L;
     @ManyToOne(optional = false, targetEntity = ProjectInfo.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_info_id", referencedColumnName = "project_info_id", nullable = false)
@@ -51,7 +55,7 @@ public class DataCoreMeasurement implements Serializable {
     @Column( name="status", nullable = false)
     private String status;
 
-    @Column(name="l1_l2_ratio", nullable = false)
+    @Column(name="l1_l2_ratio")
     private Double l1L2Ratio;
 
     @Column(name="insulation_resistance")
@@ -267,6 +271,63 @@ public class DataCoreMeasurement implements Serializable {
 
     public void setHighSampleInsulationCapacitance(String highSampleInsulationCapacitance) {
         this.highSampleInsulationCapacitance = highSampleInsulationCapacitance;
+    }
+
+    /// specific to child class getters & setters
+    public String getMode() {
+        return this.dataVlifeMkOne.getMode();
+    }
+
+    public void setMode(String mode) {
+        this.dataVlifeMkOne.setMode(mode);
+    }
+
+    public Long getReadingNumber() {
+        return this.dataVlifeMkOne.getReadingNumber();
+    }
+
+    public void setReadingNumber(Long readingNumber) {
+        this.dataVlifeMkOne.setReadingNumber(readingNumber);
+    }
+
+    public Double getLimVoltage() {
+        return this.dataVlifeMkOne.getLimVoltage();
+    }
+
+    public void setLimVoltage(Double limVoltage) {
+        this.dataVlifeMkOne.setLimVoltage(limVoltage);
+    }
+
+    public String getLimCurrent() {
+        return this.dataVlifeMkOne.getLimCurrent();
+    }
+
+    public void setLimCurrent(String limCurrent) {
+        this.dataVlifeMkOne.setLimCurrent(limCurrent);
+    }
+
+    public Double getTemperature() {
+        return this.dataVlifeMkOne.getTemperature();
+    }
+
+    public void setTemperature(Double temperature) {
+        this.dataVlifeMkOne.setTemperature(temperature);
+    }
+
+    public Double getLineVoltageTwo() {
+        return this.dataVlifeMkOne.getLineVoltageTwo();
+    }
+
+    public void setLineVoltageTwo(Double lineVoltageTwo) {
+        this.dataVlifeMkOne.setLineVoltageTwo(lineVoltageTwo);
+    }
+
+    public Double getLimResistance() {
+        return this.dataVlifeMkOne.getLimResistance();
+    }
+
+    public void setLimResistance(Double limResistance) {
+        this.dataVlifeMkOne.setLimResistance(limResistance);
     }
 
     @Override

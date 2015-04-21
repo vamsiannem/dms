@@ -160,9 +160,15 @@ function fillNetworkUnitDropDown(){
         }));
         $('#networkUnitSelect ').change(function(){
             var toolTipValue = $('#networkUnitSelect > option:selected').attr('title');
+            var selectedVal = $('#networkUnitSelect > option:selected').val();
             if(toolTipValue+'' != 'undefined'){
                 var toolTipDisplayText = toolTipValue.replace(/,/g, "\n");
                 showTip(toolTipDisplayText);
+                $("#dataStartDate").text(projectsDataRange[selectedVal].fromDate);
+                $("#dataEndDate").text(projectsDataRange[selectedVal].toDate);
+            } else {
+                $("#dataStartDate").text('');
+                $("#dataEndDate").text('');
             }
         });
         $('#wrapper').mouseleave(function(){

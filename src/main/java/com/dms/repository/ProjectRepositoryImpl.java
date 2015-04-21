@@ -12,11 +12,15 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -28,6 +32,16 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Resource
     SessionFactory sessionFactory;
+
+    @Override
+    public Collection<Long> getAllIds() {
+        Session session = sessionFactory.getCurrentSession();
+        List<Long> projectIdList = session.createCriteria(ProjectInfo.class)
+                .setProjection(Projections.projectionList()
+                .add(Projections.distinct(Projections.property("projectInfoId"))))
+                .list();
+        return projectIdList;
+    }
 
     @Override
     public ProjectInfo get(Long projectInfoId) {

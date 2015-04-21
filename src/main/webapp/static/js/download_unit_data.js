@@ -2,26 +2,31 @@ var fadeSpeed = 100; // a value between 1 and 1000 where 1000 will take 10
                         // seconds to fade in and out and 1 will take 0.01 sec.
 $(document).ready(function() {
 
-   $( "#from" ).datepicker({
-     defaultDate: "+1w",
-     changeMonth: true,
-     changeYear: true,
-     numberOfMonths: 1,
-     onClose: function( selectedDate ) {
-       $( "#to" ).datepicker( "option", "minDate", selectedDate );
-     },
-     dateFormat: "dd/mm/yy"
-   });
-   $( "#to" ).datepicker({
-     defaultDate: "+1w",
-     changeMonth: true,
-     changeYear: true,
-     numberOfMonths: 1,
-     onClose: function( selectedDate ) {
-       $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-     },
-     dateFormat: "dd/mm/yy"
-   })
+    jQuery('#from').datetimepicker({
+        format:'d/m/Y H:i',
+        onChangeDateTime:function(dp,$input){
+            jQuery('#from').datetimepicker('hide');
+        }
+        /*,
+        onShow:function( ct, time ){
+            console.log(time);
+           this.setOptions({
+            maxDate:jQuery('#to').val()?jQuery('#to').val():false
+            })
+        }*/
+     })
+    jQuery('#to').datetimepicker({
+        format:'d/m/Y H:i',
+        onChangeDateTime:function(dp,$input){
+            jQuery('#from').datetimepicker('hide');
+        }
+        /*,
+        onShow:function( ct ){
+           this.setOptions({
+            minDate:jQuery('#from').val()?jQuery('#from').val():false
+           })
+        }*/
+    });
    fillNetworkUnitDropDown()
 });
 

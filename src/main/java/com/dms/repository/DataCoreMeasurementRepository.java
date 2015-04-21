@@ -9,10 +9,11 @@
  */
 package com.dms.repository;
 
-import com.dms.dto.UnitDataDateLimit;
+import com.dms.dto.ProjectDataTimeLimit;
 import com.dms.model.DataCoreMeasurement;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public interface DataCoreMeasurementRepository {
 
-    UnitDataDateLimit getTimeRangeOfProjectData();
+    Map<Long, ProjectDataTimeLimit> getTimeRangeOfAllProjectsData();
 
     /**
      * 
@@ -28,7 +29,14 @@ public interface DataCoreMeasurementRepository {
      */
     List<DataCoreMeasurement> getAllDataMeasurements();
 
-    List<Object[]> getDataMeasurements(Long projectInfoId, String startDate, String endDate);
+    /**
+     * This method is used to fetch data measurements for export.
+     * @param projectInfoId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<Object[]> getDataMeasurementsForExport(Long projectInfoId, String startDate, String endDate);
     
     /**
      * Get all the data for a company. This data is used to display
@@ -38,7 +46,7 @@ public interface DataCoreMeasurementRepository {
      */
     List<DataCoreMeasurement> getDataMeasurements(Long projectInfoId);
 
-   // List<DataCoreMeasurement> getDataMeasurements(String companyName, String unitSerialNo);
+   // List<DataCoreMeasurement> getDataMeasurementsForExport(String companyName, String unitSerialNo);
 
   //  List<DataCoreMeasurement> getUnitListByCompany(String companyName);
 

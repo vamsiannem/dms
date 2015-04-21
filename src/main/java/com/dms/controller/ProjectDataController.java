@@ -9,11 +9,14 @@ import com.dms.dto.UploadCSVMetadata;
 import com.dms.exception.InvalidRequest;
 import com.dms.exception.NoResultsException;
 import com.dms.model.DataCoreMeasurement;
+import com.dms.model.ProductInfo;
 import com.dms.repository.DataCoreMeasurementRepository;
 import com.dms.repository.ProjectRepository;
 import com.dms.sysenum.UploadCSVType;
 import com.dms.utils.DMSConstants;
 import com.dms.utils.DateUtils;
+import com.dms.utils.EnumHelper;
+import com.dms.utils.UploadCSVHelper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -30,9 +33,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
-import org.supercsv.io.CsvBeanReader;
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.io.ICsvListWriter;
+import org.supercsv.io.*;
+import org.supercsv.io.dozer.CsvDozerBeanReader;
+import org.supercsv.io.dozer.ICsvDozerBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
 import javax.annotation.PostConstruct;
@@ -101,7 +104,6 @@ public class ProjectDataController extends BaseController{
         try {
             // Parse the request
             List<FileItem> items = servletFileUpload.parseRequest(request);
-            validateRequest(items, request);
             Map<String, Object> map = createProjectData(items);
             List<DataCoreMeasurement> dataCoreMeasurement = (List<DataCoreMeasurement>) map.get("dataCoreMeasurement");
             Map<String, String> formFields = (Map<String, String>) map.get("formFields");
@@ -143,6 +145,8 @@ public class ProjectDataController extends BaseController{
         ModelAndView mav = new ModelAndView("download_unit_data");
         try {
             mav.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
+            mav.addObject("projects_data_time_range", mapper.writeValueAsString(
+                    dataCoreMeasurementRepository.getTimeRangeOfAllProjectsData()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -161,22 +165,31 @@ public class ProjectDataController extends BaseController{
         String fromDt = null;
         String toDt = null;
         try {
-            fromDt = DateUtils.getMysqlDateStr(fromDate, DateUtils.DISPLAY_DT_FMT);
-            toDt =DateUtils.getMysqlDateStr(toDate, DateUtils.DISPLAY_DT_FMT);
+            fromDt = DateUtils.getMysqlDateStr(fromDate, DateUtils.DISPLAY_DT_FMT_WITH_TIME);
+            toDt =DateUtils.getMysqlDateStr(toDate, DateUtils.DISPLAY_DT_FMT_WITH_TIME);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         List<Object[]> products;
         if( fromDt!=null && toDt!=null){
-            products = dataCoreMeasurementRepository.getDataMeasurements(projectInfoId, fromDt, toDt);
-            String unitSerialNo =  projectRepository.get(projectInfoId).getUnitSerialNo();
-            String tempFileName = DMSConstants.EXPORT_FILE_PREFIX + unitSerialNo+"_"+DateUtils.getDisplayDate(new Date())+DMSConstants.SUFFIX_CSV;
+            products = dataCoreMeasurementRepository.getDataMeasurementsForExport(projectInfoId, fromDt, toDt);
+            String type =  projectRepository.get(projectInfoId).getProductInfo().getType();
+            UploadCSVType csvType = EnumHelper.load(UploadCSVType.class, type);
+            CellProcessor[] cellProcessors = null;
+            String[] csvHeaders = null;
+            UploadCSVMetadata metadata = uploadCSVHelper.getMetaData(csvType);
+            if (csvType.compareTo(UploadCSVType.VLIFE_MK1)==0){
+                cellProcessors = Arrays.copyOfRange(metadata.getCellProcessors(), 0, metadata.getCellProcessors().length-4);
+                csvHeaders = Arrays.copyOfRange(metadata.getCsvHeaders(),0, metadata.getCsvHeaders().length-4);
+            } else {
+                cellProcessors = metadata.getCellProcessors();
+                csvHeaders = metadata.getCsvHeaders();
+            }
             String headerKey = "Content-Disposition";
             String headerValue = String.format("attachment; filename=\"%s\"",
-                    tempFileName);
+                    metadata.getExportCSVFileName());
             response.setHeader(headerKey, headerValue);
-            // TODO : Change the Upload CSV Type to take multiple values.
-            CellProcessor[] processors = uploadCSVHelper.getProcessors(UploadCSVType.VLIM_MK1);
+
             ICsvListWriter writer = null;
             try {
                 //String absFilePath = FileUtils.getTempDirectory()+File.separator+ tempFileName;
@@ -185,9 +198,10 @@ public class ProjectDataController extends BaseController{
                 if(products.size()==0){
                     writer.write("No Results Found!!!");
                 } else {
-                    writer.writeHeader(DMSConstants.HEADERS_CSV);
+                    writer.writeHeader(csvHeaders);
+
                     for(Object[] var: products){
-                        writer.write(Arrays.asList(var), processors);
+                        writer.write(Arrays.asList(var), cellProcessors);
                     }
                 }
 
@@ -206,32 +220,17 @@ public class ProjectDataController extends BaseController{
         }
     }
 
-    private void validateRequest(List<FileItem> items, HttpServletRequest request) throws InvalidRequest {
-        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+    private void validateRequest(String uploadedFileName, Long projectInfoId, UploadCSVType type) throws InvalidRequest {
         String errorMsg = null;
-        if(!isMultipart){
-            logger.error("Request is expected to be of type:" + MediaType.MULTIPART_FORM_DATA_VALUE);
-            errorMsg = "Required multi-part form input";
-        }
-        String uploadedFileName = "";
-        Iterator<FileItem> itemIterator = items.iterator();
-        while (itemIterator.hasNext()) {
-            FileItem item = itemIterator.next();
-
-            if (!item.isFormField()) {
-                String name = item.getFieldName();
-                if(name !=null && name.equalsIgnoreCase("myfile")){
-                    uploadedFileName = item.getName();
-                }
-            }
-        }
+        ProductInfo productInfo = projectRepository.get(projectInfoId).getProductInfo();
+        String unitSerialNo_Project = productInfo.getUnitSerialNo();
+        String unitSerialNo_FileName = null;
         if(uploadedFileName.toLowerCase().startsWith(DMSConstants.UPLOAD_CSV_NAME_PREFIX.toLowerCase())
                 && uploadedFileName.endsWith("csv")) {
             String[] fileNameSplit = uploadedFileName.split("_");
             if (fileNameSplit.length==3) {
                 try {
-                    // TODO : validate the Unit Serial No
-                    Long.parseLong(fileNameSplit[1]);
+                    unitSerialNo_FileName = fileNameSplit[1];
                     DateUtils.getDate(fileNameSplit[2], DateUtils.MYSQL_DT_FMT);
                 } catch (ParseException pe){
                     errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
@@ -241,8 +240,28 @@ public class ProjectDataController extends BaseController{
             } else {
                 errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
             }
-        } else {
-            errorMsg = "File Name format should comply to: <vlim-datalog>_SerialNumber_<yyyy-mm-dd>.csv";
+        } else if( uploadedFileName.toLowerCase().startsWith(DMSConstants.UPLOAD_CSV_NAME_PREFIX_VLIFE_MK1.toLowerCase())) {
+            // TODO: VIPER for VLIFE MK1 is expected. Need to implement this.
+            // VIPER-855703555-Birch_ChB-Brae_Alpha-2015-03-20T15-53-50.csv
+            // Format : <VIPER>-<Serial no.>-<ch>-<platform>-<time>
+            // for now it is valid and no error msg!!!
+            String[] fileNameSplit = uploadedFileName.split("-");
+            try {
+                unitSerialNo_FileName = fileNameSplit[1];
+                // other validations goes here.
+
+            } catch (Exception e) {
+                errorMsg = "File Name format should comply to: <VIPER>-<Serial no.>-<ch>-<platform>-<yyyy-MM-ddTHH-mm-ss>.csv";
+            }
+        }
+        // validate unitserialNo matches or not
+        if(!unitSerialNo_Project.equalsIgnoreCase(unitSerialNo_FileName)){
+            errorMsg = "Unit Serial No of the CSV file is not matching with the Selected Project's UnitSerialNo. ";
+        }
+        // validate csv type
+        if(!productInfo.getType().equalsIgnoreCase(type.name())){
+            errorMsg = "Current Project's Unit Type:"+ productInfo.getType()+", Uploaded CSV File Type: "+ type+
+                        ", Please choose a CSV of same type.";
         }
         if (errorMsg != null){
             throw new InvalidRequest(errorMsg);
@@ -254,7 +273,11 @@ public class ProjectDataController extends BaseController{
         Map<String, Object> stringObjectMap = new HashMap<String, Object>(2);
         List<DataCoreMeasurement> dataCoreMeasurementList = null;
         Map<String, String> formFields = new HashMap<String, String>(2);
-        String companyName = null;
+        String uploadFileName = null;
+
+        String tempFileName = "temp_dms_"+ random.nextInt() +".csv";
+        File tempFile =  new File(FileUtils.getTempDirectoryPath() + File.separator+tempFileName);
+        FileUtils.touch(tempFile);
 
         Iterator<FileItem> itemIterator = items.iterator();
         while (itemIterator.hasNext()) {
@@ -263,66 +286,62 @@ public class ProjectDataController extends BaseController{
             if (item.isFormField()) {
                 processFormField(item, formFields);
             } else {
-                dataCoreMeasurementList =  processUploadedFile(item);
+                FileUtils.copyInputStreamToFile(item.getInputStream(), tempFile);
+                uploadFileName = item.getName();
             }
         }
+        UploadCSVType type = uploadCSVHelper.getCSVFileType(tempFile);
+        validateRequest(uploadFileName, Long.valueOf(formFields.get(VAR_NETWORK_UNIT)), type);
+        dataCoreMeasurementList =  processUploadedFile(tempFile, type);
         stringObjectMap.put("dataCoreMeasurement", dataCoreMeasurementList);
         stringObjectMap.put("formFields", formFields);
         return stringObjectMap;
     }
 
-    private List<DataCoreMeasurement> processUploadedFile(FileItem file) throws Exception {
-        if (file.isFormField()) {
-            return null;
-        }
+    private List<DataCoreMeasurement> processUploadedFile(File file, UploadCSVType type) throws Exception {
+
         List<DataCoreMeasurement> dataCoreMeasurementList = new ArrayList<DataCoreMeasurement>(50);
 
-        String fileName = file.getName();
-        CsvBeanReader csvBeanReader = null;
-        String tempFileName = "temp_dms_"+ random.nextInt() +".csv";
-        File tempFile =  new File(FileUtils.getTempDirectoryPath() + File.separator+tempFileName);
-        FileUtils.touch(tempFile);
+        ICsvDozerBeanReader csvBeanReader = null;
         try {
-            if (fileName.endsWith(".csv")) {
-                FileUtils.copyInputStreamToFile(file.getInputStream(), tempFile);
-                UploadCSVType type = uploadCSVHelper.getCSVFileType(tempFile);
-                UploadCSVMetadata metadata = uploadCSVHelper.getMetaData(type);
-                if(type == null){
-                    throw new InvalidRequest("Unable to find CSV Type of the Input File. \n " +
-                            "Allowed CSV Types:"+ UploadCSVType.values() );
-                }
-                final CellProcessor[] processors = metadata.getCellProcessors();
-                csvBeanReader = new CsvBeanReader(new FileReader(tempFile), CsvPreference.STANDARD_PREFERENCE);
-                final String[] header = metadata.getCsvHeaders();
-                DataCoreMeasurement product = null;
-
-                while( true ){
-                    try {
-                        product = csvBeanReader.read(DataCoreMeasurement.class, header, processors);
-                    } catch (SuperCsvCellProcessorException e){
-                        logger.error(e.getMessage());
-                        logger.info("The above error is expected because of " +
-                                "the headers spanning across multiple lines");
-                        continue;
-                    }
-                    if ( product==null ){
-                        break;
-                    }
-                    String row = csvBeanReader.getUntokenizedRow();
-                    if(row!=null && !row.trim().contains(",,,,,,,") &&
-                            !row.trim().contains(metadata.getTypeIdentifierString()) &&
-                            product !=null){
-                            dataCoreMeasurementList.add(product);
-                    } else if(row == null ||  (row!=null && row.startsWith(",,,,,,")) ){
-                        break;
-                    }
-                }
-            } else {
-                throw new Exception("Unknown File Format uploaded");
+            UploadCSVMetadata metadata = uploadCSVHelper.getMetaData(type);
+            if(type == null){
+                throw new InvalidRequest("Unable to find CSV Type of the Input File. \n " +
+                        "Allowed CSV Types:"+ UploadCSVType.values() );
             }
+            final CellProcessor[] processors = metadata.getCellProcessors();
+
+            //csvBeanReader = new CsvBeanReader(new FileReader(tempFile), CsvPreference.STANDARD_PREFERENCE);
+            csvBeanReader = new CsvDozerBeanReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
+            csvBeanReader.configureBeanMapping(DataCoreMeasurement.class, metadata.getBeanMappings());
+            //final String[] header = metadata.getCsvHeaders();
+            DataCoreMeasurement product = null;
+
+            while( true ){
+                try {
+                    product = csvBeanReader.read(DataCoreMeasurement.class, processors);
+                } catch (SuperCsvCellProcessorException e){
+                    logger.error("Error Stack: "+e);
+                    logger.info("The above error is expected because of " +
+                            "the headers spanning across multiple lines");
+                    continue;
+                }
+                if ( product==null ){
+                    break;
+                }
+                String row = csvBeanReader.getUntokenizedRow();
+                if(row!=null && !row.trim().contains(",,,,,,,") &&
+                        !row.trim().contains(metadata.getTypeIdentifierString()) &&
+                        product !=null){
+                    dataCoreMeasurementList.add(product);
+                } else if(row == null ||  (row!=null && row.startsWith(",,,,,,")) ){
+                    break;
+                }
+            }
+
         } finally {
             csvBeanReader.close();
-            tempFile.delete();
+            file.delete();
         }
         return dataCoreMeasurementList;
     }
