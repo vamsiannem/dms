@@ -126,7 +126,7 @@ public class ProjectController extends BaseController {
 
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setProjectId(projectId);
-        projectInfo.setClientInfo(clientRepository.getClient(companyName));
+
 
         projectInfo.setPlatform(platform);
         projectInfo.setControlSystem(controlSystem);
@@ -152,13 +152,19 @@ public class ProjectController extends BaseController {
 
         projectInfo.setProjectHistoryInfoList(historyInfoList);
         projectInfo.setUnitConnectionConfig(config);
-        projectInfo.setProductInfo(productRepository.get(unitSerialNo));
+
 
         ModelAndView mav = new ModelAndView();
         try {
+            projectInfo.setClientInfo(clientRepository.getClient(companyName));
+            projectInfo.setProductInfo(productRepository.get(unitSerialNo));
             projectRepository.create(projectInfo);
             mav.addObject("status", addStatus);
         } catch (HibernateException he){
+            logger.error(he.getCause().getMessage());
+            he.printStackTrace();
+            mav.addObject("status", "Failed");
+        } catch (Exception he){
             logger.error(he.getCause().getMessage());
             he.printStackTrace();
             mav.addObject("status", "Failed");
