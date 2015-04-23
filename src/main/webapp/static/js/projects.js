@@ -166,10 +166,11 @@ function applySelectEventForDataTable(tableId, table){
                         "&ipAddress="+ipAddress.val()+"&unitSerialNo="+unitSerialNo.val()+
                         "&installationDate="+ installationDate.val()+"&consignedEngineer="+consignedEngineer.val();
         var request = $.ajax({
-          url: "project/"+projectId.val()+".json",
+          url: "project/"+projectId.val()+".json?"+reqParam,
           type: "PUT",
-          dataType: "json",
-          data: reqParam
+          dataType: "json"
+          //data: reqParam,
+
         });
 
         request.done(function( response ) {
