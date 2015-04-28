@@ -26,6 +26,7 @@ import com.dms.utils.EnumHelper;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -59,30 +60,26 @@ public class DataCoreMeasurementRepositoryImpl implements DataCoreMeasurementRep
     @Override
     public Map<Long, ProjectDataTimeLimit> getTimeRangeOfAllProjectsData() {
         Session session = sessionFactory.getCurrentSession();
-        Collection<Long> projectInfoIds = projectRepository.getAllIds();
-        Map<Long, ProjectDataTimeLimit> dataTimeLimitMap = new HashMap<Long, ProjectDataTimeLimit>(projectInfoIds!=null ? projectInfoIds.size(): 10);
-        for (Iterator<Long> iterator = projectInfoIds.iterator(); iterator.hasNext(); ) {
-            Long projectInfoId = iterator.next();
-            // TODO: replace this with HQL criteria query.
-            Query query = session.createSQLQuery("SELECT min(TIMESTAMP(p.time)), max(TIMESTAMP(p.time)) FROM data_core_measurements p where p.project_info_id = :projectInfoId").setParameter("projectInfoId", projectInfoId);
-            Object[] result = (Object[]) query.uniqueResult();
-            if(result!=null && result.length >0 && result[0]!=null){
-                ProjectDataTimeLimit res = null;
-                try {
-                    String toFormat = "dd/MM/yyyy HH:mm";
-                    String fromFormat = "yyyy-MM-dd HH:mm:ss";
-                    res = new ProjectDataTimeLimit(
-                            getDateStrWithFormat(result[0].toString(),fromFormat, toFormat),
-                            getDateStrWithFormat(result[1].toString(),fromFormat, toFormat)
-                    );
-                    dataTimeLimitMap.put(projectInfoId, res);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                dataTimeLimitMap.put(projectInfoId, new ProjectDataTimeLimit(null, null));
+        //Collection<Long> projectInfoIds = projectRepository.getAllIds();
+        Map<Long, ProjectDataTimeLimit> dataTimeLimitMap = new HashMap<Long, ProjectDataTimeLimit>(10);
+        Criteria query = session.createCriteria(DataCoreMeasurement.class)
+                .createAlias("projectInfo", "pjt", CriteriaSpecification.INNER_JOIN)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.sqlProjection("date_format(min(timestamp({alias}.time)), '%d/%m/%Y %H:%i') as minTime",
+                                new String[]{"minTime"}, new Type[]{StandardBasicTypes.STRING}))
+                        .add(Projections.sqlProjection("date_format(max(timestamp({alias}.time)), '%d/%m/%Y %H:%i') as maxTime",
+                                new String[]{"maxTime"}, new Type[]{StandardBasicTypes.STRING}))
+                        .add(Projections.property("pjt.projectInfoId"))
+                        .add(Projections.groupProperty("pjt.projectInfoId"))
+                );
+         List<Object[]> results = query.list();
+        if(results!=null && results.size() >0){
+            for(Object[] item: results){
+                ProjectDataTimeLimit limitObj = new ProjectDataTimeLimit(item[0].toString(), item[1].toString());
+                dataTimeLimitMap.put(Long.parseLong(item[2].toString()), limitObj);
             }
         }
+
         return dataTimeLimitMap;
     }
 
@@ -120,22 +117,29 @@ public class DataCoreMeasurementRepositoryImpl implements DataCoreMeasurementRep
         ProjectionList list = Projections.projectionList();
         String[] mappingCols = uploadCSVHelper.getMetaData(type).getOrmMappings();
         for (String col: mappingCols){
-            if (col != null)
-                list.add(Projections.property(col));
+            if (col != null){
+                if(col.equalsIgnoreCase("time")){
+                    list.add(Projections.sqlProjection("date_format(timestamp({alias}.time), '%d/%m/%Y %T') as time",
+                            new String[]{"time"}, new Type[]{StandardBasicTypes.STRING}));
+                } else {
+                    list.add(Projections.property(col));
+                }
+            }
         }
         return list;
     }
 
     @Override
-    public List<DataCoreMeasurement> getDataMeasurements(Long projectInfoId) {
+    public List<DataCoreMeasurement> getDataMeasurements(Long projectInfoId, int maxResults) {
         Session session = sessionFactory.getCurrentSession();
         Criteria query = session.createCriteria(DataCoreMeasurement.class)
                 .createAlias("projectInfo", "nu", CriteriaSpecification.INNER_JOIN)
                 .createAlias("nu.clientInfo", "client", CriteriaSpecification.INNER_JOIN)
                 .createAlias("nu.productInfo", "product", CriteriaSpecification.INNER_JOIN)
                 .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
+                .add(Restrictions.le("insulationResistance", DMSConstants.IR_VALUE_RANGE))
                 .addOrder(Order.desc("id"))
-                .setMaxResults(MAX_RESULTS)
+                .setMaxResults(maxResults!=0? maxResults: MAX_RESULTS)
                 .setProjection(Projections.projectionList()
                         .add(Projections.property("time"))
                         .add(Projections.property("vNetAddress"))

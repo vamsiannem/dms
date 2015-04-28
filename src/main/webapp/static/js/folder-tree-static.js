@@ -32,8 +32,7 @@ Owner of DHTMLgoodies.com
 */
 		
 	var idOfFolderTrees = ['dhtmlgoodies_tree2'];
-	
-	var imageFolder = '../static/images/';	// Path to images
+	var imageFolder = ctx+'/static/images/';	// Path to images
 	var folderImage = 'dhtmlgoodies_folder.gif';
 	var plusImage = 'dhtmlgoodies_plus.gif';
 	var minusImage = 'dhtmlgoodies_minus.gif';

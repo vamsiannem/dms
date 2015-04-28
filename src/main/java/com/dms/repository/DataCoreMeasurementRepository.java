@@ -44,7 +44,7 @@ public interface DataCoreMeasurementRepository {
      * @param projectInfoId
      * @return list of product data.
      */
-    List<DataCoreMeasurement> getDataMeasurements(Long projectInfoId);
+    List<DataCoreMeasurement> getDataMeasurements(Long projectInfoId, int maxResults);
 
    // List<DataCoreMeasurement> getDataMeasurementsForExport(String companyName, String unitSerialNo);
 

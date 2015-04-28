@@ -28,7 +28,7 @@ public class ProductInfo implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "unit_serial_no")
+    @Column(name = "unit_serial_no", unique = true, nullable = false)
     private String unitSerialNo;
 
     @Column(name = "part_no")

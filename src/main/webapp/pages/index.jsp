@@ -7,14 +7,19 @@
     <title>
         DMS - Data Management System
     </title>
-
-    <link rel="stylesheet" type="text/css" href="../static/css/sample_style.css" />
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/static/css/messages.css" />
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/static/css/sample_style.css" />
+    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
 </head>
 <body>
 <div class="header1">
 	<span style="float:left"><img src="" alt="DMS Logo"/></span>
 	<h2>Data Management Software</h2>
 </div>
+    <input type="hidden" id="statusMessage" name="statusMessage" value="${flag}-${status}"/>
+    <div style=" text-align:center;" id="statusWrapper">
+    </div>
 <div id="wrapper">
 
 	<form name="login-form" class="login-form" action="<%= request.getContextPath() %>/api/login" method="post">
@@ -22,13 +27,7 @@
     		<h1>Welcome to DMS</h1>
 	    	<span>Please sign in</span>
 		</div>
-		<div>
-		    <span style="float:left;color:red;font-size: 13px;">
-		        <c:if test="${message ne null}">
-		            <c:out value="${message}"> </c:out>
-		        </c:if>
-		    </span>
-		</div>
+
 		<div class="content">
 		    <input name="username" type="text" class="input username" placeholder="Username" />
 		    <input name="password" type="password" class="input password" placeholder="Password" />
@@ -56,6 +55,3 @@
 </div>
 </body>
 </html>
-
-
-

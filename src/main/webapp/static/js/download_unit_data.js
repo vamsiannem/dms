@@ -92,7 +92,7 @@ $(document).ready(function() {
         }
         return valid;
     }
-    fetchUnitData = function(){
+    /*fetchUnitData = function(){
         var reqParam = "projectInfoId="+networkUnit.val()+"&from="+
                         from.val()+"&to="+to.val();
         var request = $.ajax({
@@ -113,7 +113,7 @@ $(document).ready(function() {
           console.log( "Request failed: " + textStatus );
           //tips.text("Unexpected Error! Unable to Create Project with ProjectInfoId:"+ projectInfoId.val());
         });
-    }
+    }*/
 
     form = $( "#file_download_form" ).on( "submit", function( event ) {
         //event.preventDefault();

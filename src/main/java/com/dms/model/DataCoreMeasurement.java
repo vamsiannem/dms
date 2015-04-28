@@ -25,10 +25,6 @@ import javax.persistence.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"project_info_id", "vNetAddress","time"})})
 public class DataCoreMeasurement implements Serializable {
 
-    public DataCoreMeasurement() {
-        dataVlifeMkOne = new DataVlifeMkOne();
-    }
-
     private static final long serialVersionUID = -671385228972170150L;
     @ManyToOne(optional = false, targetEntity = ProjectInfo.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_info_id", referencedColumnName = "project_info_id", nullable = false)
@@ -275,58 +271,65 @@ public class DataCoreMeasurement implements Serializable {
 
     /// specific to child class getters & setters
     public String getMode() {
-        return this.dataVlifeMkOne.getMode();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getMode(): "";
     }
 
     public void setMode(String mode) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setMode(mode);
     }
 
     public Long getReadingNumber() {
-        return this.dataVlifeMkOne.getReadingNumber();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getReadingNumber(): 0;
     }
 
     public void setReadingNumber(Long readingNumber) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setReadingNumber(readingNumber);
     }
 
     public Double getLimVoltage() {
-        return this.dataVlifeMkOne.getLimVoltage();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getLimVoltage(): 0.0;
     }
 
     public void setLimVoltage(Double limVoltage) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setLimVoltage(limVoltage);
     }
 
     public String getLimCurrent() {
-        return this.dataVlifeMkOne.getLimCurrent();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getLimCurrent(): "";
     }
 
     public void setLimCurrent(String limCurrent) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setLimCurrent(limCurrent);
     }
 
     public Double getTemperature() {
-        return this.dataVlifeMkOne.getTemperature();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getTemperature(): 0.0;
     }
 
     public void setTemperature(Double temperature) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setTemperature(temperature);
     }
 
     public Double getLineVoltageTwo() {
-        return this.dataVlifeMkOne.getLineVoltageTwo();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getLineVoltageTwo(): 0.0;
     }
 
     public void setLineVoltageTwo(Double lineVoltageTwo) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setLineVoltageTwo(lineVoltageTwo);
     }
 
     public Double getLimResistance() {
-        return this.dataVlifeMkOne.getLimResistance();
+        return dataVlifeMkOne!=null ? this.dataVlifeMkOne.getLimResistance(): 0.0;
     }
 
     public void setLimResistance(Double limResistance) {
+        initVlifeMkOne();
         this.dataVlifeMkOne.setLimResistance(limResistance);
     }
 
@@ -340,5 +343,11 @@ public class DataCoreMeasurement implements Serializable {
                 ", status='" + status + '\'' +
                 ", projectInfoId=" + projectInfoId +
                 '}';
+    }
+
+    private void initVlifeMkOne() {
+        if(dataVlifeMkOne==null){
+            dataVlifeMkOne = new DataVlifeMkOne();
+        }
     }
 }

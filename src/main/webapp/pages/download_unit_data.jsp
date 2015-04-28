@@ -6,6 +6,11 @@
     <title>
         DMS - Data Management Software
     </title>
+     	<script language="javascript" type="text/javascript">
+            var projects= JSON.parse('${projects}');
+            var projectsDataRange = JSON.parse('${projects_data_time_range}');
+            var ctx = "${pageContext.request.contextPath}"
+        </script>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
      <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/file_upload.css" />
           <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">
@@ -20,10 +25,6 @@
      	<script type="text/javascript" charset="utf8" src="<%= request.getContextPath() %>/static/js/jquery-ui.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/common.js"></script>
      	<script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jQuery/jquery.datetimepicker.js"></script>
-     	<script language="javascript" type="text/javascript">
-            var projects= JSON.parse('${projects}');
-            var projectsDataRange = JSON.parse('${projects_data_time_range}');
-        </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/download_unit_data.js"></script>
 
 </head>
@@ -42,11 +43,9 @@
   </div>
     <div>
 
-	<div style="float:left; margin-left:18px; margin-top:10px;" id="statusMessage">
-        <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
-                <c:out value="${status}"> </c:out>
-        </span>
-	</div>
+        <input type="hidden" id="statusMessage" name="statusMessage" value="${flag}-${status}"/>
+	<div style="float:left; padding-left:15px;" id="statusWrapper">
+    </div>
 	<div style="float:right;padding-right: 15px;"><input type="submit" name="submit" value="Page buttons" class="button" /></div>
 	</div>
 	<div style="border-bottom: 2px solid #cfcfcf;border-radius: 3px 3px 0 0;padding-top: 52px">

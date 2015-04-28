@@ -6,6 +6,8 @@
 package com.dms.model;
 
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
@@ -19,7 +21,8 @@ import java.util.SortedSet;
  * Created by support on 25/1/15.
  */
 @Entity
-@Table(name = "project_info")
+@Table(name = "project_info",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"starjar_project_id", "channel"}))
 public class ProjectInfo implements Serializable {
 
     private static final long serialVersionUID = -8631347700179294927L;
@@ -36,7 +39,7 @@ public class ProjectInfo implements Serializable {
     @JoinColumn(name = "client_info_id", referencedColumnName = "id", nullable = false)
     private ClientInfo clientInfo;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_info_id", referencedColumnName = "id", nullable = false)
     private ProductInfo productInfo;
 

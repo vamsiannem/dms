@@ -6,6 +6,10 @@
     <title>
         DMS - Data Management Software
     </title>
+      	<script language="javascript" type="text/javascript">
+      	    var dataCoreMeasurements = JSON.parse('${data_core_measurements}');
+      	    var ctx = "${pageContext.request.contextPath}"
+        </script>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
            <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">
       	<link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/context-menu.css" type="text/css">
@@ -23,9 +27,6 @@
 
         <!-- DataTables -->
         <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
-      	<script language="javascript" type="text/javascript">
-      	    var dataCoreMeasurements = JSON.parse('${data_core_measurements}');
-        </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/project_data.js"></script>
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
@@ -41,10 +42,8 @@
       <jsp:include page="left_nav.jsp"/>
     </div>
 
-	<div style="float:left;" id="statusMessage">
-        <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
-                <c:out value="${status}"> </c:out>
-        </span>
+        <input type="hidden" id="statusMessage" name="statusMessage" value="${flag}-${status}"/>
+	<div style="float:left; padding-left:15px;" id="statusWrapper">
     </div>
 	<div style="float:right;padding-right: 15px;"><input type="submit" name="submit" value="Page buttons" class="button" /></div>
 	</div>

@@ -64,7 +64,7 @@ public class NavigationController extends BaseController {
         ModelAndView mav = new ModelAndView("project_data_graph");
         try {
 
-            List<DataCoreMeasurement> dataMeasurements =  dataCoreMeasurementRepository.getDataMeasurements(projectInfoId);
+            List<DataCoreMeasurement> dataMeasurements =  dataCoreMeasurementRepository.getDataMeasurements(projectInfoId, 10000);
             List<Object[]> plotGraphData = new ArrayList<Object[]>(dataMeasurements.size());
             DecimalFormat df = new DecimalFormat("#");
             df.setMaximumFractionDigits(9);
@@ -103,9 +103,11 @@ public class NavigationController extends BaseController {
         } catch (IOException ioe){
             logger.error("Error while json conversion:"+ ioe);
             mav.addObject("status", "An error occurred while graph generation.");
+            mav.addObject("flag", "3");
         } catch (Exception e){
             logger.error("An unknown error occurred: "+e);
             mav.addObject("status", "An error occurred while graph generation.");
+            mav.addObject("flag", "3");
         }
         return mav;
     }

@@ -30,21 +30,15 @@ function applySelectEventForDataTable(tableId, table){
     $('#'+tableId+' tbody')
       .on( 'mouseover', 'td', function () {
           var colIdx = table.cell(this).index().column;
-
-          if ( colIdx !== lastIdx ) {
-              $( table.cells().nodes() ).removeClass( 'highlight' );
-              $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
-          }
           // this is very specific fix for a column
           if(colIdx === 5){
-            $(table.column( colIdx ).nodes()).addClass('hover_text');
+            $(this).addClass('hover_text');
           }
       } )
       .on( 'mouseleave','td', function () {
-          $( table.cells().nodes() ).removeClass( 'highlight' );
           var colIdx = table.cell(this).index().column;
           if(colIdx === 5){
-              $(table.column( colIdx ).nodes()).removeClass('hover_text');
+              $(this).removeClass('hover_text');
           }
       })
       .on('click', 'td', function(){
@@ -56,12 +50,16 @@ function applySelectEventForDataTable(tableId, table){
         if(colIdx === 5){
             var rowIdx = table.cell(this).index().row;
             var firstColumnValues = $(table.column(0).nodes());
-            //$.each($(table.column( colIdx ).nodes()), function(index, value){
                var projectInfoId = $(firstColumnValues[rowIdx]).text();
                var projectId = $($(table.column(1).nodes())[rowIdx]).text();
                getNodesList(projectInfoId, projectId);
-            //});
         }
+      })
+      .on( 'mouseover', 'tr', function () {
+            $(this).addClass('selected');
+      })
+      .on( 'mouseleave', 'tr', function () {
+           $(this).removeClass('selected');
       });
 
     /*$('#'+tableId).on( 'click', 'tr',

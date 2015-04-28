@@ -4,7 +4,7 @@ $(document).ready(function() {
     $.each(plotData, function (index, item) {
             // "2014-10-24 14:36"
             var dt = item[0].split(/[-: ]/);
-            item[0] = new Date(dt[0], dt[1]-1, dt[2], dt[3], dt[4], 00);
+            item[0] = Date.UTC(dt[0], dt[1]-1, dt[2], dt[3], dt[4], 0, 0);
            item[1]= parseFloat(item[1]);
     });
    // console.log(plotData);

@@ -412,7 +412,7 @@ FOOTER
 
   .hide_column {display:none}
 
-  .hover_text { text-decoration: underline; text-color:blue; font-style:italic; cursor:pointer }
+  .hover_text { text-decoration: underline; color: #9ff0ae ; font-style:italic; cursor:pointer }
 
   .highlight { background-color : #dfdfdf }
 
@@ -444,3 +444,8 @@ FOOTER
         opacity:0;
     }
   /* Tooltip CSS End*/
+
+  .selected_row {
+    background-color: #483D8B !important;
+    color: white;
+  }

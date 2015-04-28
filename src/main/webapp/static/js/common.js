@@ -59,6 +59,11 @@ $(document).ready(function() {
     $('#myfile').change(function(){
     		$('#fileName').val($(this).val());
     });
+    var statusMsg = $("#statusMessage").val();
+    if(statusMsg && statusMsg!="-" ){
+        var statusMsgSplit = statusMsg.split("-");
+        setAlertMessage(statusMsgSplit[1], parseInt(statusMsgSplit[0]), "statusWrapper");
+    }
 
 });
 
@@ -86,7 +91,8 @@ var getNodesList = function(projectInfoId, projectId) {
       if( typeof response === 'object' && typeof(response.nodes) != 'undefined'){
         var nodes = response.nodes;
         if(nodes.length ==0){
-           $("#statusMessage").html("No Data Log available for Project:"+ projectId +", Please sync the data first.")
+           var infoMsg = "No Data Log available for Project:"+ projectId +", Please sync the data first.";
+           setAlertMessage(infoMsg, 1, "statusWrapper" )
            return;
         }
         if(nodes.length == 1){
@@ -95,13 +101,13 @@ var getNodesList = function(projectInfoId, projectId) {
             showNetworkImage(projectInfoId);
         }
       } else {
-        $("#statusMessage").html("Unknown error has occurred.");
+        setAlertMessage("Unexpected problem while fetching details.", 2, "statusWrapper" );
       }
     });
 
     request.fail(function( jqXHR, textStatus ) {
       console.log( "Request failed: " + textStatus );
-      $("#statusMessage").html("Unable to Fetch Nodes for Project:"+ projectInfoId)
+      setAlertMessage("Unable to Fetch Nodes for Project:"+ projectInfoId, 3, "statusWrapper" );
     });
 }
 
@@ -134,13 +140,13 @@ var reloadAllUnits = function(){
         $("#orderBy").val("lastModifiedDate");
         $("#list_10").click();
       } else {
-        $("#statusMessage").html("An error has occurred while reloading all units, Please try again later.");
+        setAlertMessage("An error has occurred while reloading all units, Try again.", 3, "statusWrapper" );
       }
     });
 
     request.fail(function( jqXHR, textStatus ) {
       console.log( "Request failed: " + textStatus );
-      $("#statusMessage").html("An error has occurred while reloading all units, Please try again later.");
+      setAlertMessage("An error has occurred while reloading all units, Try again.", 2, "statusWrapper" );
     });
 }
 
@@ -164,8 +170,13 @@ function fillNetworkUnitDropDown(){
             if(toolTipValue+'' != 'undefined'){
                 var toolTipDisplayText = toolTipValue.replace(/,/g, "\n");
                 showTip(toolTipDisplayText);
-                $("#dataStartDate").text(projectsDataRange[selectedVal].fromDate);
-                $("#dataEndDate").text(projectsDataRange[selectedVal].toDate);
+                if(projectsDataRange && projectsDataRange[selectedVal]){
+                    $("#dataStartDate").text(projectsDataRange[selectedVal].fromDate);
+                    $("#dataEndDate").text(projectsDataRange[selectedVal].toDate);
+                } else {
+                      $("#dataStartDate").text('None');
+                      $("#dataEndDate").text('None');
+                }
             } else {
                 $("#dataStartDate").text('');
                 $("#dataEndDate").text('');
@@ -210,3 +221,75 @@ var hideTip = function(){
 
     }
 };
+
+function setAlertMessage(textMessage, alertType, wrapperDivId ){
+    var htmlContent;
+    switch (alertType){
+        case 0: // success
+             htmlContent = "<div class='alert-box success'><span>success: </span>"+textMessage+"</div>";
+             break;
+        case 1: // info or notice
+             htmlContent = "<div class='alert-box notice'><span>notice: </span>"+textMessage+"</div>";
+             break;
+        case 2: // warning
+             htmlContent = "<div class='alert-box warning'><span>warning: </span>"+textMessage+"</div>";
+             break;
+        case 3: // error
+             htmlContent = "<div class='alert-box error'><span>error: </span>"+textMessage+"</div>";
+             break;
+        default:
+            htmlContent = "<div class='alert-box notice'><span>notice: </span>"+textMessage+"</div>";
+            break;
+    }
+    //$("#"+wrapperDivId).html("");
+    $("#"+wrapperDivId).html(htmlContent);
+    shakeIt(wrapperDivId);
+}
+
+function updateTips( text ) {
+    setAlertMessage(text, 3, "statusWrapper");
+}
+function checkLength( o, n, min, max ) {
+    if ( o.val().length > max || o.val().length < min ) {
+    o.addClass( "ui-state-error" );
+    updateTips( "Length of " + n + " must be between " +
+    min + " and " + max + "." );
+    return false;
+    } else {
+    return true;
+    }
+}
+function checkNotEmpty(o, n){
+    if($(o).is("select") && $(o).prop('selectedIndex') ==0){
+        o.addClass( "ui-state-error" );
+        updateTips(n + "cannot be blank.");
+        return false;
+    } else if( $.trim(o.val()).length == 0 ){
+        o.addClass( "ui-state-error" );
+        updateTips(n + "cannot be blank.");
+        return false;
+    }
+    return true;
+}
+function addError(n){
+    o.addClass( "ui-state-error" );
+    updateTips(n + "cannot be blank.");
+    return false;
+}
+function checkRegexp( o, regexp, n ) {
+    if ( !( regexp.test( o.val() ) ) ) {
+    o.addClass( "ui-state-error" );
+    updateTips( n );
+    return false;
+    } else {
+    return true;
+    }
+}
+
+function shakeIt(elementId){
+    $("#"+elementId).effect("shake", {"distance": 10, "times": 2, "direction": "left"}, 1000);
+        /*$("#"+elementId).animate({
+            right: -width+'px',
+            opacity: 1
+        },*/
+}

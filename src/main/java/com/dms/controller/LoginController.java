@@ -5,6 +5,7 @@
 
 package com.dms.controller;
 
+import com.dms.exception.InvalidCredentialsException;
 import com.dms.model.User;
 import com.dms.repository.LoginRepository;
 import com.dms.repository.ProjectRepository;
@@ -24,7 +25,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController extends BaseController{
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -44,7 +45,7 @@ public class LoginController {
             request.getSession(true).setAttribute(DMSConstants.SESSION_USER_ID, user.getId());
         } else {
            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw new Exception("Invalid username or password");
+            throw new InvalidCredentialsException("Invalid username or password");
         }
         ModelAndView modelAndView = new ModelAndView("dashboard");
         try {
@@ -52,18 +53,22 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        modelAndView.addObject("status", "SUCCESS");
+        modelAndView.addObject("flag", "0");
+        modelAndView.addObject("status", "User login successful");
         return modelAndView;
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(InvalidCredentialsException.class)
     public ModelAndView handleError(HttpServletRequest req, Exception exception) {
         logger.error("Request: " + req.getRequestURL() + " raised " + exception);
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", exception);
         mav.addObject("url", req.getRequestURL());
-        mav.addObject("message", "Unable to login, Please verify your credentials");
+        mav.addObject("flag", "3");
+        mav.addObject("status", "Unable to login, Please verify your credentials");
         mav.setViewName("index");
         return mav;
     }
+
+
 }

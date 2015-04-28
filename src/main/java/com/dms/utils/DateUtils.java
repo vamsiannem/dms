@@ -20,7 +20,7 @@ public class DateUtils {
     public final static String MYSQL_DT_FMT_WITH_TIME = "yyyy-MM-dd HH:mm";
     public final static String DISPLAY_DT_FMT = "dd/MM/yyyy";
     public final static String DISPLAY_DT_FMT_WITH_TIME = "dd/MM/yyyy HH:mm";
-    public final static String DISPLAY_DT_FMT_WITH_TIME_SS = "dd/MM/yyyy HH:mm:ss";
+    public final static String DISPLAY_DT_FMT_WITH_TIME_SS = "dd-MM-yyyy_HH-mm-ss";
 
     public static String defaultDateFormat(Date d){
         DateFormat df = new SimpleDateFormat(MYSQL_DT_FMT, Locale.UK);

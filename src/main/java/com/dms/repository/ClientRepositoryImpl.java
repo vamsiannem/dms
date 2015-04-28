@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by VamsiKrishna on 29/3/15.
@@ -27,7 +28,8 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public ClientInfo getClient(Integer id) {
-        return null;
+        Session session = sessionFactory.getCurrentSession();
+        return (ClientInfo) session.get(ClientInfo.class, id);
     }
 
     @Override
@@ -36,5 +38,12 @@ public class ClientRepositoryImpl implements ClientRepository {
         Criteria query = session.createCriteria(ClientInfo.class)
                 .add(Restrictions.eq("name", name));
         return (ClientInfo) query.uniqueResult();
+    }
+
+    @Override
+    public List<ClientInfo> getAll() {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria query = session.createCriteria(ClientInfo.class);
+        return query.list();
     }
 }

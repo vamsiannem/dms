@@ -114,19 +114,19 @@ public class ProjectDataController extends BaseController{
             logger.error("Error while uploading the CSV", ex);
             statusMessage = "An error occurred while uploading CSV.";
             mav.addObject("status", statusMessage);
-            mav.addObject("flag", "red");
+            mav.addObject("flag", "3");
             return mav;
         } catch (InvalidRequest e) {
             logger.error("Error while uploading the CSV", e);
             statusMessage = e.getMessage();
             mav.addObject("status", statusMessage);
-            mav.addObject("flag", "red");
+            mav.addObject("flag", "3");
             return mav;
         } catch (Exception e) {
             logger.error("Error while uploading the CSV", e);
             statusMessage = "Unknown error occurred while uploading CSV, Contact System Admin.";
             mav.addObject("status", statusMessage);
-            mav.addObject("flag", "red");
+            mav.addObject("flag", "3");
             return mav;
         } finally {
             try {
@@ -136,7 +136,7 @@ public class ProjectDataController extends BaseController{
             }
         }
         mav.addObject("status", statusMessage);
-        mav.addObject("flag", "green");
+        mav.addObject("flag", "0");
         mav.addObject("file", uploadedFileName );
         return mav;
     }
@@ -305,11 +305,11 @@ public class ProjectDataController extends BaseController{
 
         ICsvDozerBeanReader csvBeanReader = null;
         try {
-            UploadCSVMetadata metadata = uploadCSVHelper.getMetaData(type);
             if(type == null){
                 throw new InvalidRequest("Unable to find CSV Type of the Input File. \n " +
                         "Allowed CSV Types:"+ UploadCSVType.values() );
             }
+            UploadCSVMetadata metadata = uploadCSVHelper.getMetaData(type);
             final CellProcessor[] processors = metadata.getCellProcessors();
 
             //csvBeanReader = new CsvBeanReader(new FileReader(tempFile), CsvPreference.STANDARD_PREFERENCE);
@@ -365,15 +365,16 @@ public class ProjectDataController extends BaseController{
         if(servletFileUpload == null) {
             // Create a factory for disk-based file items
             DiskFileItemFactory factory = new DiskFileItemFactory();
-            // 1 MB is the file size limit.
-            factory.setSizeThreshold(1048576);
+            // 2 MB is the file size limit.
+            factory.setSizeThreshold(DMSConstants.SIZE_THRESHOLD);
             // Configure a repository (to ensure a secure temp location is used)
             File repository = FileUtils.getTempDirectory();
             factory.setRepository(repository);
 
             // Create a new file upload handler
             ServletFileUpload upload = new ServletFileUpload(factory);
-            upload.setFileSizeMax(1048576*2);
+            // 50MB is the max upload file size
+            upload.setFileSizeMax(DMSConstants.MAX_FILE_UPLOAD_SIZE);
             servletFileUpload = upload;
         }
     }

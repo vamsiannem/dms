@@ -5,7 +5,10 @@
 
 package com.dms.dto;
 
+import com.dms.utils.DateUtils;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+
+import java.util.Date;
 
 /**
  * Created by VamsiKrishna on 31/3/15.
@@ -64,8 +67,9 @@ public class UploadCSVMetadata {
         this.beanMappings = beanMappings;
     }
 
-    public String getExportCSVFileName() {
-        return exportCSVFileName;
+    public String getExportCSVFileName()  {
+        String date = DateUtils.getDateInFormat(new Date(), DateUtils.DISPLAY_DT_FMT_WITH_TIME_SS);
+        return exportCSVFileName.replace("DATE", date);
     }
 
     public void setExportCSVFileName(String exportCSVFileName) {

@@ -6,6 +6,10 @@
     <title>
         DMS - Data Management Software
     </title>
+    <script language="javascript" type="text/javascript">
+        var plotData= JSON.parse('${plotData}');
+        var ctx = "${pageContext.request.contextPath}";
+    </script>
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">
    	<link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/context-menu.css" type="text/css">
@@ -21,10 +25,6 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jqplot/jqplot.dateAxisRenderer.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jqplot/jqplot.canvasAxisTickRenderer.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/jqplot/jqplot.canvasTextRenderer.js"></script>
-    <script language="javascript" type="text/javascript">
-        var plotData= JSON.parse('${plotData}');
-
-    </script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/project_data_graph.js"></script>
     <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
     <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
@@ -45,10 +45,8 @@
         </div>
 
         <div>
-            <div style="float:left;" id="statusMessage">
-                <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
-                    <c:out value="${status}"> </c:out>
-                </span>
+                <input type="hidden" id="statusMessage" name="statusMessage" value="${flag}-${status}"/>
+            <div style="float:left; padding-left:15px;" id="statusWrapper">
             </div>
             <div style="float:right;padding-right: 15px;">
                 <input type="submit" name="submit" value="Page buttons" class="button" />
@@ -58,20 +56,13 @@
         </div>
 
 
-        <div style="padding-left: 15px;padding-top: 4px;float:left;">
-            <div style="float:left;width: 780px;height: 400px;border: 2px solid #fff;overflow-y:hidden">
+        <div style="padding-left: 15px;padding-top: 4px;float:left;width:80%">
+            <div style="float:left;width: 100%;height: 400px;border: 2px solid #fff;overflow-y:hidden">
                 <div style="margin: 10px;  border: 1px solid #ffafa4;" id="resizable">
 
                     <div id="line-chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
                 </div>
-            </div>&nbsp;
-            <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
-                Monthly Reports
-            </div>
-            <br>&nbsp;
-            <div style="float:right;width: 250px;height: 200px;border: 2px solid #fff">
-                User Activities
             </div>
         </div>
 

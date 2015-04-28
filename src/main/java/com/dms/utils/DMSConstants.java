@@ -25,6 +25,14 @@ public interface DMSConstants {
     String DUMMY_HEADERS = "Content-type:application/json;Accept:application/json";
     String DUMMY_PARAM = "type=0&vNetAddress=0&period=10";
 
+
+    /**
+     * Properties for Upload/Download of Data Core measurements
+     * Currently we use CSV format.
+     */
+    int ONE_MB = 1048576;
+    long MAX_FILE_UPLOAD_SIZE = ONE_MB * 50;
+    int SIZE_THRESHOLD =  ONE_MB * 2;
     String EXPORT_FILE_PREFIX = "vlim-datalog_";
     String EXPORT_FILE_PREFIX_VLIFE_MK1 = "VIPER_";
     String SUFFIX_CSV = ".csv";
@@ -61,4 +69,7 @@ public interface DMSConstants {
     Integer MAX_RESULTS_EXPORT = 65536;
 
     Integer ALL_MAX_RESULTS = 4000;
+
+    double IR_VALUE_RANGE = 999990000;
+
 }

@@ -9,10 +9,8 @@
  */
 package com.dms.controller;
 
-import com.dms.model.ProjectHistoryInfo;
-import com.dms.model.ProjectInfo;
-import com.dms.model.DataCoreMeasurement;
-import com.dms.model.UnitConnectionConfig;
+import com.dms.dto.ProjectDTO;
+import com.dms.model.*;
 import com.dms.repository.*;
 import com.dms.utils.*;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -21,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -81,6 +80,8 @@ public class ProjectController extends BaseController {
         }
         ModelAndView mav = new ModelAndView("projects");
         mav.addObject("projects", mapper.writeValueAsString(units));
+        mav.addObject("clients", mapper.writeValueAsString(clientRepository.getAll()));
+        mav.addObject("availableProducts", mapper.writeValueAsString(productRepository.getAllAvailable()));
 
         //mav.addObject("companies", mapper.writeValueAsString(productRepository.getAllCompanies()));
         //mav.addObject("products", mapper.writeValueAsString(productRepository.getAllDataMeasurements()));
@@ -96,50 +97,28 @@ public class ProjectController extends BaseController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             method= RequestMethod.PUT)
     public ModelAndView createNewProject(@PathVariable("projectId") String projectId,
-                                         @RequestParam("companyName") String companyName,
-                                         @RequestParam("platform") String platform,
-                                         @RequestParam("controlSystem") String controlSystem,
-                                         @RequestParam("channel") String channel,
-                                         @RequestParam("ipAddress") String ipAddress,
-                                         @RequestParam("installationDate") String installationDate,
-                                         @RequestParam("unitSerialNo") String unitSerialNo,
-                                         @RequestParam("consignedEngineer") String consignedEngineer,
-                                         HttpSession session
-                                                  /*@RequestParam("restUrl")String url,
-                                                  @RequestParam("headers") String headers,
-                                                  @RequestParam("method")String method*/) throws Exception {
-        String addStatus = "success";
-        // plz write validations here for each input field.
-        if(null == projectId || null == companyName || null == platform || null == controlSystem
-                || null == channel || null == ipAddress || null == unitSerialNo || null == installationDate
-                /*|| null == headers || null == method*/)
-            throw new Exception("All fields are mandatory.");
-        if(projectId.trim().length()==0 ||
-                companyName.trim().length()==0 ||
-                platform.trim().length()==0 ||
-                controlSystem.trim().length()==0 ||
-                channel.trim().length()==0 ||
-                ipAddress.trim().length()==0 ||
-                unitSerialNo.trim().length()==0 ){
-            throw new Exception("Some of the required fields cannot be left blank or empty.");
+                                         HttpSession session,
+                                         ProjectDTO projectDTO, BindingResult result) throws Exception {
+        if(result.hasErrors()){
+
         }
+        String addStatus = "New project with Id:"+ projectId+" created successfully";
+        // plz write validations here for each input field.
 
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setProjectId(projectId);
 
 
-        projectInfo.setPlatform(platform);
-        projectInfo.setControlSystem(controlSystem);
-        projectInfo.setChannel(channel);
-        projectInfo.setIpAddress(ipAddress);
+        projectInfo.setPlatform(projectDTO.getPlatform());
+        projectInfo.setControlSystem(projectDTO.getControlSystem());
+        projectInfo.setChannel(projectDTO.getChannel());
+        projectInfo.setDescription(projectDTO.getDescription());
+        projectInfo.setIpAddress("HARD CODED FOR NOW");
         projectInfo.setAlive(false);
         projectInfo.setLastModifiedBy((String) session.getAttribute(DMSConstants.SESSION_USER_FULL_NAME));
         projectInfo.setLastModifiedDate(new Date(System.currentTimeMillis()));
 
-        ProjectHistoryInfo historyInfo = new ProjectHistoryInfo();
-        historyInfo.setInstallationDate(DateUtils.getDate(installationDate, DateUtils.DISPLAY_DT_FMT));
-        historyInfo.setUnitSerialNo(unitSerialNo);
-        historyInfo.setConsignedEngineer(consignedEngineer);
+
 
         UnitConnectionConfig config = new UnitConnectionConfig();
         config.setUrl(DMSConstants.DUMMY_URL);
@@ -147,32 +126,41 @@ public class ProjectController extends BaseController {
         config.setMethod(EnumHelper.load(RequestMethod.class, DMSConstants.DUMMY_METHOD));
         config.setBodyParams(DMSConstants.DUMMY_PARAM);
 
-        SortedSet<ProjectHistoryInfo> historyInfoList = new TreeSet<ProjectHistoryInfo>();
-        historyInfoList.add(historyInfo);
 
-        projectInfo.setProjectHistoryInfoList(historyInfoList);
         projectInfo.setUnitConnectionConfig(config);
 
 
         ModelAndView mav = new ModelAndView();
         try {
-            projectInfo.setClientInfo(clientRepository.getClient(companyName));
-            projectInfo.setProductInfo(productRepository.get(unitSerialNo));
+            projectInfo.setClientInfo(clientRepository.getClient(projectDTO.getClientId()));
+            ProductInfo productInfo = productRepository.get(projectDTO.getProductId());
+            projectInfo.setProductInfo(productInfo);
+            ProjectHistoryInfo historyInfo = new ProjectHistoryInfo();
+            historyInfo.setInstallationDate(DateUtils.getDate(projectDTO.getInstallationDate(), DateUtils.DISPLAY_DT_FMT));
+            historyInfo.setUnitSerialNo(productInfo.getUnitSerialNo());
+            historyInfo.setConsignedEngineer(projectDTO.getConsignedEngineer());
+            SortedSet<ProjectHistoryInfo> historyInfoList = new TreeSet<ProjectHistoryInfo>();
+            historyInfoList.add(historyInfo);
+            projectInfo.setProjectHistoryInfoList(historyInfoList);
             projectRepository.create(projectInfo);
             mav.addObject("status", addStatus);
+            mav.addObject("flag", "0");
         } catch (HibernateException he){
             logger.error(he.getCause().getMessage());
             he.printStackTrace();
-            mav.addObject("status", "Failed");
+            mav.addObject("status", "An error while creating project:"+ projectId);
+            mav.addObject("flag", "3");
         } catch (Exception he){
             logger.error(he.getCause().getMessage());
             he.printStackTrace();
-            mav.addObject("status", "Failed");
+            mav.addObject("status", "An error while creating project:"+ projectId);
+            mav.addObject("flag", "3");
         }
         return mav;
     }
 
     /**
+     * Not used now.
      * Update a network unit on DMS db.
      * @return
      */
@@ -192,7 +180,7 @@ public class ProjectController extends BaseController {
                                 @RequestParam("restUrl") String url,
                                 @RequestParam("headers") String headers,
                                 @RequestParam("method") String method) throws Exception {
-        String status = "success";
+        String status= "New project with Id:"+ projectId+" created successfully";
         // plz write validations here for each input field.
         if(null == projectId || null == companyName || null == platform || null == controlSystem
                 || null == channel || null == ipAddress || null == unitSerialNo || null ==url
@@ -274,7 +262,7 @@ public class ProjectController extends BaseController {
             method= RequestMethod.GET)
     public ModelAndView getDataForProject(@PathVariable("projectInfoId") Long projectInfoId) throws IOException {
         ModelAndView mav = new ModelAndView("project_data");
-        List<DataCoreMeasurement> dataCoreMeasurement = dataCoreMeasurementRepository.getDataMeasurements(projectInfoId);
+        List<DataCoreMeasurement> dataCoreMeasurement = dataCoreMeasurementRepository.getDataMeasurements(projectInfoId, 0);
         if(dataCoreMeasurement !=null && dataCoreMeasurement.size()>0){
             mav.addObject("companyName", dataCoreMeasurement.get(0).getProjectInfo().getCompanyName());
             mav.addObject("unitSerialNo", dataCoreMeasurement.get(0).getProjectInfo().getUnitSerialNo());

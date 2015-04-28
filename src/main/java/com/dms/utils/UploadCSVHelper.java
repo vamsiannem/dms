@@ -239,20 +239,20 @@ public class UploadCSVHelper {
         return FIELD_MAPPING;
     }
 
-    private String getExportCSVFileName(UploadCSVType type){
+    public String getExportCSVFileName(UploadCSVType type){
         String tempFileName = null;
         switch (type){
             case VLIFE_MK1:
                 tempFileName = DMSConstants.EXPORT_FILE_PREFIX_VLIFE_MK1 +
-                        DateUtils.getDateInFormat(new Date(), DateUtils.DISPLAY_DT_FMT_WITH_TIME_SS)+DMSConstants.SUFFIX_CSV;
+                        "DATE"+DMSConstants.SUFFIX_CSV;
                 break;
             case VLIFE_MK2_TY4:
                 tempFileName = DMSConstants.EXPORT_FILE_PREFIX +
-                        DateUtils.getDateInFormat(new Date(), DateUtils.DISPLAY_DT_FMT_WITH_TIME_SS)+DMSConstants.SUFFIX_CSV;
+                        "DATE"+DMSConstants.SUFFIX_CSV;
                 break;
             case VLIM_MK1:
                 tempFileName = DMSConstants.EXPORT_FILE_PREFIX +
-                        DateUtils.getDateInFormat(new Date(), DateUtils.DISPLAY_DT_FMT_WITH_TIME_SS)+DMSConstants.SUFFIX_CSV;
+                        "DATE"+DMSConstants.SUFFIX_CSV;
                 break;
             default: break;
         }

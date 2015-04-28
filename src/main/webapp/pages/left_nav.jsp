@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/static/css/messages.css" />
     <ul id="dhtmlgoodies_tree2" class="dhtmlgoodies_tree">
         <li><a href="#" id="node_99">Dashboard</a></li>
 		<li><a href="#" id="node_100">Networks</a>

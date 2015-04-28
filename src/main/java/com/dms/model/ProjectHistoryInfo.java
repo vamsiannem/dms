@@ -39,13 +39,13 @@ public class ProjectHistoryInfo implements Serializable, Comparable<ProjectHisto
         when this unit is installed on client location.
         User is expected to enter a date, while creating a project.
      */
-    @Column(name = "installation_date", nullable = false, columnDefinition = "TIME")
-    @Temporal(value = TemporalType.TIME)
+    @Column(name = "installation_date", nullable = false, columnDefinition = "DATE")
+    @Temporal(value = TemporalType.DATE)
     private Date installationDate;
 
     // When the unit has been dismantled and another unit is installed.
-    @Column(name = "decommission_date", columnDefinition = "TIME")
-    @Temporal(value = TemporalType.TIME)
+    @Column(name = "decommission_date", columnDefinition = "DATE")
+    @Temporal(value = TemporalType.DATE)
     private Date deCommissionedDate;
 
     @Column(name="consigned_engineer")

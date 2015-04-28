@@ -6,6 +6,7 @@
 package com.dms.repository;
 
 import com.dms.model.ProductInfo;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by VamsiKrishna on 12/4/15.
@@ -34,5 +36,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public ProductInfo get(Long id) {
         return commonRepository.get(ProductInfo.class, id);
+    }
+
+    @Override
+    public List<ProductInfo> getAllAvailable() {
+        //Criteria get
+        String hql = "select p from ProductInfo as p left outer join p.projectInfo as pjt where pjt.projectInfoId is null";
+        return commonRepository.createQuery(hql).list();
     }
 }

@@ -5,6 +5,11 @@
     <title>
         DMS - Data Management Software
     </title>
+      	<script language="javascript" type="text/javascript">
+      	    var companies= JSON.parse('${companies}');
+      	    var products= JSON.parse('${products}');
+      	    var ctx = "${pageContext.request.contextPath}"
+        </script>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
            <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">
       	<link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/context-menu.css" type="text/css">
@@ -23,10 +28,6 @@
         <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
         <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
 
-      	<script language="javascript" type="text/javascript">
-      	    var companies= JSON.parse('${companies}');
-      	    var products= JSON.parse('${products}');
-        </script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/networks_script.js"></script>
 </head>
 <body onload="expandAll('dhtmlgoodies_tree2');return false">
@@ -43,10 +44,8 @@
     </div>
     <div>
 
-	<div style="float:left;" id="statusMessage">
-        <span style='color:<c:out value="${flag}"> </c:out>;font-size: 18px;'>
-                <c:out value="${status}"> </c:out>
-        </span>
+        <input type="hidden" id="statusMessage" name="statusMessage" value="${flag}-${status}"/>
+	<div style="float:left; padding-left:15px;" id="statusWrapper">
     </div>
 	<div style="float:right;padding-right: 15px;"><input type="submit" name="submit" value="Page buttons" class="button" /></div>
 	</div>
