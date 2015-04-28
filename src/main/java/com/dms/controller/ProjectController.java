@@ -99,21 +99,16 @@ public class ProjectController extends BaseController {
     public ModelAndView createNewProject(@PathVariable("projectId") String projectId,
                                          HttpSession session,
                                          ProjectDTO projectDTO, BindingResult result) throws Exception {
-        if(result.hasErrors()){
-
-        }
         String addStatus = "New project with Id:"+ projectId+" created successfully";
         // plz write validations here for each input field.
 
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setProjectId(projectId);
-
-
         projectInfo.setPlatform(projectDTO.getPlatform());
         projectInfo.setControlSystem(projectDTO.getControlSystem());
         projectInfo.setChannel(projectDTO.getChannel());
         projectInfo.setDescription(projectDTO.getDescription());
-        projectInfo.setIpAddress("HARD CODED FOR NOW");
+        projectInfo.setIpAddress("10.10.10.10");
         projectInfo.setAlive(false);
         projectInfo.setLastModifiedBy((String) session.getAttribute(DMSConstants.SESSION_USER_FULL_NAME));
         projectInfo.setLastModifiedDate(new Date(System.currentTimeMillis()));
