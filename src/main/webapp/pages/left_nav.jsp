@@ -3,7 +3,7 @@
         <li><a href="#" id="node_99">Dashboard</a></li>
 		<li><a href="#" id="node_100">Networks</a>
 			<ul>
-				<li><a href="#" id="list_10">List of Networks</a>
+				<li><a href="#" id="list_10">V-IR Systems</a>
 				</li>
 			</ul>
 		</li>
@@ -11,7 +11,7 @@
 			<ul>
 				<li><a href="#" id="list_20">Import</a>
 				</li>
-				<li><a href="#" id="list_21">exports</a>
+				<li><a href="#" id="list_21">Export</a>
 				</li>
 			</ul>
 		</li>

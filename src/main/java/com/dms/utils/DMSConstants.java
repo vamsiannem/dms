@@ -70,6 +70,6 @@ public interface DMSConstants {
 
     Integer ALL_MAX_RESULTS = 4000;
 
-    double IR_VALUE_RANGE = 999990000;
+    double IR_VALUE_RANGE = 186258176;
 
 }

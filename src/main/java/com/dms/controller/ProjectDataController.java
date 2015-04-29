@@ -82,6 +82,8 @@ public class ProjectDataController extends BaseController{
         ModelAndView mav = new ModelAndView("upload_project_data");
         try {
             mav.addObject("projects", mapper.writeValueAsString(projectRepository.getAll()));
+            mav.addObject("projects_data_time_range", mapper.writeValueAsString(
+                    dataCoreMeasurementRepository.getTimeRangeOfAllProjectsData()));
         } catch (IOException e) {
             e.printStackTrace();
         }

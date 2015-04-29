@@ -7,8 +7,8 @@
         DMS - Data Management Software
     </title>
     <script language="javascript" type="text/javascript">
-        var plotData= JSON.parse('${plotData}');
         var ctx = "${pageContext.request.contextPath}";
+        var plotData= JSON.parse('${plotData}');
     </script>
   <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
         <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">

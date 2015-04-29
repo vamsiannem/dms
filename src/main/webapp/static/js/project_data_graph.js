@@ -12,13 +12,18 @@ $(document).ready(function() {
 
     $('#line-chart').highcharts({
         chart: {
-            type: 'spline'
+            zoomType: 'x'
         },
         title: {
             text: 'Line Chart Analysis of Unit'
         },
         subtitle: {
-            text: 'Source: DMS Unit Data'
+            text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' :
+                    'Pinch the chart to zoom in'
+        },
+        legend: {
+            enabled: false
         },
         xAxis: {
             type: 'datetime',
@@ -32,8 +37,7 @@ $(document).ready(function() {
         yAxis: {
             title: {
                 text: 'Measurement'
-            },
-            min: 0
+            }
         },
         tooltip: {
             headerFormat: '<b>{series.name}</b><br>',
@@ -41,10 +45,24 @@ $(document).ready(function() {
         },
 
         plotOptions: {
-            spline: {
+            area: {
+                fillColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
                 marker: {
-                    enabled: true
-                }
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
             }
         },
 

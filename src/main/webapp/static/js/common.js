@@ -164,29 +164,67 @@ function fillNetworkUnitDropDown(){
             text : item.projectId+'-'+ item.companyName+'-'+ item.platform+ '-' +item.controlSystem+'-'+ item.channel+'-'+ item.unitSerialNo,
             title: toolTipText
         }));
-        $('#networkUnitSelect ').change(function(){
-            var toolTipValue = $('#networkUnitSelect > option:selected').attr('title');
-            var selectedVal = $('#networkUnitSelect > option:selected').val();
-            if(toolTipValue+'' != 'undefined'){
-                var toolTipDisplayText = toolTipValue.replace(/,/g, "\n");
-                showTip(toolTipDisplayText);
-                if(projectsDataRange && projectsDataRange[selectedVal]){
-                    $("#dataStartDate").text(projectsDataRange[selectedVal].fromDate);
-                    $("#dataEndDate").text(projectsDataRange[selectedVal].toDate);
-                } else {
-                      $("#dataStartDate").text('None');
-                      $("#dataEndDate").text('None');
-                }
-            } else {
-                $("#dataStartDate").text('');
-                $("#dataEndDate").text('');
-            }
-        });
-        $('#wrapper').mouseleave(function(){
+    });
+    $('#wrapper').mouseleave(function(){
             hideTip();
-        });
+    });
+    $('#networkUnitSelect ').change(function(){
+        var toolTipValue = $('#networkUnitSelect > option:selected').attr('title');
+        var selectedVal = $('#networkUnitSelect > option:selected').val();
+        if(toolTipValue && toolTipValue+'' != 'undefined'){
+            var toolTipDisplayText = toolTipValue.replace(/,/g, "\n");
+            showTip(toolTipDisplayText);
+            var projectInfoArray = toolTipValue.split(',');
+            setProjectInfo(projectInfoArray);
+            if(projectsDataRange && projectsDataRange[selectedVal]){
+                $("#dataStartDate").text(projectsDataRange[selectedVal].fromDate);
+                $("#dataEndDate").text(projectsDataRange[selectedVal].toDate);
+            } else {
+                  $("#dataStartDate").text('---');
+                  $("#dataEndDate").text('---');
+            }
+        } else {
+            resetProjectInfo();
+        }
     });
 
+}
+
+function setProjectInfo(projectInfoArray){
+    $.each(projectInfoArray, function (index, item) {
+        var itemSplit = item.split(":");
+        switch(index){
+            case 0:
+                $("#info_projectId").text(itemSplit[1]);
+                break;
+            case 1:
+                $("#info_client").text(itemSplit[1]);
+                break;
+            case 2:
+                $("#info_platform").text(itemSplit[1]);
+                break;
+            case 3:
+                $("#info_controlSystem").text(itemSplit[1]);
+                break;
+            case 4:
+                $("#info_channel").text(itemSplit[1]);
+                break;
+            case 5:
+                $("#info_unitSerialNo").text(itemSplit[1]);
+                break;
+        }
+    });
+}
+
+function resetProjectInfo(){
+    $("#info_projectId").text('None');
+    $("#info_client").text('None');
+    $("#info_platform").text('None');
+    $("#info_controlSystem").text('None');
+    $("#info_channel").text('None');
+    $("#info_unitSerialNo").text('None');
+    $("#dataStartDate").text('None');
+    $("#dataEndDate").text('None');
 }
 
 

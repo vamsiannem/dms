@@ -6,7 +6,7 @@
         DMS - Data Management Software
     </title>
       	<script language="javascript" type="text/javascript">
-      	    var ctx = "${pageContext.request.contextPath}"
+      	    var ctx = "${pageContext.request.contextPath}";
         </script>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
            <link rel="stylesheet" href="<%= request.getContextPath() %>/static/css/folder-tree-static.css" type="text/css">

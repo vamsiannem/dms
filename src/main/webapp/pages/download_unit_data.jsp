@@ -7,9 +7,9 @@
         DMS - Data Management Software
     </title>
      	<script language="javascript" type="text/javascript">
+            var ctx = "${pageContext.request.contextPath}";
             var projects= JSON.parse('${projects}');
             var projectsDataRange = JSON.parse('${projects_data_time_range}');
-            var ctx = "${pageContext.request.contextPath}"
         </script>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/sample_style.css" />
      <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/static/css/file_upload.css" />
@@ -91,15 +91,55 @@
 	        <span> Project info </span>
 	    </div>
 	    <div id="content">
-	        <div style='margin-top:5px; padding:5px 25px;'>
-                <label class='dialog-label' for="dataStartDate" title="Selected project data core measurements captured from this date/time.">
+	        <div style='margin-top:5px; padding:5px 5px;'>
+	            <div class="row">
+                <label for="info_projectId" title="Selected project data core measurements captured from this date/time.">
+                    Project Id:
+                </label>
+	            <div id="info_projectId" > None </div>
+                </div>
+                <div class="row">
+                <label  for="info_client" title="Selected project data core measurements captured till this date/time.">
+                    Client:
+                </label>
+	                <div id="info_client" > None </div>
+                </div>
+                <div class="row">
+                <label for="info_platform" title="Selected project data core measurements captured from this date/time.">
+                    Platform:
+                </label>
+	                <div id="info_platform" > None</div>
+                </div>
+                <div class="row">
+                <label for="info_controlSystem" title="Selected project data core measurements captured till this date/time.">
+                    <span>Control System:</span>
+                </label>
+	                <div id="info_controlSystem" > None</div>
+                </div>
+                <div class="row">
+                <label for="info_channel" title="Selected project data core measurements captured from this date/time.">
+                    <span>Channel:</span>
+                </label>
+	                <div id="info_channel" > None</div>
+                </div>
+                <div class="row">
+                <label for="info_unitSerialNo" title="Selected project data core measurements captured till this date/time.">
+                    <span>Unit Serial No:</span>
+                </label>
+	                <div id="info_unitSerialNo" > None</div>
+                </div>
+                <div class="row">
+                <label for="dataStartDate" title="Selected project data core measurements captured from this date/time.">
                     <span>Start Time:</span>
-	                <span id="dataStartDate"> </span>
                 </label>
-                <label class='dialog-label' for="dataEndDate" title="Selected project data core measurements captured till this date/time.">
+	                <div id="dataStartDate" > None</div>
+                </div>
+                <div class="row">
+                <label for="dataEndDate" title="Selected project data core measurements captured till this date/time.">
                     <span>End Time:</span>
-	                <span id="dataEndDate"> </span>
                 </label>
+	                <div id="dataEndDate" > None</div>
+                </div>
             </div>
 	    </div>
     </div>

@@ -6,8 +6,8 @@
         DMS - Data Management Software
     </title>
   	<script language="javascript" type="text/javascript">
+        var ctx = "${pageContext.request.contextPath}";
         var projects= JSON.parse('${projects}');
-        var ctx = "${pageContext.request.contextPath}"
     </script>
    <link rel="stylesheet" type="text/css" href="../static/css/sample_style.css" />
    <link rel="stylesheet" href="../static/css/folder-tree-static.css" type="text/css">

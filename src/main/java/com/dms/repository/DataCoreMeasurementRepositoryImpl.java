@@ -101,7 +101,7 @@ public class DataCoreMeasurementRepositoryImpl implements DataCoreMeasurementRep
                 .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
                 .add(Restrictions.sqlRestriction("timestamp({alias}.time) between ? and ?",
                         values, new org.hibernate.type.Type[]{StandardBasicTypes.STRING, StandardBasicTypes.STRING}))
-                .addOrder(Order.asc("id"))
+                .addOrder(Order.asc("time"))
                 .setMaxResults(MAX_RESULTS_EXPORT);
         ProjectInfo projectInfo = projectRepository.get(projectInfoId);
         UploadCSVType type = EnumHelper.load(UploadCSVType.class, projectInfo.getProductInfo().getType());
@@ -137,8 +137,8 @@ public class DataCoreMeasurementRepositoryImpl implements DataCoreMeasurementRep
                 .createAlias("nu.clientInfo", "client", CriteriaSpecification.INNER_JOIN)
                 .createAlias("nu.productInfo", "product", CriteriaSpecification.INNER_JOIN)
                 .add(Restrictions.eq("nu.projectInfoId", projectInfoId))
-                .add(Restrictions.le("insulationResistance", DMSConstants.IR_VALUE_RANGE))
-                .addOrder(Order.desc("id"))
+                .add(Restrictions.lt("insulationResistance", DMSConstants.IR_VALUE_RANGE))
+                .addOrder(Order.asc("time"))
                 .setMaxResults(maxResults!=0? maxResults: MAX_RESULTS)
                 .setProjection(Projections.projectionList()
                         .add(Projections.property("time"))
